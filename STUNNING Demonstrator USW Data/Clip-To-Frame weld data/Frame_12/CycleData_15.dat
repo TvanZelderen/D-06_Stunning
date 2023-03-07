@@ -1,0 +1,3 @@
+WeldID:	3620	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.260	DisplAfterCool:0.350	FrameNumber: 12	StringerNumber: 15	SpotNumber: 01
+WeldID:	3621	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.120	DisplAfterCool:0.170	FrameNumber: 12	StringerNumber: 15	SpotNumber: 02
+WeldID:	3622	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.351	DisplAfterCool:0.500	FrameNumber: 12	StringerNumber: 15	SpotNumber: 02

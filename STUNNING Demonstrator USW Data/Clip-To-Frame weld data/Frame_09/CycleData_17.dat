@@ -1,0 +1,3 @@
+WeldID:	3494	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.180	DisplAfterCool:0.300	FrameNumber: 09	StringerNumber: 17	SpotNumber: 01
+WeldID:	3495	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.110	DisplAfterCool:0.190	FrameNumber: 09	StringerNumber: 17	SpotNumber: 02
+WeldID:	3496	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.440	DisplAfterCool:0.500	FrameNumber: 09	StringerNumber: 17	SpotNumber: 02

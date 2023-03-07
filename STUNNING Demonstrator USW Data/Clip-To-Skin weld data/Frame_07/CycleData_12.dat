@@ -1,0 +1,3 @@
+WeldID:	2123	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.647	DisplAfterCool:1.900	FrameNumber: 07	StringerNumber: 12	SpotNumber: 01
+WeldID:	2124	WeldType nr:	5	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.359	DisplAfterCool:1.490	FrameNumber: 07	StringerNumber: 12	SpotNumber: 02
+WeldID:	2125	WeldType nr:	5	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.783	DisplAfterCool:0.880	FrameNumber: 07	StringerNumber: 12	SpotNumber: 03

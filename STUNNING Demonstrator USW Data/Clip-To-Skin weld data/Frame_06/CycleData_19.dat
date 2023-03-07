@@ -1,0 +1,3 @@
+WeldID:	2777	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.060	DisplAfterCool:1.170	FrameNumber: 06	StringerNumber: 19	SpotNumber: 01
+WeldID:	2778	WeldType nr:	4	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.236	DisplAfterCool:1.570	FrameNumber: 06	StringerNumber: 19	SpotNumber: 05
+WeldID:	2779	WeldType nr:	5	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.888	DisplAfterCool:1.020	FrameNumber: 06	StringerNumber: 19	SpotNumber: 06

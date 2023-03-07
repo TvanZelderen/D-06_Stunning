@@ -1,0 +1,7 @@
+WeldID:	2691	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.644	DisplAfterCool:0.740	FrameNumber: 06	StringerNumber: 10	SpotNumber: 01
+WeldID:	2692	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.342	DisplAfterCool:0.400	FrameNumber: 06	StringerNumber: 10	SpotNumber: 02
+WeldID:	2693	WeldType nr:	2	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.310	DisplAfterCool:0.410	FrameNumber: 06	StringerNumber: 10	SpotNumber: 03
+WeldID:	2694	WeldType nr:	2	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.410	DisplAfterCool:0.450	FrameNumber: 06	StringerNumber: 10	SpotNumber: 04
+WeldID:	2695	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.586	DisplAfterCool:0.650	FrameNumber: 06	StringerNumber: 10	SpotNumber: 04
+WeldID:	2696	WeldType nr:	4	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.940	DisplAfterCool:1.040	FrameNumber: 06	StringerNumber: 10	SpotNumber: 05
+WeldID:	2697	WeldType nr:	5	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.630	DisplAfterCool:0.700	FrameNumber: 06	StringerNumber: 10	SpotNumber: 06

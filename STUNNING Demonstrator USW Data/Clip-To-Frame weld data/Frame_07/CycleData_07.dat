@@ -1,0 +1,4 @@
+WeldID:	3435	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.200	DisplAfterCool:0.260	FrameNumber: 07	StringerNumber: 07	SpotNumber: 01
+WeldID:	3436	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.160	DisplAfterCool:0.230	FrameNumber: 07	StringerNumber: 07	SpotNumber: 01
+WeldID:	3437	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.160	DisplAfterCool:0.230	FrameNumber: 07	StringerNumber: 07	SpotNumber: 02
+WeldID:	3438	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.230	DisplAfterCool:0.290	FrameNumber: 07	StringerNumber: 07	SpotNumber: 03

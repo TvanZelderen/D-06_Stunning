@@ -1,0 +1,2 @@
+WeldID:	3371	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.298	DisplAfterCool:0.440	FrameNumber: 05	StringerNumber: 13	SpotNumber: 01
+WeldID:	3372	WeldType nr:	1	WeldError	3	RincoStatus:	0x20000	WeldEnd:	0x4	DisplAfterWeld:0.380	DisplAfterCool:0.460	FrameNumber: 05	StringerNumber: 13	SpotNumber: 02

@@ -1,0 +1,14 @@
+WeldID:	2880	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.960	DisplAfterCool:2.140	FrameNumber: 05	StringerNumber: 05	SpotNumber: 01
+WeldID:	2881	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.320	DisplAfterCool:0.428	FrameNumber: 05	StringerNumber: 05	SpotNumber: 02
+WeldID:	2882	WeldType nr:	2	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.470	DisplAfterCool:0.550	FrameNumber: 05	StringerNumber: 05	SpotNumber: 03
+WeldID:	2883	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.690	DisplAfterCool:0.800	FrameNumber: 05	StringerNumber: 05	SpotNumber: 04
+WeldID:	2884	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.760	DisplAfterCool:2.000	FrameNumber: 05	StringerNumber: 05	SpotNumber: 05
+WeldID:	2885	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:2.090	DisplAfterCool:2.190	FrameNumber: 05	StringerNumber: 05	SpotNumber: 06
+WeldID:	2894	WeldType nr:	0	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.770	DisplAfterCool:0.820	FrameNumber: 05	StringerNumber: 05	SpotNumber: 01
+WeldID:	2895	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.110	DisplAfterCool:0.170	FrameNumber: 05	StringerNumber: 05	SpotNumber: 02
+WeldID:	2896	WeldType nr:	2	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.710	DisplAfterCool:0.790	FrameNumber: 05	StringerNumber: 05	SpotNumber: 03
+WeldID:	2897	WeldType nr:	3	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:2.020	DisplAfterCool:2.220	FrameNumber: 05	StringerNumber: 05	SpotNumber: 04
+WeldID:	2898	WeldType nr:	4	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:2.200	DisplAfterCool:2.310	FrameNumber: 05	StringerNumber: 05	SpotNumber: 05
+WeldID:	2899	WeldType nr:	5	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.790	DisplAfterCool:2.030	FrameNumber: 05	StringerNumber: 05	SpotNumber: 06
+WeldID:	2900	WeldType nr:	1	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:0.460	DisplAfterCool:0.530	FrameNumber: 05	StringerNumber: 05	SpotNumber: 02
+WeldID:	2901	WeldType nr:	2	WeldError	0	RincoStatus:	0x0	WeldEnd:	0x4	DisplAfterWeld:1.150	DisplAfterCool:1.350	FrameNumber: 05	StringerNumber: 05	SpotNumber: 03
