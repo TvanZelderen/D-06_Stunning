@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class Data:
 
@@ -12,7 +15,7 @@ class Data:
         else:
             self.sample_rate = '100Hz' # 100Hz
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        self.file_path = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + sample_rate +  + str(stringer_no)+'_' + str(weld_no) + '.dat'
+        self.file_path = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + self.sample_rate + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
         self.frame = pd.read_csv(self.file_path, delimiter='\t', skiprows=[0], names=['Time_step', 'Pressure', 'Displacement'])
 
     def normalize(self): # normalize time step to start from 0
@@ -30,8 +33,20 @@ class Data:
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
+
+    def plot(self, power=True, displacement=True, pressure=True):
+        fig, ax = plt.subplots()
+        if pressure==True:
+            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=ax)
+        if displacement==True:
+            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=ax)
+        # if power==True:
+        #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
+        sns.plt.show()
+    
 a = Data('01', '02', '01', 1)
 a.normalize()
 a.bar_to_N()
 a.create_array()
+a.plot()
 
