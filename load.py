@@ -3,8 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plot_ini():
+def plot_ini(title):
     fig, ax = plt.subplots()
+    plt.title(title)
+    plt.xlabel('Time [s]')
     return ax
 
 class Data:
@@ -59,8 +61,8 @@ b = Data('01', '02', '01', 1)
 b.normalize()
 b.bar_to_N()
 
-ax = plot_ini()
-a.plot(axes=ax, displacement=False)
+ax = plot_ini('trine')
+a.plot(axes=ax)
 b.plot(axes=ax, displacement=False)
 plt.show()
 
