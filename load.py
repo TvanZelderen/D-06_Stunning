@@ -3,6 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def plot_ini(title):
+    fig, ax = plt.subplots()
+    plt.title(title)
+    plt.xlabel('Time [s]')
+    return ax
+
 class Data:
 
     def __init__(self, frame_no, stringer_no, weld_no, type):
@@ -32,17 +38,15 @@ class Data:
         self.array = self.frame.to_numpy()
         #print(self.array)
 
-    def plot(self, power=True, displacement=True, pressure=True):
-        fig, ax = plt.subplots()
+    def plot(self, axes, power=True, displacement=True, pressure=True):
         if pressure==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=ax)
+            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=axes)
         if displacement==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=ax)
+            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=axes)
         # if power==True:
         #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
-        sns.plt.show()
     
-a = Data('01', '02', '01', 1)
+'''a = Data('01', '02', '02', 1)
 a.normalize()
 a.bar_to_N()
 print(a.frame[0:10])
