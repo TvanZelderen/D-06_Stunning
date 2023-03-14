@@ -44,9 +44,9 @@ class Data:
 
     def plot(self, axes, power=True, displacement=True, pressure=True):
         if pressure==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=axes)
+            sns.lineplot(data=self.frame, x='Time_step [ms]', y='Pressure [Bar]', ax=axes)
         if displacement==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=axes)
+            sns.lineplot(data=self.frame, x='Time_step [ms]', y='Displacement [mm]', ax=axes)
         # if power==True:
         #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
     
