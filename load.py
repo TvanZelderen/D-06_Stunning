@@ -52,7 +52,7 @@ class Data:
         # if power==True:
         #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
     
-a = Data('01', '02', '02', 1)
+'''a = Data('01', '02', '02', 1)
 a.normalize()
 a.bar_to_N()
 a.create_array()
@@ -65,6 +65,6 @@ ax = plot_ini('trine')
 a.plot(axes=ax)
 b.plot(axes=ax, displacement=False)
 plt.show()
-
+'''
 
 
