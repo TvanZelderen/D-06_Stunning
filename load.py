@@ -26,6 +26,9 @@ class Data:
         self.frame = pd.read_csv(self.file_path, delimiter='\t', skiprows=[0], names=['Time_step', 'Pressure', 'Displacement'])
         sns.set_theme(style='darkgrid')
 
+    def __str__(self):
+        return self.frame
+
     def normalize(self): # normalize time step to start from 0
         time_0 = self.frame.at[0, 'Time_step']
         self.frame['Time_step'] = self.frame['Time_step'].sub(time_0)
