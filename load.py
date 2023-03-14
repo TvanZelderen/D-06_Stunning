@@ -7,4 +7,7 @@ class Data:
         self.stringer_no = stringer_no
         self.weld_no = weld_no
         self.type = type
-        self.frame = pd.read_csv('.\Frame_' + str(frame_no) + '\\1kHz_' + str(stringer_no)+'_' + str(weld_no) + '.dat', delimiter='\t', skiprows=[0], header=['Time_step', 'Pressure', 'Displacement'])
+        folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
+        self.file_path = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/1kHz_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+        self.frame = pd.read_csv(self.file_path, delimiter='\t', skiprows=[0], names=['Time_step', 'Pressure', 'Displacement'])
+
