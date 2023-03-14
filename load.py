@@ -10,10 +10,13 @@ def plot_ini():
 class Data:
 
     def __init__(self, frame_no, stringer_no, weld_no, type, sample_rate=1000):
+
+        #defining variables
         self.frame_no = frame_no
         self.stringer_no = stringer_no
         self.weld_no = weld_no
         self.type = type # True: clip-to-frame, False: clip-to-skin
+
         if sample_rate == 1000:
             self.sample_rate = '1kHz' # 1kHz
         else:
