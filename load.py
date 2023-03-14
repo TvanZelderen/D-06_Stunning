@@ -19,7 +19,8 @@ class Data:
         time_0 = self.frame.at[0, 'Time_step']
         self.frame['Time_step'] = self.frame['Time_step'].sub(time_0)
         self.frame['Time_step'] = self.frame['Time_step'].div(1000)
-        self.frame
+        if sample_rate = '100Hz':
+            self.frame['Time_step'] = self.frame['Time_step'].div(0.1)
         # print(self.frame['Time_step'][0:10])
 
     def bar_to_N(self): # convert 1 bar = 266.667 N/m^2
