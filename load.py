@@ -21,7 +21,11 @@ class Data:
         self.frame['Pressure'] = self.frame['Pressure'].mul(266.667)
         # print(self.frame['Pressure'][0:10])
 
+    def create_array(self): # convert pandas data frame to numpy array
+        self.array = self.frame.to_numpy()
+        #print(self.array)
 a = Data('01', '02', '01', 1)
 a.normalize()
 a.bar_to_N()
+a.create_array()
 
