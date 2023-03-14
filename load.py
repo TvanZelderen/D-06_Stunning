@@ -5,32 +5,27 @@ import seaborn as sns
 
 class Data:
 
-    def __init__(self, frame_no, stringer_no, weld_no, type, sample_rate=1000):
+    def __init__(self, frame_no, stringer_no, weld_no, type):
 
         #defining variables
         self.frame_no = frame_no
         self.stringer_no = stringer_no
         self.weld_no = weld_no
         self.type = type # True: clip-to-frame, False: clip-to-skin
-
-        if sample_rate == 1000:
-            self.sample_rate = '1kHz' # 1kHz
-        else:
-            self.sample_rate = '100Hz' # 100Hz
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        self.file_path = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + self.sample_rate + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
-        self.frame = pd.read_csv(self.file_path, delimiter='\t', skiprows=[0], names=['Time_step', 'Pressure', 'Displacement'])
+        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+        self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
+        file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+        power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
+        self.frame = self.frame.join(power.set_index('Time'), on='Time')
 
     def normalize(self): # normalize time step to start from 0
-        time_0 = self.frame.at[0, 'Time_step']
-        self.frame['Time_step'] = self.frame['Time_step'].sub(time_0)
-        self.frame['Time_step'] = self.frame['Time_step'].div(1000)
-        if self.sample_rate == '100Hz':
-            self.frame['Time_step'] = self.frame['Time_step'].div(0.1)
-        # print(self.frame['Time_step'][0:10])
+        time_0 = self.frame.at[0, 'Time']
+        self.frame['Time'] = self.frame['Time'].sub(time_0)
+        self.frame['Time'] = self.frame['Time'].div(1000)
 
     def bar_to_N(self): # convert 1 bar = 266.667 N/m^2
-        self.frame['Pressure'] = self.frame['Pressure'].mul(266.667)
+        self.frame['Force'] = self.frame['Pressure'].mul(266.667)
         # print(self.frame['Pressure'][0:10])
 
     def create_array(self): # convert pandas data frame to numpy array
@@ -50,6 +45,5 @@ class Data:
 a = Data('01', '02', '01', 1)
 a.normalize()
 a.bar_to_N()
-a.create_array()
-a.plot()
+print(a.frame[0:10])
 
