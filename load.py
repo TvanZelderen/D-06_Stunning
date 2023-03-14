@@ -7,7 +7,7 @@ class Data:
         self.stringer_no = stringer_no
         self.weld_no = weld_no
         self.type = type # True: clip-to-frame, False: clip-to-skin
-        if sample_rate = 1000:
+        if sample_rate == 1000:
             self.sample_rate = '1kHz' # 1kHz
         else:
             self.sample_rate = '100Hz' # 100Hz
@@ -19,7 +19,7 @@ class Data:
         time_0 = self.frame.at[0, 'Time_step']
         self.frame['Time_step'] = self.frame['Time_step'].sub(time_0)
         self.frame['Time_step'] = self.frame['Time_step'].div(1000)
-        if sample_rate = '100Hz':
+        if self.sample_rate == '100Hz':
             self.frame['Time_step'] = self.frame['Time_step'].div(0.1)
         # print(self.frame['Time_step'][0:10])
 
