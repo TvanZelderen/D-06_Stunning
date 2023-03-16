@@ -22,4 +22,3 @@ for i in range(12):
         frame_01[i].plot(axes=ax, displacement=False)
 
 plt.show()
-    

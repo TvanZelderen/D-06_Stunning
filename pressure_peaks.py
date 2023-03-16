@@ -14,8 +14,10 @@ n = 2
 
 p_peak = p[np.where(p > (avg+n*std))]
 t_peak = t[np.where(p > (avg+n*std))]
-print(p_peak)
+
 plt.scatter(t_peak, p_peak)
+print(np.unique(p_peak))
+print(len(np.unique(p_peak)))
 plt.plot(t, p)
 plt.show()
 
