@@ -3,13 +3,27 @@ import pandas as pd
 from pathlib import Path
 
 # Path to the data directory
-list = []
+file_list = []
+list_1khz = []
+list_100hz = []
 for path in Path('STUNNING Demonstrator USW Data').rglob('*.dat'):
-    list.append(path.name)
-print(len(list)/2)
+    file_list.append(path.name)
 
-# # Data class
-# class Data:
-#     def __init__(self, file_name):
-#         self
-#     def print(self)
+for fname in file_list:
+    
+    if fname.startswith('1kHz'):
+        name = fname.strip('1kHz')
+        name = name.strip('.dat')
+        list_1khz.append(name)
+    elif fname.startswith('100Hz'):
+        name = fname.strip('100Hz')
+        name = name.strip('.dat')
+        list_100hz.append(name)
+
+one = set(list_1khz) - set(list_100hz)
+two = set(list_100hz) - set(list_1khz)
+three = set(list_1khz) & set(list_100hz)
+print(three, len(three))
+
+if __name__ == '__main__':
+    pass

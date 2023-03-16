@@ -4,25 +4,40 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def plot_ini(title):
+    sns.set_theme()
     fig, ax = plt.subplots()
     plt.title(title)
     plt.xlabel('Time [s]')
-    return ax
+
+    global legend
+    legend = []
+    return ax 
 
 class Data:
 
-    def __init__(self, frame_no, stringer_no, weld_no, type):
+    def __init__(self, frame_no, stringer_no, weld_no, data_type):
 
         #defining variables
         self.frame_no = frame_no
+        if frame_no >= 10:
+            frame_name = '/Frame_' + str(frame_no)
+        else:
+            frame_name = '/Frame_0' + str(frame_no)
         self.stringer_no = stringer_no
+        if stringer_no >= 10:
+            stringer_name = '_' + str(stringer_no)
+        else:
+            stringer_name = '_0' + str(stringer_no)
         self.weld_no = weld_no
-        self.type = type # True: clip-to-frame, False: clip-to-skin
-        folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+        if weld_no >= 10:
+            weld_name = '_' + str(weld_no)
+        else:
+            weld_name = '_0' + str(weld_no)
+        self.folder = '/Clip-to-Frame weld data' if data_type == True else '/Clip-to-Skin weld data'
+        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ self.folder + frame_name + '/' + '1kHz' + stringer_name + weld_name + '.dat'
         self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
         try:
-            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+            file_path_100Hz = './STUNNING Demonstrator USW Data'+ self.folder + frame_name + '/' + '100Hz' + stringer_name + weld_name + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
@@ -41,15 +56,32 @@ class Data:
         self.array = self.frame.to_numpy()
         #print(self.array)
 
-    def plot(self, axes, power=True, displacement=True, pressure=True):
-        if pressure==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=axes)
+    def plot(self, axes, power=False, displacement=False, force=False):
+        if self.type == True:
+            loc = 'Frame'
+        else:
+            loc = 'Skin'
+        main_label = loc+'_'+str(self.frame_no)+'_'+str(self.stringer_no)+'_'+str(self.weld_no)
+
+        if force==True:
+            sns.lineplot(data=self.frame, x='Time', y='Force', ax=axes)
+            legend.append(main_label+' Force')
         if displacement==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=axes)
+            sns.lineplot(data=self.frame, x='Time', y='Displacement', ax=axes)
+            legend.append(main_label+' Displacement')
         if power==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=axes)         
+            sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
+            legend.append(main_label+' Power')
+
+def plot_legends():
+    plt.legend( loc='upper left', labels=legend)
+    plt.show()
+
+def save_with_legends(filename):
+    plt.legend( loc='upper left', labels=legend)
+    plt.savefig(filename)      
     
-a = Data('02', '02', '01', 1)
+a = Data(2, 2, 2, 1)
 a.normalize()
 a.bar_to_N()
 print(a.frame)
