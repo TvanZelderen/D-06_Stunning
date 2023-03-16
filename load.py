@@ -68,10 +68,8 @@ def save_with_legends(filename):
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
     plt.savefig(filename)      
     
-'''
-a = Data('01', '02', '02', 1)
-a.normalize()
-a.bar_to_N()
-print(a.frame[0:10])
-'''
+#a = Data('01', '02', '02', 1)
+#a.normalize()
+#a.bar_to_N()
+#print(a.frame[0:10])
 
