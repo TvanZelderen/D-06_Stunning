@@ -69,7 +69,42 @@ def plot_legends():
 def save_with_legends(filename):
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
     plt.savefig(filename, bbox_inches = 'tight')      
-    
+
+def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
+    if frames == 'All':
+        frames = range(1,13)
+    if stringers == 'All':
+        stringers = range(1,28)
+    if welds == 'All':
+        welds = range(1,7)
+
+    valid_welds = []
+    for frame_no in frames:
+        if frame_no < 10:
+            frame_no = '0'+str(frame_no)
+        else:
+            frame_no = str(frame_no)
+        
+        for stringer_no in stringers:
+            if stringer_no < 10:
+                stringer_no = '0'+str(stringer_no)
+            else:
+                stringer_no = str(stringer_no)
+            
+            for weld_no in welds:
+                if weld_no < 10:
+                    weld_no = '0'+str(weld_no)
+                else:
+                    weld_no = str(weld_no)
+                
+                try:
+                    new_object = Data(frame_no, stringer_no, weld_no, type)
+                except:
+                    pass
+                else:
+                    valid_welds.append(new_object)
+    return valid_welds
+
 #a = Data('01', '02', '02', 1)
 #a.normalize()
 #a.bar_to_N()
