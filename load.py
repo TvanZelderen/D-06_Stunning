@@ -61,7 +61,11 @@ class Data:
 
 def plot_legends():
     plt.legend( loc='upper left', labels=legend)
-    plt.show()        
+    plt.show()
+
+def save_with_legends(filename):
+    plt.legend( loc='upper left', labels=legend)
+    plt.savefig(filename)      
     
 '''
 a = Data('01', '02', '02', 1)
