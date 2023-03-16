@@ -4,10 +4,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def plot_ini(title):
+    sns.set_theme()
     fig, ax = plt.subplots()
     plt.title(title)
     plt.xlabel('Time [s]')
-    return ax
+
+    global legend
+    legend = []
+    return ax 
 
 class Data:
 
@@ -38,13 +42,30 @@ class Data:
         self.array = self.frame.to_numpy()
         #print(self.array)
 
-    def plot(self, axes, power=True, displacement=True, pressure=True):
-        if pressure==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Pressure', ax=axes)
+    def plot(self, axes, power=False, displacement=False, force=False):
+        if self.type == True:
+            loc = 'Frame'
+        else:
+            loc = 'Skin'
+        main_label = loc+'_'+str(self.frame_no)+'_'+str(self.stringer_no)+'_'+str(self.weld_no)
+
+        if force==True:
+            sns.lineplot(data=self.frame, x='Time', y='Force', ax=axes)
+            legend.append(main_label+' Force')
         if displacement==True:
-            sns.lineplot(data=self.frame, x='Time_step', y='Displacement', ax=axes)
-        # if power==True:
-        #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
+            sns.lineplot(data=self.frame, x='Time', y='Displacement', ax=axes)
+            legend.append(main_label+' Displacement')
+        if power==True:
+            sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
+            legend.append(main_label+' Power')
+
+def plot_legends():
+    plt.legend( loc='upper left', labels=legend)
+    plt.show()
+
+def save_with_legends(filename):
+    plt.legend( loc='upper left', labels=legend)
+    plt.savefig(filename)      
     
 #a = Data('01', '02', '02', 1)
 #a.normalize()
