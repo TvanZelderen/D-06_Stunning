@@ -66,7 +66,7 @@ def plot_legends():
 
 def save_with_legends(filename):
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
-    plt.savefig(filename)      
+    plt.savefig(filename, bbox_inches = 'tight')      
     
 #a = Data('01', '02', '02', 1)
 #a.normalize()
