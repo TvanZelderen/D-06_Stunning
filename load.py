@@ -52,9 +52,11 @@ class Data:
         if force==True:
             sns.lineplot(data=self.frame, x='Time', y='Force', ax=axes)
             legend.append(main_label+' Force')
+            legend.append('')
         if displacement==True:
             sns.lineplot(data=self.frame, x='Time', y='Displacement', ax=axes)
             legend.append(main_label+' Displacement')
+            legend.append('')
         if power==True:
             sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
             legend.append(main_label+' Power')
