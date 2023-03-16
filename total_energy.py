@@ -1,7 +1,22 @@
 from load import Data
 from scipy.integrate import simpson
 import pandas as pd
+from load import iterate_points
+import matplotlib.pyplot as plt
+import numpy as np
 
+data = iterate_points(frames=[5])
+energy = []
+for i in data:
+    i.normalize()
+    i.bar_to_N()
+    p = i.frame['Power'].dropna().to_numpy()
+    t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
+    #dt = t[1]-t[0]
+    energy.append(simpson(p, t))
+print('Energy: ' + str(energy))
+plt.scatter(np.ones(len(energy)), energy)
+plt.show()
 a = Data('01', '02', '02', 0)
 a.normalize()
 a.bar_to_N()
@@ -12,5 +27,5 @@ dt = t[1]-t[0]
 #print(len(p))
 #print(len(t))
 #print(dt)
-energy = simpson(p, t)
+
 print(energy)
