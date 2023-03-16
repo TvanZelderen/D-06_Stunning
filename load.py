@@ -58,13 +58,14 @@ class Data:
         if power==True:
             sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
             legend.append(main_label+' Power')
+            legend.append('')
 
 def plot_legends():
-    plt.legend( loc='upper left', labels=legend)
+    plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
     plt.show()
 
 def save_with_legends(filename):
-    plt.legend( loc='upper left', labels=legend)
+    plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
     plt.savefig(filename)      
     
 '''
