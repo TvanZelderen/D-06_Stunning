@@ -46,8 +46,10 @@ class Data:
         # if power==True:
         #     sns.lineplot(data=self.frame, x='Time_step', y='Power', ax=ax)         
     
-'''a = Data('01', '02', '02', 1)
+'''
+a = Data('01', '02', '02', 1)
 a.normalize()
 a.bar_to_N()
 print(a.frame[0:10])
+'''
 
