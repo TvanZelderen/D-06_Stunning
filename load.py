@@ -74,7 +74,7 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     if frames == 'All':
         frames = range(1,13)
     if stringers == 'All':
-        stringers = range(1,28)
+        stringers = range(1,30)
     if welds == 'All':
         welds = range(1,7)
 
