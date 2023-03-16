@@ -58,9 +58,13 @@ class Data:
             legend.append(main_label+' Displacement')
             legend.append('')
         if power==True:
-            sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
-            legend.append(main_label+' Power')
-            legend.append('')
+            try:
+                sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
+            except:
+                print('Power data for '+main_label+' is not available.')
+            else:  
+                legend.append(main_label+' Power')
+                legend.append('')
 
 def plot_legends():
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
@@ -74,7 +78,7 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     if frames == 'All':
         frames = range(1,13)
     if stringers == 'All':
-        stringers = range(1,28)
+        stringers = range(1,30)
     if welds == 'All':
         welds = range(1,7)
 
