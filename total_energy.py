@@ -8,7 +8,7 @@ import seaborn as sns
 import statsmodels.api as sm
 import pylab as py
 
-data = iterate_points(frames=[10])
+data = iterate_points(frames=[7])
 energy = []
 for i in data:
     #p = i.frame['Force'].dropna().to_numpy()
