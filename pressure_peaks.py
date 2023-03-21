@@ -1,6 +1,7 @@
 from load import Data as dt
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sb
 
 a = dt('01', '02', '02', 1)
 a.create_array()
@@ -14,12 +15,14 @@ n = 2
 p_peak = p[np.where(p > (avg+n*std))]
 t_peak = t[np.where(p > (avg+n*std))]
 
+
 Np_peak = len(np.unique(p_peak)) #number of peaks in pressure graph
-Vp_peak = np.unique(p_peak) #array of peaks in pressure graph
+Vp_peak = np.unique(p_peak) #array of peak values pressure
 
 plt.scatter(t_peak, p_peak)
 print("The peak values are:", Vp_peak)
 print("The number of peak values are:", Np_peak)
+fig, ax = plt.subplots()
 plt.plot(t, p)
 plt.show()
 
