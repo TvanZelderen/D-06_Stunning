@@ -4,6 +4,7 @@ import seaborn as sns
 import scipy as sc
 import pandas as pd
 import load as ld
+from math import isnan
 
 all_data = ld.Data(10,18,3,1)
 power=all_data.frame["Power"]
@@ -14,25 +15,25 @@ print(max(power))
 def find_break(power, time):
     max=0
     max_loc=0
-    i=0
     t=[]
     p=[]
     ti=[]
     po=[]
-    while i < len(power):
-        if max<=power[i]:
+    for i in range(len(power)):
+        if isnan(power[i]):
+            continue
+        elif max<=power[i]:
             max=power[i]
             max_loc=i
-            t.append(time[i])
-            p.append(power[i])
         elif max > power[i] and ((max-power[i])>max*0.005):
             break_point=i
             t.append(time[i])
             p.append(power[i])
             print('oh no')
             break
-        
-        i=i+1
+
+        t.append(time[i])
+        p.append(power[i])
     k=0
     while k<len(power):
         ti.append(time[k])
