@@ -3,9 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 a = dt('01', '02', '02', 1)
-a.normalize()
 a.create_array()
-a.bar_to_N()
+
 p = a.frame['Pressure'].to_numpy()
 t = a.frame['Time'].to_numpy()
 avg = np.average(p) #average of pressure graphs
