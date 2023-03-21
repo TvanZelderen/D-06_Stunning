@@ -28,15 +28,25 @@ class Data:
 
         #defining variables
         self.frame_no = frame_no
+        if frame_no < 10:
+            self.frame_string = '0'+str(frame_no)
+        else:
+            self.frame_string = str(frame_no)
         self.stringer_no = stringer_no
         self.weld_no = weld_no
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
-        self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
-        file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
-        power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
-        self.frame = self.frame.join(power.set_index('Time'), on='Time')
+        try:
+            self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+            self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
+        except FileNotFoundError:
+            print(f'File {self.file_path_1kHz} not found.')
+        try:
+            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+            power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
+            self.frame = self.frame.join(power.set_index('Time'), on='Time')
+        except FileNotFoundError:
+            print(f'No power data for {self.file_path_1kHz} found.')
 
         self.normalize()
         self.bar_to_N()
@@ -112,8 +122,10 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                     valid_welds.append(new_object)
     return valid_welds
 
-#a = Data('01', '02', '02', 1)
-#a.normalize()
-#a.bar_to_N()
-#print(a.frame[0:10])
 
+
+def test():
+    a = Data(1, 2, 2, 1)
+    print(a.frame[0:10])
+
+test()
