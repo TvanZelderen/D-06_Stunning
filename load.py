@@ -29,20 +29,28 @@ class Data:
         #defining variables
         self.frame_no = frame_no
         if frame_no < 10:
-            self.frame_string = '0'+str(frame_no)
+            self.frame_string = '/Frame_'+'0'+str(frame_no)
         else:
-            self.frame_string = str(frame_no)
+            self.frame_string = '/Frame_'+str(frame_no)
         self.stringer_no = stringer_no
+        if stringer_no < 10:
+            self.stringer_string = '_0'+str(stringer_no)
+        else:
+            self.stringer_string = '_'+str(stringer_no)
         self.weld_no = weld_no
+        if weld_no < 10:
+            self.weld_string = '_0'+str(weld_no)
+        else:
+            self.weld_string = '_'+str(weld_no)
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
         try:
-            self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+            self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
         except FileNotFoundError:
             print(f'File {self.file_path_1kHz} not found.')
         try:
-            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
+            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
@@ -122,10 +130,8 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                     valid_welds.append(new_object)
     return valid_welds
 
-
- aanpassing
 def test():
     a = Data(1, 2, 2, 1)
     print(a.frame[0:10])
 
-test()
+# test()
