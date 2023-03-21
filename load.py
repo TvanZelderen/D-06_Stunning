@@ -28,20 +28,11 @@ class Data:
 
         #defining variables
         self.frame_no = frame_no
-        if frame_no < 10:
-            self.frame_string = '/Frame_'+'0'+str(frame_no)
-        else:
-            self.frame_string = '/Frame_'+str(frame_no)
+        self.frame_string = '/Frame_'+str(frame_no).zfill(2)
         self.stringer_no = stringer_no
-        if stringer_no < 10:
-            self.stringer_string = '_0'+str(stringer_no)
-        else:
-            self.stringer_string = '_'+str(stringer_no)
+        self.stringer_string = '_'+str(stringer_no).zfill(2)
         self.weld_no = weld_no
-        if weld_no < 10:
-            self.weld_string = '_0'+str(weld_no)
-        else:
-            self.weld_string = '_'+str(weld_no)
+        self.weld_string = '_'+str(weld_no).zfill(2)
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
         try:
@@ -131,7 +122,7 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     return valid_welds
 
 def test():
-    a = Data(1, 2, 2, 1)
+    a = Data(1, 12, 2, 1)
     print(a.frame[0:10])
 
 # test()
