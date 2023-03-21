@@ -142,12 +142,3 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                 else:
                     valid_welds.append(new_object)
     return valid_welds
-
-<<<<<<< Updated upstream
-def test():
-    a = Data(1, 12, 2, 1)
-    print(a.frame[0:10])
-=======
->>>>>>> Stashed changes
-
-# test()
