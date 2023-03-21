@@ -34,8 +34,11 @@ class Data:
         else:
             weld_name = '_0' + str(weld_no)
         self.folder = '/Clip-to-Frame weld data' if data_type == True else '/Clip-to-Skin weld data'
-        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ self.folder + frame_name + '/' + '1kHz' + stringer_name + weld_name + '.dat'
-        self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
+        try:
+            self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ self.folder + frame_name + '/' + '1kHz' + stringer_name + weld_name + '.dat'
+            self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
+        except FileNotFoundError:
+            print('No 1kHz data available')
         try:
             file_path_100Hz = './STUNNING Demonstrator USW Data'+ self.folder + frame_name + '/' + '100Hz' + stringer_name + weld_name + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
@@ -80,10 +83,9 @@ def plot_legends():
 def save_with_legends(filename):
     plt.legend( loc='upper left', labels=legend)
     plt.savefig(filename)      
-    
-a = Data(2, 2, 2, 1)
-a.normalize()
-a.bar_to_N()
-print(a.frame)
 
-
+def test():
+    a = Data(2, 2, 2, 1)
+    a.normalize()
+    a.bar_to_N()
+    print(a.frame)
