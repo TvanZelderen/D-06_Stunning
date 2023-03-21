@@ -123,7 +123,7 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     return valid_welds
 
 
-
+ aanpassing
 def test():
     a = Data(1, 2, 2, 1)
     print(a.frame[0:10])
