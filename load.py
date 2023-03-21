@@ -15,6 +15,15 @@ def plot_ini(title):
 
 class Data:
 
+    def normalize(self): # normalize time step to start from 0
+        time_0 = self.frame.at[0, 'Time']
+        self.frame['Time'] = self.frame['Time'].sub(time_0)
+        self.frame['Time'] = self.frame['Time'].div(1000)
+
+    def bar_to_N(self): # convert 1 bar = 266.667 N/m^2
+        self.frame['Force'] = self.frame['Pressure'].mul(266.667)
+        # print(self.frame['Pressure'][0:10])
+
     def __init__(self, frame_no, stringer_no, weld_no, type):
 
         #defining variables
@@ -29,14 +38,8 @@ class Data:
         power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
         self.frame = self.frame.join(power.set_index('Time'), on='Time')
 
-    def normalize(self): # normalize time step to start from 0
-        time_0 = self.frame.at[0, 'Time']
-        self.frame['Time'] = self.frame['Time'].sub(time_0)
-        self.frame['Time'] = self.frame['Time'].div(1000)
-
-    def bar_to_N(self): # convert 1 bar = 266.667 N/m^2
-        self.frame['Force'] = self.frame['Pressure'].mul(266.667)
-        # print(self.frame['Pressure'][0:10])
+        self.normalize()
+        self.bar_to_N()
 
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
