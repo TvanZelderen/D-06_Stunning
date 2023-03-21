@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -15,12 +16,12 @@ def plot_ini(title):
 
 class Data:
 
-    def normalize(self): # normalize time step to start from 0
+    def __normalize(self): # normalize time step to start from 0
         time_0 = self.frame.at[0, 'Time']
         self.frame['Time'] = self.frame['Time'].sub(time_0)
         self.frame['Time'] = self.frame['Time'].div(1000)
 
-    def bar_to_N(self): # convert 1 bar = 266.667 N/m^2
+    def __bar_to_N(self): # convert 1 bar = 266.667 N/m^2
         self.frame['Force'] = self.frame['Pressure'].mul(266.667)
         # print(self.frame['Pressure'][0:10])
 
@@ -28,24 +29,45 @@ class Data:
 
         #defining variables
         self.frame_no = frame_no
+        self.frame_string = '/Frame_'+str(frame_no).zfill(2)
         self.stringer_no = stringer_no
+        self.stringer_string = '_'+str(stringer_no).zfill(2)
         self.weld_no = weld_no
+        self.weld_string = '_'+str(weld_no).zfill(2)
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '1kHz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
-        self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
-        file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + '/Frame_' + str(frame_no) + '/' + '100Hz' + '_' + str(stringer_no)+'_' + str(weld_no) + '.dat'
-        power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
-        self.frame = self.frame.join(power.set_index('Time'), on='Time')
+        try:
+            self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
+            self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
+        except FileNotFoundError:
+            print(f'File {self.file_path_1kHz} not found.')
+        try:
+            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
+            power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
+            self.frame = self.frame.join(power.set_index('Time'), on='Time')
+        except FileNotFoundError:
+            print(f'No power data for {self.file_path_1kHz} found.')
 
-        self.normalize()
-        self.bar_to_N()
+        self.__normalize()
+        self.__bar_to_N()
 
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
+    
+    def smoothing(self, window=12, order=3):
+        power_frame = self.frame['Power'].dropna()
+        power_frame = power_frame[:-1]
+        power_data = power_frame.to_numpy()
+        window = min(window, len(power_data))
+        if len(power_data) == 0:
+            return None
+        smooth_power = sp.signal.savgol_filter(power_data, window_length=window, polyorder=order)
+        power_frame = power_frame.to_frame(name='Power')
+        power_frame['Smooth power'] = smooth_power.tolist()
+        self.frame = self.frame.join(power_frame['Smooth power'])
 
-    def plot(self, axes, power=False, displacement=False, force=False):
+    def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False):
         if self.type == True:
             loc = 'Frame'
         else:
@@ -68,6 +90,15 @@ class Data:
             else:  
                 legend.append(main_label+' Power')
                 legend.append('')
+        if smooth_power==True:
+            try:
+                sns.lineplot(data=self.frame, x='Time', y='Smooth power', ax=axes)
+            except:
+                print('Smooth power data for '+main_label+' is not available.')
+            else:  
+                legend.append(main_label+' Smooth power')
+                legend.append('')
+        
 
 def plot_legends():
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
@@ -111,9 +142,3 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                 else:
                     valid_welds.append(new_object)
     return valid_welds
-
-#a = Data('01', '02', '02', 1)
-#a.normalize()
-#a.bar_to_N()
-#print(a.frame[0:10])
-
