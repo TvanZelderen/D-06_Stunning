@@ -14,6 +14,7 @@ for i in data:
     #p = i.frame['Force'].dropna().to_numpy()
     #t = i.frame['Time'].drop(i.frame['Pressure'].isna()*range(len(i.frame['Force']))).to_numpy()
     #dt = t[1]-t[0]
+    print(data.frame)
     p = i.frame['Force'].to_numpy()
     t = i.frame['Time'].to_numpy()
     print(i.frame['Force'])
