@@ -29,7 +29,6 @@ def boxplots(): #boxplots of pressure graph peaks
     plt.show()
 
 def peakvalues(a): #pressure graph, with its corresponding peak values and number of peak values
-
     a.create_array()
 
     p = a.frame['Pressure'].to_numpy()
@@ -52,4 +51,8 @@ def peakvalues(a): #pressure graph, with its corresponding peak values and numbe
     plt.plot(t, p)
     plt.show()
 
-peakvalues(a)
+    return t_peak
+    return Vp_peak
+    
+#boxplots()
+#peakvalues(a)
