@@ -1,9 +1,5 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-
-# Set the style
-# sns.set_style("darkgrid")
 
 # Create a figure
 def data_for_cylinder_along_z(center_x,center_y,radius,length):

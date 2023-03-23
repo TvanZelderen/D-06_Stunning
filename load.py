@@ -122,7 +122,7 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     return valid_welds
 
 def test():
-    a = Data(1, 12, 2, 1)
-    print(a.frame["Time"])
+    a = Data(11, 25, 2, 1)
+    print(a.frame)
 
-# test()
+test()
