@@ -44,11 +44,13 @@ class Data:
             file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
+            self.__normalize()
+            self.__bar_to_N()
         except FileNotFoundError:
             print(f'No power data for {self.file_path_1kHz} found.')
+            del self
 
-        self.__normalize()
-        self.__bar_to_N()
+        
 
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
@@ -77,6 +79,8 @@ class Data:
             else:  
                 legend.append(main_label+' Power')
                 legend.append('')
+    #def __del__(self):
+    #    print('Destructor called, kill me too please.')
 
 def plot_legends():
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
