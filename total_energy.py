@@ -1,13 +1,11 @@
-from load import Data
 from scipy.integrate import simpson
 import pandas as pd
 from load import iterate_points
 import matplotlib.pyplot as plt
-import numpy as np
 import seaborn as sns
-import pylab as py
 
-def total_energy(frame:list = [1], stringer:list = [2], weld:list = [1], type:int = 1):
+
+def total_energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int = 1):
     data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
     energy = []
     for i in data:
