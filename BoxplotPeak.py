@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from load import *
 #boxplot of pressure graphs
 
-atotal = iterate_points(type=1, frames=[4], stringers=range(1,11)) #choose type or frames
+atotal = iterate_points(type=1, frames=[2], stringers=range(1,11)) #choose type/frames
 fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
 for i, ax in zip(atotal, axs):
