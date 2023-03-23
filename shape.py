@@ -17,18 +17,26 @@ def root_finder(var, time):
     
     return root_loc
 
-obj = Data(1,4,2,1)
-obj.smoothing()
+peaks_valleys = []
+total = iterate_points(type=1)
+print(total)
+for obj in total:
+    obj.smoothing()
 
-power = obj.frame['Smooth power'].to_numpy()
-time = obj.frame['Time'].to_numpy()
-power, time = nan_filter(power,time)
-power_1 = np.gradient(power,time)    #first dev
-power_2 = np.gradient(power_1,time)  #second dev
+    power = obj.frame['Smooth power'].to_numpy()
+    time = obj.frame['Time'].to_numpy()
+    power, time = nan_filter(power,time)
+    power_1 = np.gradient(power,time)    #first dev
+    power_2 = np.gradient(power_1,time)  #second dev
 
-roots = root_finder(power_1,time)
-plt.plot(time, power_1)
-plt.scatter(roots, np.zeros(len(roots)))
+    roots = root_finder(power_1,time)
+    for t in roots:
+        value = np.interp(t, time, power)
+        second_dev = np.interp(t, time, power_2)
+        peaks_valleys.append((t,value,second_dev))
+
+roots, values, second_devs = zip(*peaks_valleys)
+plt.scatter(roots, values)
 plt.show()
 
 
