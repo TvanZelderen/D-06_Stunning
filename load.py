@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -53,8 +54,20 @@ class Data:
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
+    
+    def smoothing(self, window=12, order=3):
+        power_frame = self.frame['Power'].dropna()
+        power_frame = power_frame[:-1]
+        power_data = power_frame.to_numpy()
+        window = min(window, len(power_data))
+        if len(power_data) == 0:
+            return None
+        smooth_power = sp.signal.savgol_filter(power_data, window_length=window, polyorder=order)
+        power_frame = power_frame.to_frame(name='Power')
+        power_frame['Smooth power'] = smooth_power.tolist()
+        self.frame = self.frame.join(power_frame['Smooth power'])
 
-    def plot(self, axes, power=False, displacement=False, force=False):
+    def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False):
         if self.type == True:
             loc = 'Frame'
         else:
@@ -77,6 +90,15 @@ class Data:
             else:  
                 legend.append(main_label+' Power')
                 legend.append('')
+        if smooth_power==True:
+            try:
+                sns.lineplot(data=self.frame, x='Time', y='Smooth power', ax=axes)
+            except:
+                print('Smooth power data for '+main_label+' is not available.')
+            else:  
+                legend.append(main_label+' Smooth power')
+                legend.append('')
+        
 
 def plot_legends():
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
