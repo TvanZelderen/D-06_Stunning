@@ -35,6 +35,7 @@ class Data:
         self.weld_string = '_'+str(weld_no).zfill(2)
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
+        del_self = False
         try:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
@@ -48,9 +49,7 @@ class Data:
             self.__bar_to_N()
         except FileNotFoundError:
             print(f'No power data for {self.file_path_1kHz} found.')
-            del self
 
-        
 
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
@@ -100,25 +99,11 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
 
     valid_welds = []
     for frame_no in frames:
-        if frame_no < 10:
-            frame_no = '0'+str(frame_no)
-        else:
-            frame_no = str(frame_no)
-        
         for stringer_no in stringers:
-            if stringer_no < 10:
-                stringer_no = '0'+str(stringer_no)
-            else:
-                stringer_no = str(stringer_no)
-            
             for weld_no in welds:
-                if weld_no < 10:
-                    weld_no = '0'+str(weld_no)
-                else:
-                    weld_no = str(weld_no)
-                
                 try:
                     new_object = Data(frame_no, stringer_no, weld_no, type)
+                    new_object.frame
                 except:
                     pass
                 else:
