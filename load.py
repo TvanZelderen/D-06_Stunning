@@ -114,7 +114,10 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     if stringers == 'All':
         stringers = range(1,30)
     if welds == 'All':
-        welds = range(1,7)
+        if type == 0:
+            welds = range(1,7)
+        else:
+            welds = range(1,3)
 
     valid_welds = []
     for frame_no in frames:
