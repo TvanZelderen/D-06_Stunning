@@ -1,7 +1,9 @@
 from load import *
 
 ax = plot_ini('test')    
-i = Data(1,2,2,1)
-i.smoothing()
-i.plot(ax, smooth_power=True)
-plot_legends()
+atotal = iterate_points(frames=[10])
+print(atotal)
+
+# i.smoothing()
+# i.plot(ax, smooth_power=True)
+# plot_legends()

@@ -3,6 +3,8 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
+import load
+import logging
 
 def plot_ini(title):
     sns.set_theme()
@@ -40,13 +42,13 @@ class Data:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
         except FileNotFoundError:
-            print(f'File {self.file_path_1kHz} not found.')
+            logging.info(f'No data for {self.file_path_1kHz} found.')
         try:
-            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
-            power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
+            self.file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
+            power = pd.read_csv(self.file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
-            print(f'No power data for {self.file_path_1kHz} found.')
+            logging.info(f'No data for {file_path_100Hz} found.')
 
         self.__normalize()
         self.__bar_to_N()
@@ -54,18 +56,6 @@ class Data:
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
-    
-    def smoothing(self, window=12, order=3):
-        power_frame = self.frame['Power'].dropna()
-        power_frame = power_frame[:-1]
-        power_data = power_frame.to_numpy()
-        window = min(window, len(power_data))
-        if len(power_data) == 0:
-            return None
-        smooth_power = sp.signal.savgol_filter(power_data, window_length=window, polyorder=order)
-        power_frame = power_frame.to_frame(name='Power')
-        power_frame['Smooth power'] = smooth_power.tolist()
-        self.frame = self.frame.join(power_frame['Smooth power'])
 
     def smoothing(self, window=12, order=3):
         power_frame = self.frame['Power'].dropna()
@@ -143,6 +133,22 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                     valid_welds.append(new_object)
     return valid_welds
 
+def nan_filter(var, time):
+    from math import isnan
+
+    time_fil = []
+    var_fil = []
+    for i in range(len(var)):
+        if isnan(var[i]):
+            continue
+        else:
+            time_fil.append(time[i])
+            var_fil.append(var[i])
+    
+    return var_fil, time_fil
+
 def test():
     a = Data(11, 25, 2, 1)
     print(a.frame)
+
+test()

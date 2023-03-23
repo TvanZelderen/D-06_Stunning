@@ -9,13 +9,16 @@ def total_energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type
     data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
     energy = []
     for i in data:
-        p = i.frame['Power'].dropna().to_numpy()
-        t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
-        energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, simpson(p, t)])
+        try: 
+            p = i.frame['Power'].dropna().to_numpy()
+            t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
+            energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, simpson(p, t)])
+        except:
+            pass
     #print('Energy: ' + str(energy))
     df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
     return df_energy
 #plt.scatter(np.ones(len(energy)), energy)
-#sns.histplot(df_energy, x = 'Energy')
+
+sns.histplot(total_energy(frame = [1, 3, 4, 5, 6], stringer=[2, 3, 4, 5, 6, 7]), x = 'Energy')
 plt.show()
-total_energy()
