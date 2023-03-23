@@ -36,7 +36,6 @@ class Data:
         self.weld_string = '_'+str(weld_no).zfill(2)
         self.type = type # True: clip-to-frame, False: clip-to-skin
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
-        del_self = False
         try:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
@@ -46,15 +45,27 @@ class Data:
             file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
-            self.__normalize()
-            self.__bar_to_N()
         except FileNotFoundError:
             print(f'No power data for {self.file_path_1kHz} found.')
 
+        self.__normalize()
+        self.__bar_to_N()
 
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
+    
+    def smoothing(self, window=12, order=3):
+        power_frame = self.frame['Power'].dropna()
+        power_frame = power_frame[:-1]
+        power_data = power_frame.to_numpy()
+        window = min(window, len(power_data))
+        if len(power_data) == 0:
+            return None
+        smooth_power = sp.signal.savgol_filter(power_data, window_length=window, polyorder=order)
+        power_frame = power_frame.to_frame(name='Power')
+        power_frame['Smooth power'] = smooth_power.tolist()
+        self.frame = self.frame.join(power_frame['Smooth power'])
 
     def smoothing(self, window=12, order=3):
         power_frame = self.frame['Power'].dropna()
@@ -99,6 +110,7 @@ class Data:
             else:  
                 legend.append(main_label+' Smooth power')
                 legend.append('')
+
     #def __del__(self):
     #    print('Destructor called, kill me too please.')
 
@@ -132,7 +144,5 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     return valid_welds
 
 def test():
-    a = Data(1, 12, 2, 1)
-    print(a.frame[0:10])
-
-# test()
+    a = Data(11, 25, 2, 1)
+    print(a.frame)

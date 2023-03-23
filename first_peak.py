@@ -6,7 +6,7 @@ import pandas as pd
 import load as ld
 from math import isnan
 
-all_data = ld.Data(10,18,3,1)
+all_data = ld.Data(1,7,7,1)
 power=all_data.frame["Power"]
 time=all_data.frame["Time"]
 print(max(power))
@@ -34,11 +34,14 @@ def find_break(power, time):
 
         t.append(time[i])
         p.append(power[i])
-    k=0
-    while k<len(power):
-        ti.append(time[k])
-        po.append(power[k])
-        k=k+1
+    
+    for i in range(len(power)):
+        if isnan(power[i]):
+            continue
+        else:
+            ti.append(time[i])
+            po.append(power[i])
+
     return( max, max_loc, break_point, t, p, ti, po)
 k=0
 
@@ -60,6 +63,7 @@ print(power)"""
 #ax = ld.plot_ini('test')
 #all_data.plot(ax, power=True)
 
+plt.plot(ti, po, "r")
 plt.plot(t, p, "b")
 plt.show()
 
