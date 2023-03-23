@@ -3,6 +3,7 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
+import load
 
 def plot_ini(title):
     sns.set_theme()
@@ -40,13 +41,13 @@ class Data:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
         except FileNotFoundError:
-            print(f'File {self.file_path_1kHz} not found.')
+            logging.info(f'No data for {self.file_path_1kHz} found.')
         try:
-            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
+            self.file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
-            print(f'No power data for {self.file_path_1kHz} found.')
+            logging.info(f'No data for {file_path_100Hz} found.')
 
         self.__normalize()
         self.__bar_to_N()
@@ -54,7 +55,7 @@ class Data:
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
-    
+
     def smoothing(self, window=12, order=3):
         power_frame = self.frame['Power'].dropna()
         power_frame = power_frame[:-1]
@@ -98,7 +99,9 @@ class Data:
             else:  
                 legend.append(main_label+' Smooth power')
                 legend.append('')
-        
+
+    #def __del__(self):
+    #    print('Destructor called, kill me too please.')
 
 def plot_legends():
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
@@ -118,33 +121,31 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
 
     valid_welds = []
     for frame_no in frames:
-        if frame_no < 10:
-            frame_no = '0'+str(frame_no)
-        else:
-            frame_no = str(frame_no)
-        
         for stringer_no in stringers:
-            if stringer_no < 10:
-                stringer_no = '0'+str(stringer_no)
-            else:
-                stringer_no = str(stringer_no)
-            
             for weld_no in welds:
-                if weld_no < 10:
-                    weld_no = '0'+str(weld_no)
-                else:
-                    weld_no = str(weld_no)
-                
                 try:
                     new_object = Data(frame_no, stringer_no, weld_no, type)
+                    new_object.frame
                 except:
                     pass
                 else:
                     valid_welds.append(new_object)
     return valid_welds
 
+def nan_filter(var, time):
+    from math import isnan
+
+    time_fil = []
+    var_fil = []
+    for i in range(len(var)):
+        if isnan(var[i]):
+            continue
+        else:
+            time_fil.append(time[i])
+            var_fil.append(var[i])
+    
+    return var_fil, time_fil
+
 def test():
     a = Data(11, 25, 2, 1)
     print(a.frame)
-
-test()
