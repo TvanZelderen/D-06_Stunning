@@ -1,6 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+from total_energy import total_energy as tot
 
 # Set the style
 # sns.set_style("darkgrid")
@@ -53,4 +54,8 @@ for position in positions:
 
 plt.show()
 
-for frame in range(frame_numbers)
+for frame in range(number_of_frames):
+    for stringer in range(number_of_stringers):
+        theta = np.linspace(0, -np.pi/(2*number_of_stringers))
+        E = tot([frame], [stringer])['Energy'].to_numpy()
+        print(E)
