@@ -2,11 +2,11 @@ from load import Data as dt
 import numpy as np
 import matplotlib.pyplot as plt
 from load import *
-
+a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
 
 
 def boxplots(): #boxplots of pressure graph peaks
-    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1]) #W
+    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1])
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -28,8 +28,8 @@ def boxplots(): #boxplots of pressure graph peaks
     plt.tight_layout()
     plt.show()
 
-def peakvalues(): #pressure graph, with its corresponding peak values and number of peak values
-    a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
+def peakvalues(a): #pressure graph, with its corresponding peak values and number of peak values
+
     a.create_array()
 
     p = a.frame['Pressure'].to_numpy()
@@ -52,4 +52,4 @@ def peakvalues(): #pressure graph, with its corresponding peak values and number
     plt.plot(t, p)
     plt.show()
 
-peakvalues()
+peakvalues(a)
