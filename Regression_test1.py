@@ -64,3 +64,6 @@ print(X_train.index)
 #plt.show()
 
 
+#for i in atotal:
+#     i.plot(ax, power=True)
+#plot_legends()

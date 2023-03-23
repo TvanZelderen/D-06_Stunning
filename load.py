@@ -142,3 +142,9 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                 else:
                     valid_welds.append(new_object)
     return valid_welds
+
+def test():
+    a = Data(11, 25, 2, 1)
+    print(a.frame)
+
+test()
