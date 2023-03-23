@@ -2,7 +2,8 @@ from load import Data as dt
 import numpy as np
 import matplotlib.pyplot as plt
 from load import *
-a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
+a = dt('08', '16', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
+lst = []
 
 
 def boxplots(): #boxplots of pressure graph peaks
@@ -24,7 +25,9 @@ def boxplots(): #boxplots of pressure graph peaks
 
         text = f"Weld {i.weld_no}, Stringer {i.stringer_no}, Frame {i.frame_no}"
         ax.text(0.5, -0.2, text, fontsize=6, ha='center', transform=ax.transAxes)
+        plt.xlabel("Locus")
 
+    
     plt.tight_layout()
     plt.show()
 
@@ -44,6 +47,12 @@ def peakvalues(a): #pressure graph, with its corresponding peak values and numbe
     Np_peak = len(np.unique(p_peak)) #number of peaks in pressure graph
     Vp_peak = np.unique(p_peak) #array of peak values pressure
 
+    #for vp in Vp_peak:
+       # idx = np.where(p == vp)[0]
+        #t_avg = np.mean(t[idx])
+        #lst.append(t_avg)
+    #print(lst)
+
     plt.scatter(t_peak, p_peak)
     print("The peak values are:", Vp_peak)
     print("The number of peak values are:", Np_peak)
@@ -51,8 +60,8 @@ def peakvalues(a): #pressure graph, with its corresponding peak values and numbe
     plt.plot(t, p)
     plt.show()
 
-    return t_peak
-    return Vp_peak
+    #return t_peak
+    #return Vp_peak
     
 #boxplots()
-#peakvalues(a)
+peakvalues(a)
