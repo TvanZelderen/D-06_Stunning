@@ -6,7 +6,7 @@ from load import *
 
 
 def boxplots(): #boxplots of pressure graph peaks
-    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1])
+    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1]) #W
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -28,7 +28,7 @@ def boxplots(): #boxplots of pressure graph peaks
     plt.tight_layout()
     plt.show()
 
-def peakvalues(): #pressure graphs, with its corresponding peak values and number of peak values
+def peakvalues(): #pressure graph, with its corresponding peak values and number of peak values
     a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
     a.create_array()
 
@@ -52,4 +52,4 @@ def peakvalues(): #pressure graphs, with its corresponding peak values and numbe
     plt.plot(t, p)
     plt.show()
 
-boxplots()
+peakvalues()
