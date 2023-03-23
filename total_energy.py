@@ -5,19 +5,14 @@ from load import iterate_points
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import statsmodels.api as sm
 import pylab as py
 
 data = iterate_points(frames=[10])
 energy = []
 for i in data:
-    #p = i.frame['Force'].dropna().to_numpy()
-    #t = i.frame['Time'].drop(i.frame['Pressure'].isna()*range(len(i.frame['Force']))).to_numpy()
-    #dt = t[1]-t[0]
-    p = i.frame['Force'].to_numpy()
-    t = i.frame['Time'].to_numpy()
-    print(i.frame['Force'])
-    print(i.frame['Time'])
+    p = i.frame['Power'].dropna().to_numpy()
+    t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
+    dt = t[1]-t[0]
     print(len(t))
     print(len(p))
     energy.append(simpson(p, t))
