@@ -3,6 +3,7 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
+import load
 
 def plot_ini(title):
     sns.set_theme()
@@ -40,13 +41,13 @@ class Data:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
             self.frame = pd.read_csv(self.file_path_1kHz, delimiter='\t', skiprows=[0], names=['Time', 'Pressure', 'Displacement'])
         except FileNotFoundError:
-            print(f'File {self.file_path_1kHz} not found.')
+            logging.info(f'No data for {self.file_path_1kHz} found.')
         try:
-            file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
+            self.file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
             power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
-            print(f'No power data for {self.file_path_1kHz} found.')
+            logging.info(f'No data for {file_path_100Hz} found.')
 
         self.__normalize()
         self.__bar_to_N()
