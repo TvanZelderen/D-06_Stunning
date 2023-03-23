@@ -55,18 +55,6 @@ class Data:
     def create_array(self): # convert pandas data frame to numpy array
         self.array = self.frame.to_numpy()
         #print(self.array)
-    
-    def smoothing(self, window=12, order=3):
-        power_frame = self.frame['Power'].dropna()
-        power_frame = power_frame[:-1]
-        power_data = power_frame.to_numpy()
-        window = min(window, len(power_data))
-        if len(power_data) == 0:
-            return None
-        smooth_power = sp.signal.savgol_filter(power_data, window_length=window, polyorder=order)
-        power_frame = power_frame.to_frame(name='Power')
-        power_frame['Smooth power'] = smooth_power.tolist()
-        self.frame = self.frame.join(power_frame['Smooth power'])
 
     def smoothing(self, window=12, order=3):
         power_frame = self.frame['Power'].dropna()
@@ -143,6 +131,20 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                 else:
                     valid_welds.append(new_object)
     return valid_welds
+
+def nan_filter(var, time):
+    from math import isnan
+
+    time_fil = []
+    var_fil = []
+    for i in range(len(var)):
+        if isnan(var[i]):
+            continue
+        else:
+            time_fil.append(time[i])
+            var_fil.append(var[i])
+    
+    return var_fil, time_fil
 
 def test():
     a = Data(11, 25, 2, 1)
