@@ -7,29 +7,17 @@ import numpy as np
 import seaborn as sns
 import pylab as py
 
-data = iterate_points(frames=[10])
-energy = []
-for i in data:
-    p = i.frame['Power'].dropna().to_numpy()
-    t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
-    dt = t[1]-t[0]
-    print(len(t))
-    print(len(p))
-    energy.append(simpson(p, t))
-print('Energy: ' + str(energy))
-df_energy = pd.DataFrame(energy, columns=['energy'])
+def total_energy(frame:list = [1], stringer:list = [2], weld:list = [1], type:int = 1):
+    data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
+    energy = []
+    for i in data:
+        p = i.frame['Power'].dropna().to_numpy()
+        t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
+        energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, simpson(p, t)])
+    #print('Energy: ' + str(energy))
+    df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
+    return df_energy
 #plt.scatter(np.ones(len(energy)), energy)
-sns.histplot(df_energy, x = 'energy')
+#sns.histplot(df_energy, x = 'Energy')
 plt.show()
-'''a = Data('01', '02', '02', 0)
-a.normalize()
-a.bar_to_N()
-print(a.frame)
-p = a.frame['Power'].dropna().to_numpy()
-t = a.frame['Time'].drop(a.frame['Power'].isna()*range(len(a.frame['Power']))).to_numpy()
-dt = t[1]-t[0]'''
-#print(len(p))
-#print(len(t))
-#print(dt)
-
-print(energy)
+total_energy()
