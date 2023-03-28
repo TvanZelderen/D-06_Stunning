@@ -154,3 +154,16 @@ def nan_filter(var, time):
 def test():
     a = Data(11, 25, 2, 1)
     print(a.frame)
+
+from total_energy import energy
+
+def tot_time(obj):
+    power = obj.frame['Power'].dropna()
+    idx = power.index[-1]
+    time = obj.frame['Time'][idx]
+    return time
+
+def avg_power(obj):
+    energy_df = energy(frame=[obj.frame_no], stringer=[obj.stringer_no], weld=[obj.weld_no], type= obj.type)
+    power = energy_df['Energy'][0]/tot_time(obj)
+    return power
