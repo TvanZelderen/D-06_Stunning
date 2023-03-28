@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def total_energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int = 1):
+def energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int = 1):
     data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
     energy = []
     for i in data:
@@ -20,5 +20,5 @@ def total_energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type
     return df_energy
 #plt.scatter(np.ones(len(energy)), energy)
 
-sns.histplot(total_energy(frame = [1, 3, 4, 5, 6], stringer=[2, 3, 4, 5, 6, 7]), x = 'Energy')
+sns.histplot(energy(frame = [1], stringer=[2, 3, 4, 5, 6, 7]), x = 'Energy')
 plt.show()
