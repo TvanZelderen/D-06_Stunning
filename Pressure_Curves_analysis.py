@@ -2,11 +2,11 @@ from load import Data as dt
 import numpy as np
 import matplotlib.pyplot as plt
 from load import *
-a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
+a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 
 def boxplots(): #boxplots of upper pressure graph peaks
-    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1])
+    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -98,7 +98,7 @@ def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak
 
 
 def boxplots2(): #boxplots of upper and lower pressure graph peaks
-    atotal = iterate_points(type=1, frames='All', stringers='05', welds = [1])
+    atotal = iterate_points(type=1, frames='All', stringers='05', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -110,13 +110,10 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
         n = 2
 
         p_peak_high = p[np.where(p > (avg+n*std))]
-        t_peak_high = t[np.where(p > (avg+n*std))]
 
         p_peak_low = p[np.where(p < (avg-n*std))]
-        t_peak_low = t[np.where(p < (avg-n*std))]
 
         p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
-        t_peak_merged = np.concatenate((t_peak_high, t_peak_low))
 
         Vp_peak_merged = np.unique(p_peak_merged) #array of peak values for merged pressure
 
@@ -139,3 +136,9 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
 
     plt.tight_layout()
     plt.show()
+
+
+boxplots()
+#peakvalues(a)
+#peakvalues2(a)
+#boxplots2()
