@@ -44,10 +44,10 @@ class Data:
             logging.info(f'No data for {self.file_path_1kHz} found.')
         try:
             self.file_path_100Hz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '100Hz' + self.stringer_string + self.weld_string + '.dat'
-            power = pd.read_csv(file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
+            power = pd.read_csv(self.file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
-            logging.info(f'No data for {file_path_100Hz} found.')
+            logging.info(f'No data for {self.file_path_100Hz} found.')
 
         self.__normalize()
         self.__bar_to_N()
