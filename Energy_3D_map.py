@@ -52,10 +52,16 @@ for position in positions:
     y = side_offset + fuselage_length/number_of_frames*position[1]
     ax.scatter(x, y, z, color='r', marker='o', s=100) # Plot a point at the origin
 
+for frame in range(1):
+    for stringer in range(1):
+        theta_mean = -np.pi/number_of_stringers*stringer
+        dtheta = np.pi/(2*number_of_stringers)
+        theta = np.linspace(theta_mean - dtheta , theta_mean + dtheta, 50)
+        print(theta)
+        x = fuselage_radius*np.cos(theta) + 0
+        z = fuselage_radius*np.sin(theta) + fuselage_radius
+        y = np.array([1]*len(x))
+        ax.plot(x, y, z, color='red')
+        #E = tot([frame], [stringer])['Energy'].to_numpy()
+        #print(E)
 plt.show()
-
-for frame in range(number_of_frames):
-    for stringer in range(number_of_stringers):
-        theta = np.linspace(0, -np.pi/(2*number_of_stringers))
-        E = tot([frame], [stringer])['Energy'].to_numpy()
-        print(E)
