@@ -3,7 +3,6 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 import seaborn as sns
-import load
 import logging
 
 def plot_ini(title):
@@ -48,7 +47,7 @@ class Data:
             power = pd.read_csv(self.file_path_100Hz, delimiter='\t', skiprows=[0], names=['Time', 'Power'])
             self.frame = self.frame.join(power.set_index('Time'), on='Time')
         except FileNotFoundError:
-            logging.info(f'No data for {file_path_100Hz} found.')
+            logging.info(f'No data for {self.file_path_100Hz} found.')
 
         self.__normalize()
         self.__bar_to_N()
@@ -68,7 +67,7 @@ class Data:
         power_frame = power_frame.to_frame(name='Power')
         power_frame['Smooth power'] = smooth_power.tolist()
         self.frame = self.frame.join(power_frame['Smooth power'])
-
+    
     def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False):
         if self.type == True:
             loc = 'Frame'
@@ -119,18 +118,23 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
         stringers = range(1,30)
     if welds == 'All':
         welds = range(1,7)
+    if type == 'All':
+        types = range(0,2)
+    else:
+        types = [type]
 
     valid_welds = []
-    for frame_no in frames:
-        for stringer_no in stringers:
-            for weld_no in welds:
-                try:
-                    new_object = Data(frame_no, stringer_no, weld_no, type)
-                    new_object.frame
-                except:
-                    pass
-                else:
-                    valid_welds.append(new_object)
+    for type in types:
+        for frame_no in frames:
+            for stringer_no in stringers:
+                for weld_no in welds:
+                    try:
+                        new_object = Data(frame_no, stringer_no, weld_no, type)
+                        new_object.frame
+                    except:
+                        pass
+                    else:
+                        valid_welds.append(new_object)
     return valid_welds
 
 def nan_filter(var, time):
@@ -151,4 +155,15 @@ def test():
     a = Data(11, 25, 2, 1)
     print(a.frame)
 
-test()
+from total_energy import energy
+
+def tot_time(obj):
+    power = obj.frame['Power'].dropna()
+    idx = power.index[-1]
+    time = obj.frame['Time'][idx]
+    return time
+
+def avg_power(obj):
+    energy_df = energy(frame=[obj.frame_no], stringer=[obj.stringer_no], weld=[obj.weld_no], type= obj.type)
+    power = energy_df['Energy'][0]/tot_time(obj)
+    return power

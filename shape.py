@@ -17,13 +17,10 @@ def root_finder(var, time):
     
     return root_loc
 
-peaks_valleys = []
-total = iterate_points(type=1)
-print(total)
-for obj in total:
-    obj.smoothing()
-
-    power = obj.frame['Smooth power'].to_numpy()
+def get_peaks(obj, power_norm=False, time_norm=False):
+    peaks_valleys = []
+    
+    power = obj.frame['Smooth power'].to_numpy()    
     time = obj.frame['Time'].to_numpy()
     power, time = nan_filter(power,time)
     power_1 = np.gradient(power,time)    #first dev
@@ -33,9 +30,31 @@ for obj in total:
     for t in roots:
         value = np.interp(t, time, power)
         second_dev = np.interp(t, time, power_2)
+        if power_norm == True:
+            avg_p = avg_power(obj)
+            value /= avg_p
+            second_dev /= avg_p
+        if time_norm == True:
+            tot_t = tot_time(obj)
+            t /= tot_t
+            second_dev *= tot_t
         peaks_valleys.append((t,value,second_dev))
+    return peaks_valleys
 
-roots, values, second_devs = zip(*peaks_valleys)
+i = Data(1,2,2,1)
+
+total = iterate_points(type=1)
+all_peaks = []
+for obj in total:
+    if 'Power' not in obj.frame.keys() or len(obj.frame['Power'].dropna())==0:
+        continue
+    else:
+        obj.smoothing()
+        peaks = get_peaks(obj, time_norm=True, power_norm=True)
+        all_peaks += peaks
+
+all_peaks = [x for x in all_peaks if x[2]<0]
+roots, values, second_devs = zip(*all_peaks)
 plt.scatter(roots, values)
 plt.show()
 
