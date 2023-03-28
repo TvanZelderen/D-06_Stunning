@@ -4,20 +4,6 @@ print("\U0001F601")
 from load import *
 import numpy as np
 import matplotlib.pyplot as plt
-from total_energy import total_energy
-
-class Data:
-
-    def tot_time(self):
-        power = self.frame['Power'].dropna()
-        idx = power.index[-1]
-        self.total_time = self.frame['Time'][idx]
-        return self.total_time
-
-    def avg_power(self):
-        energy_df = total_energy(frame=[self.frame_no], stringer=[self.stringer_no], weld=[self.weld_no], type= self.type)
-        self.average_power = energy_df['Energy'][0]/self.tot_time()
-        return self.average_power
 
 def root_finder(var, time):
     root_loc=[]
