@@ -1,7 +1,6 @@
 from load import *
-
 ax = plot_ini('test')    
-i = Data(1,2,2,1)
-print(i.frame)
-i.plot(ax, force=True)
+i = Data(2,2,2,1)
+i.smoothing()
+i.plot(ax, smooth_power=True)
 plot_legends()
