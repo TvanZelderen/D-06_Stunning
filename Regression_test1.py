@@ -39,13 +39,6 @@ def scale(X):
     return X_1
 
 
-'''Bestlearningrate'''
-def lrate(X, y, ):
-
-    
-    return lr_best
-
-
 '''Training'''
 def model(dim_hidden: int, dim_input: int, dim_output: int):
     model = nn.Sequential(
@@ -83,13 +76,23 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
 
     return train_loss_history, val_loss_history
 
+'''Bestlearningrate'''
+def lrate(model, X_train, y_train, X_val, y_val, reps: int):
+    rvs = stats.loguniform.rvs(1e-3, 1, size=reps)
+
+    for i in range(reps):
+        weights_init
+        train_loss, val_loss = train_model_early_stop(model, X_train, y_train, X_val, y_val, loss_function = nn.MSEloss(), optimizer=torch.optim.Optimizer(lr=rvs[i]))
+
+    return lr_best
     
 if __name__ == '__main__':
 
     total = iterate_points(type=0, frames=[1], stringers=[1, 2])
 
     X, y = Data(total, num = 30)
-
+    print(X)
+'''
     X = scale(X)
     X = torch.Tensor(X.values)
 
@@ -97,22 +100,20 @@ if __name__ == '__main__':
 
     model_ = model(dim_hidden=10, dim_input=X_train.size()[1], dim_output=1)
 
+    lr_best = lrate(model, X_train, y_train, X_cv, y_cv, reps = 15)
+
     train_loss_history, validation_loss_history = train_model_early_stop(model_, X_train, y_train, X_cv, y_cv, 
-                                                                        loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = 0.1))
+                                                                        loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = lf_best))
     print(train_loss_history)
 
- #plt.plot(train_loss_history)
+    #plt.plot(train_loss_history)
     #plt.show()
-    X_test0 = iterate_points(type=0, frames=[2], stringers=[1, 2])
-    X_test0, y = Data(total, num = 30)
-    X = scale(X_test0)
-    X = torch.Tensor(X.values)
-    X_pred = model_(X)
+    X_pred = model_(X_test)
     fig, ax = plt.subplot()
     for i in range(X_pred.size()[1]):
         ax.plot(X_pred.detach().numpy()[:,i], lable = f'stringers{i + 1}')
     plt.show()
-'''  '''
+''' 
 
 
 '''

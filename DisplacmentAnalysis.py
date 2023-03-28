@@ -10,11 +10,18 @@ import pylab as py
 
 data = iterate_points(frames=[10])
 energy = []
-for i in data:
-    d = i.frame['Displacement'].dropna().to_numpy()
-    t = i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy()
-    dt = t[1]-t[0]
+# for i in data:
+#     d = i.frame['Displacement'].dropna().to_numpy()
+#     t = i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy()
+#     dt = t[1]-t[0]
 
+d = data.frame['Displacement']
+na_rows = d.isna()
+rows_remove = np.where(na_rows)[0]
+d = d.dropna()
+t=data.frame['Time']
+t.drop(rows_remove, axis=0)
+t.reset_index()
 
 print('Energy: ' + str(energy))
 df_energy = pd.DataFrame(energy, columns=['energy'])
