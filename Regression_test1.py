@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import torch
 import torch.nn as nn
 from typing import Callable
+from scipy import stats
 
 #class filter()
 
@@ -75,6 +76,12 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
         optimizer.step()
 
     return train_loss_history, val_loss_history
+
+'''Weightinitiation'''
+def weights_init(layer: nn.Module) -> None:
+    if isinstance(layer, nn.Linear):
+        nn.init.xavier_uniform_(layer.weight)
+        nn.init.zeros_(layer.bias)
 
 '''Bestlearningrate'''
 def lrate(model, X_train, y_train, X_val, y_val, reps: int):
