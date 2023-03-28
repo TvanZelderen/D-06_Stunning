@@ -18,7 +18,7 @@ def Data(total, num: int):
     for i in range(0, len(total)):
         X['Power' + str(i)] = total[i].frame['Power'].dropna().to_numpy()[0:num]
     y = X.index
-    return torch.Tensor(X.values), torch.Tensor(y.reshape(-1,1))
+    return X, torch.Tensor(y).reshape(-1, 1)
 
 '''Training sets'''
 def train_test_set(X, y, test_size, cv_size):
@@ -31,18 +31,17 @@ def train_test_set(X, y, test_size, cv_size):
     return[X_train, X_test, X_cv, y_train, y_test, y_cv]
 
 '''Standardization'''
-def scale(X_train, X_test, X_cv):
-    scaler = StandardScaler().fit(X_train.T)
+def scale(X):
+    
+    X_1 = (X.sub(X.mean(axis = 1).to_numpy(), axis = 0)).div(X.std(axis = 1), axis = 0)
+    X_1.fillna(0, inplace = True)
 
-    X_train1 = scaler.fit_transform(X_train.T)
-    X_test1 = scaler.transform(X_test.T)
-    X_cv1 = scaler.transform(X_cv.T)
-
-    return[X_train1, X_test1, X_cv1]
+    return X_1
 
 
 '''Bestlearningrate'''
-def lrate():
+def lrate(X, y, ):
+
     
     return lr_best
 
@@ -61,7 +60,7 @@ def model(dim_hidden: int, dim_input: int, dim_output: int):
 
 '''Learning'''
 def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: torch.tensor, X_cv: torch.tensor,
-                            y_cv: torch.tensor, loss_function: Callable, optimizer: torch.optim.Optimizer, tot_tol: float = 1e-3, n_epochs: int = 20):
+                            y_cv: torch.tensor, loss_function: Callable, optimizer: torch.optim.Optimizer, tot_tol: float = 1e-5, n_epochs: int = 200):
     train_loss_history = []
     val_loss_history = []
 
@@ -72,8 +71,8 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
 
         loss = loss_function(y_pred, y_train)
         val_loss = loss_function(y_pred_cv, y_cv)
-        train_loss_history.append(loss)
-        val_loss_history.append(val_loss)
+        train_loss_history.append(loss.detach().numpy())
+        val_loss_history.append(val_loss.detach().numpy())
 
         if loss < tot_tol:
             break
@@ -85,27 +84,44 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
     return train_loss_history, val_loss_history
 
     
+if __name__ == '__main__':
 
-total = iterate_points(type=0, frames=[1], stringers=[1,2])
+    total = iterate_points(type=0, frames=[1], stringers=[1, 2])
 
-X, y = Data(total, num = 20)
-print(y)
+    X, y = Data(total, num = 30)
 
-X_train, X_test, X_cv, y_train, y_test, y_cv = train_test_set(X, y, test_size=0.15, cv_size=0.1)
+    X = scale(X)
+    X = torch.Tensor(X.values)
 
-model_ = model(dim_hidden=10, dim_input=4, dim_output=4)
+    X_train, X_test, X_cv, y_train, y_test, y_cv = train_test_set(X, y, test_size=0.15, cv_size=0.1)
 
-train_loss_history, validation_loss_history = train_model_early_stop(model_, X_train, y_train, X_cv, y_cv, 
-                                                                     loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = 1e-3))
-plt.plot(train_loss_history)
-plt.show()
+    model_ = model(dim_hidden=10, dim_input=X_train.size()[1], dim_output=1)
 
-''''''
+    train_loss_history, validation_loss_history = train_model_early_stop(model_, X_train, y_train, X_cv, y_cv, 
+                                                                        loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = 0.1))
+    print(train_loss_history)
+
+ #plt.plot(train_loss_history)
+    #plt.show()
+    X_test0 = iterate_points(type=0, frames=[2], stringers=[1, 2])
+    X_test0, y = Data(total, num = 30)
+    X = scale(X_test0)
+    X = torch.Tensor(X.values)
+    X_pred = model_(X)
+    fig, ax = plt.subplot()
+    for i in range(X_pred.size()[1]):
+        ax.plot(X_pred.detach().numpy()[:,i], lable = f'stringers{i + 1}')
+    plt.show()
+'''  '''
+
+
+'''
 #plt.scatter(np.linspace(0, 100, 20), total[3].frame['Power'].dropna().to_numpy()[0:20])
 #plt.scatter()
 #plt.show()
 
 
-#for i in atotal:
-#     i.plot(ax, power=True)
-#plot_legends()
+for i in atotal:
+     i.plot(ax, power=True)  
+pred.plot(ax, power=True)
+plot_legends()'''
