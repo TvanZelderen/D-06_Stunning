@@ -1,7 +1,7 @@
 from load import *
 
 ax = plot_ini('test')    
-i = Data(1,2,2,1)
-print(i.frame)
-i.plot(ax, force=True)
+atotal = iterate_points(type='All')
+for i in atotal:
+    i.plot(ax, displacement=True)
 plot_legends()
