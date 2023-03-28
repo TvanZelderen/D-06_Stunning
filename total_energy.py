@@ -14,7 +14,7 @@ def total_energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type
             t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
             energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, simpson(p, t)])
         except:
-            pass
+            energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, 0])
     #print('Energy: ' + str(energy))
     df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
     return df_energy
