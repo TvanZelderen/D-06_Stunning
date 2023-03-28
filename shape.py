@@ -4,6 +4,20 @@ print("\U0001F601")
 from load import *
 import numpy as np
 import matplotlib.pyplot as plt
+from total_energy import total_energy
+
+class Data:
+
+    def tot_time(self):
+        power = self.frame['Power'].dropna()
+        idx = power.index[-1]
+        self.total_time = self.frame['Time'][idx]
+        return self.total_time
+
+    def avg_power(self):
+        energy_df = total_energy(frame=[self.frame_no], stringer=[self.stringer_no], weld=[self.weld_no], type= self.type)
+        self.average_power = energy_df['Energy'][0]/self.tot_time()
+        return self.average_power
 
 def root_finder(var, time):
     root_loc=[]
@@ -17,7 +31,7 @@ def root_finder(var, time):
     
     return root_loc
 
-def get_peaks(obj):
+def get_peaks(obj, power_norm=False, time_norm=False):
     peaks_valleys = []
     
     power = obj.frame['Smooth power'].to_numpy()    
@@ -30,18 +44,30 @@ def get_peaks(obj):
     for t in roots:
         value = np.interp(t, time, power)
         second_dev = np.interp(t, time, power_2)
+        if power_norm == True:
+            avg_p = avg_power(obj)
+            value /= avg_p
+            second_dev /= avg_p
+        elif time_norm == True:
+            tot_t = tot_time(obj)
+            t /= tot_t
+            second_dev *= tot_t
         peaks_valleys.append((t,value,second_dev))
     return peaks_valleys
+
+i = Data(1,2,2,1)
 
 total = iterate_points(type=1)
 all_peaks = []
 for obj in total:
-    
-    obj.smoothing()
-    peaks = get_peaks(obj)
-    all_peaks += peaks
+    if 'Power' not in obj.frame.keys() or len(obj.frame['Power'].dropna())==0:
+        continue
+    else:
+        obj.smoothing()
+        peaks = get_peaks(obj, time_norm=True, power_norm=True)
+        all_peaks += peaks
 
-print(all_peaks)
+all_peaks = [x for x in all_peaks if x[2]<0]
 roots, values, second_devs = zip(*all_peaks)
 plt.scatter(roots, values)
 plt.show()
