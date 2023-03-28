@@ -34,7 +34,7 @@ def get_peaks(obj, power_norm=False, time_norm=False):
             avg_p = avg_power(obj)
             value /= avg_p
             second_dev /= avg_p
-        elif time_norm == True:
+        if time_norm == True:
             tot_t = tot_time(obj)
             t /= tot_t
             second_dev *= tot_t
