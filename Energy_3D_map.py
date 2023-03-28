@@ -1,7 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-from total_energy import total_energy as tot
+from total_energy import energy as tot
 
 # Set the style
 # sns.set_style("darkgrid")
@@ -29,7 +29,7 @@ side_offset = 0.25
 number_of_stringers = 20
 
 Xc,Yc,Zc = data_for_cylinder_along_z(0,4,fuselage_radius,fuselage_length)
-ax.plot_surface(Xc, Yc, Zc, alpha=0.5) # Plot a the fuselage surface with half transparency.
+#ax.plot_surface(Xc, Yc, Zc, alpha=0.5) # Plot a the fuselage surface with half transparency.
 for i in range(number_of_frames): # Plot the frame lines
     theta = np.linspace(0, -np.pi, 50)
     x = fuselage_radius*np.cos(theta) + 0
@@ -52,12 +52,12 @@ for position in positions:
     y = side_offset + fuselage_length/number_of_frames*position[1]
     ax.scatter(x, y, z, color='r', marker='o', s=100) # Plot a point at the origin
 
-for frame in range(number_of_frames):
+for frame in range(2):
     y_0 = fuselage_length/number_of_frames*frame
     dy = fuselage_length/(number_of_frames*2)
     y = np.linspace(y_0-dy, y_0+dy,50)
     #print(y)
-    for stringer in range(number_of_stringers):
+    for stringer in range(2):
         theta_mean = -np.pi/number_of_stringers*stringer
         dtheta = np.pi/(2*number_of_stringers)
         theta = np.linspace(theta_mean - dtheta , theta_mean + dtheta, 50)
@@ -65,9 +65,9 @@ for frame in range(number_of_frames):
         x_grid = fuselage_radius*np.cos(theta_grid) + 0
         z_grid = fuselage_radius*np.sin(theta_grid) + fuselage_radius
         
-        E = tot([2], [1]).to_numpy()
+        E = np.ones([50,50])*tot([frame], [stringer])['Energy'].to_numpy()
         print(E)
-        #ax.scatter(x_grid, y_grid, z_grid, c = E, cmap='gist_heat')
+        ax.scatter(x_grid, y_grid, z_grid, c = E, cmap='gist_heat')
         #ax.plot_surface(x_grid, y_grid, z_grid)
         
         #print(E)
