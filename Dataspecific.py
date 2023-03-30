@@ -21,8 +21,8 @@ def Data(total):
 
     for i in range(0, len(total)):
         #count = 0
-        tmp_col_1 = total[i].frame['Power'].dropna().to_numpy()
-        num_row = tmp_col_1.shape[0]
+        tmp_col_1 = pd.DataFrame(total[i].frame['Power'].dropna().to_numpy())
+        #num_row = tmp_col_1.shape[0]
         """if num_row < max_row:
             n = max_row - num_row
             m = int(max/n)
@@ -32,14 +32,15 @@ def Data(total):
                 
                 tmp_col_1.insert(f1())
             print(tmp_col_2)"""
-        tmp_col_2 = np.pad(tmp_col_1, (0, (max_row-num_row)))
-        X['Power' + str(i)] = tmp_col_2
-        for col in X.columns:
-            X[col].fillna(0, inplace=True)
+        #tmp_col_2 = np.pad(tmp_col_1, (0, (max_row-num_row)))
+        X = pd.concat([X, tmp_col_1], axis=1)
+        X.fillna(0, inplace=True)
     return X.T
 
+frame = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+stringer = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 
-total = iterate_points(type = 0, frames = [1,2,3,4,5], stringers= [1,2,3,4,5,6,7,8])
+total = iterate_points(type = 0, frames = frame[::], stringers = stringer[::])
 X = Data(total)
 #print(X)
 
@@ -106,7 +107,7 @@ X1 = encodings.numpy()
 
 #clustering
 np.random.seed(42)
-clf = LocalOutlierFactor(n_neighbors = 7, contamination = 'auto')
+clf = LocalOutlierFactor(n_neighbors = 20, contamination = 'auto')
 y_pred = clf.fit_predict(encodings)
 #n_errors = (y_pred != ground_truth).sum()
 X_scores = clf.negative_outlier_factor_
@@ -124,12 +125,10 @@ plt.scatter(
     label="Outlier scores",
 )
 plt.axis("tight")
-plt.xlim((-0.4, 1))
-plt.ylim((-0.4, 1))
+plt.xlim((-0.1, 1.5))
+plt.ylim((-0.1, 1.5))
 #plt.xlabel("prediction errors: %d" % (n_errors))
 legend = plt.legend(loc="upper left")
-legend.legendHandles[0]._sizes = [10]
-legend.legendHandles[1]._sizes = [20]
 plt.show()
 
 
