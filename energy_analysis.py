@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from total_energy import energy 
+from load import energy 
 
 
 a = energy([1],list(range(0,29)),[1],1)
