@@ -1,25 +1,35 @@
 from load import *
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
 import torch
 import torch.nn as nn
 from typing import Callable
 from scipy import stats
+from scipy.integrate import simpson
+#from total_energy import total_energy
+import pandas as pd
+'''
+class filter():
 
-#class filter()
+    def __energy(self):
+
+    def'''
+
 
 
 
 '''Data systhesis'''   
 
 def Data(total, num: int):
-    X = pd.DataFrame()
+    y = pd.DataFrame()
+    energy = []
     for i in range(0, len(total)):
-        X['Power' + str(i)] = total[i].frame['Power'].dropna().to_numpy()[0:num]
-    y = X.index
-    return X, torch.Tensor(y).reshape(-1, 1)
+        y['Power' + str(i)] = total[i].frame['Power'].dropna().to_numpy()[0:num]
+        p = total[i].frame['Power'].dropna().to_numpy()
+        t = total[i].frame['Time'].drop(total[i].frame['Power'].isna()*range(len(total[i].frame['Power']))).to_numpy()
+        energy.append(simpson(p, t))    
+    X = pd.Series(energy).values
+    return X, y.T
 
 '''Training sets'''
 def train_test_set(X, y, test_size, cv_size):
@@ -34,7 +44,7 @@ def train_test_set(X, y, test_size, cv_size):
 '''Standardization'''
 def scale(X):
     
-    X_1 = (X.sub(X.mean(axis = 1).to_numpy(), axis = 0)).div(X.std(axis = 1), axis = 0)
+    X_1 = (X.sub(X.mean(axis = 0).to_numpy(), axis = 1)).div(X.std(axis = 0), axis = 1)
     X_1.fillna(0, inplace = True)
 
     return X_1
@@ -43,11 +53,11 @@ def scale(X):
 '''Training'''
 def model(dim_hidden: int, dim_input: int, dim_output: int):
     model = nn.Sequential(
-        nn.Linear(dim_input, dim_hidden),
-        nn.Sigmoid(),
-        nn.Linear(dim_hidden, dim_hidden),
-        nn.Sigmoid(),
-        nn.Linear(dim_hidden, dim_output)
+        nn.Transformer(dim_input, dim_hidden),
+        nn.ReLU(),
+        nn.Transformer(dim_hidden, dim_hidden),
+        nn.ReLU(),
+        nn.Transformer(dim_hidden, dim_output)
     )
     
     return model
@@ -71,8 +81,8 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
         if loss < tot_tol:
             break
 
-        optimizer.zero_grad()
-        loss.backward()
+        optimizer.zero_grad() 
+        loss.backward() #
         optimizer.step()
 
     return train_loss_history, val_loss_history
@@ -85,51 +95,67 @@ def weights_init(layer: nn.Module) -> None:
 
 '''Bestlearningrate'''
 def lrate(model, X_train, y_train, X_val, y_val, reps: int):
+    lr_best = 0
+    loss_min = 1
     rvs = stats.loguniform.rvs(1e-3, 1, size=reps)
 
     for i in range(reps):
-        weights_init
-        train_loss, val_loss = train_model_early_stop(model, X_train, y_train, X_val, y_val, loss_function = nn.MSEloss(), optimizer=torch.optim.Optimizer(lr=rvs[i]))
-
+        model.apply(weights_init)
+        train_loss, val_loss = train_model_early_stop(model, X_train, y_train, X_val, y_val, 
+                                                      loss_function = nn.MSELoss(), optimizer=torch.optim.Adam(params = model.parameters(), lr = rvs[i]))
+        if val_loss[-1] < loss_min:
+            loss_min = val_loss[-1]
+            lr_best = rvs[i]
+        else:
+            continue
+    
     return lr_best
     
 if __name__ == '__main__':
+    #energy_matrix = total_energy(1, [2, 3], [1], 1)
+    #print(energy_matrix)
 
-    total = iterate_points(type=0, frames=[1], stringers=[1, 2])
+    
 
-    X, y = Data(total, num = 30)
-    print(X)
+    total = iterate_points(type=0, frames=[1], stringers=[1, 2, 4])
+
+    number_data = 20
+
+    X, y = Data(total, num = number_data)
+    print(X.shape, y.size)
 '''
-    X = scale(X)
-    X = torch.Tensor(X.values)
+    #y = scale(y)
+    X = torch.Tensor(X)
+    y = torch.Tensor(y.values)
+    #print(X.size(), y.size())
 
     X_train, X_test, X_cv, y_train, y_test, y_cv = train_test_set(X, y, test_size=0.15, cv_size=0.1)
+    #print(X_train, X_test, X_cv)
 
-    model_ = model(dim_hidden=10, dim_input=X_train.size()[1], dim_output=1)
+    #model_ = model(dim_hidden=10, dim_input=X_train.size()[1], dim_output=1)
+    model_1 = model(dim_hidden=10, dim_input=1, dim_output = number_data)
 
-    lr_best = lrate(model, X_train, y_train, X_cv, y_cv, reps = 15)
+    lr_best = lrate(model_1, X_train, y_train, X_cv, y_cv, reps = 20)
+    print(lr_best)
 
     train_loss_history, validation_loss_history = train_model_early_stop(model_, X_train, y_train, X_cv, y_cv, 
-                                                                        loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = lf_best))
-    print(train_loss_history)
-
+                                                                        loss_function = nn.MSELoss(), optimizer = torch.optim.Adam(model_.parameters(), lr = lr_best))
     #plt.plot(train_loss_history)
     #plt.show()
-    X_pred = model_(X_test)
-    fig, ax = plt.subplot()
-    for i in range(X_pred.size()[1]):
-        ax.plot(X_pred.detach().numpy()[:,i], lable = f'stringers{i + 1}')
-    plt.show()
-''' 
 
+    #print(y_test)
+    #plt.scatter(X_test.detach().numpy(), y.detach().numpy())
+    #plt.show()
 
+    #plt.scatter(np.linspace(0, 100, 20), total[3].frame['Power'].dropna().to_numpy()[0:20])
+    #plt.scatter()
+    #plt.show()
 '''
-#plt.scatter(np.linspace(0, 100, 20), total[3].frame['Power'].dropna().to_numpy()[0:20])
-#plt.scatter()
-#plt.show()
 
 
-for i in atotal:
-     i.plot(ax, power=True)  
-pred.plot(ax, power=True)
-plot_legends()'''
+    #atotal = iterate_points(type=1, frames=[1], stringers=[1,2,4,5,6,7])
+    #ax = plot_ini('test')
+    #for i in atotal:
+    #    i.plot(ax, power=True)  
+    #pred.plot(ax, power=True)
+    #plot_legends()
