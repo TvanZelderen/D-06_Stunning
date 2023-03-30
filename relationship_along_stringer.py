@@ -8,9 +8,9 @@ from math import isnan
 from load import Data as dt
 from shape import *
 
-for i in range(1,2):
+for i in range(1,13):
     all_peaks = []
-    for a in range(2,3):
+    for a in range(1,7):
         try:
             obj = dt(i, 2, a, 1)
         except:
