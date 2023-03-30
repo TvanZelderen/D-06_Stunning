@@ -81,8 +81,8 @@ def train_model_early_stop(model: nn.modules, X_train: torch.tensor, y_train: to
         if loss < tot_tol:
             break
 
-        optimizer.zero_grad()
-        loss.backward()
+        optimizer.zero_grad() 
+        loss.backward() #
         optimizer.step()
 
     return train_loss_history, val_loss_history
