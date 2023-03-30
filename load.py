@@ -36,6 +36,13 @@ class Data:
         self.weld_no = weld_no
         self.weld_string = '_'+str(weld_no).zfill(2)
         self.type = type # True: clip-to-frame, False: clip-to-skin
+
+        if self.type == True:
+            loc = 'Frame'
+        else:
+            loc = 'Skin'
+        self.main_label = loc+'_'+str(self.frame_no)+'_'+str(self.stringer_no)+'_'+str(self.weld_no)
+
         folder = '/Clip-to-Frame weld data' if type==True else '/Clip-to-Skin weld data'
         try:
             self.file_path_1kHz = './STUNNING Demonstrator USW Data'+ folder + self.frame_string + '/' + '1kHz' + self.stringer_string + self.weld_string + '.dat'
@@ -69,43 +76,37 @@ class Data:
         self.frame = self.frame.join(power_frame['Smooth power'])
     
     def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False, norm_power = False):
-        if self.type == True:
-            loc = 'Frame'
-        else:
-            loc = 'Skin'
-        main_label = loc+'_'+str(self.frame_no)+'_'+str(self.stringer_no)+'_'+str(self.weld_no)
-
         if force==True:
             sns.lineplot(data=self.frame, x='Time', y='Force', ax=axes)
-            legend.append(main_label+' Force')
+            legend.append(self.main_label+' Force')
             legend.append('')
         if displacement==True:
             sns.lineplot(data=self.frame, x='Time', y='Displacement', ax=axes)
-            legend.append(main_label+' Displacement')
+            legend.append(self.main_label+' Displacement')
             legend.append('')
         if power==True:
             try:
                 sns.lineplot(data=self.frame, x='Time', y='Power', ax=axes)
             except:
-                print('Power data for '+main_label+' is not available.')
+                print('Power data for '+self.main_label+' is not available.')
             else:  
-                legend.append(main_label+' Power')
+                legend.append(self.main_label+' Power')
                 legend.append('')
         if smooth_power==True:
             try:
                 sns.lineplot(data=self.frame, x='Time', y='Smooth power', ax=axes)
             except:
-                print('Smooth power data for '+main_label+' is not available.')
+                print('Smooth power data for '+self.main_label+' is not available.')
             else:  
-                legend.append(main_label+' Smooth power')
+                legend.append(self.main_label+' Smooth power')
                 legend.append('')
         if norm_power==True:
             try:
                 sns.lineplot(data=self.frame, x='Normalized time', y='Normalized power', ax=axes)
             except:
-                print('Normalized power data for '+main_label+' is not available.')
+                print('Normalized power data for '+self.main_label+' is not available.')
             else:  
-                legend.append(main_label+' Normalized power')
+                legend.append(self.main_label+' Normalized power')
                 legend.append('')
 
     def power_norm(self):
@@ -146,7 +147,7 @@ def energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int =
     df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
     return df_energy
 
-def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
+def iterate_points(type = 1, frames='All', stringers='All', welds='All', valid_power = True):
     if frames == 'All':
         frames = range(1,13)
     if stringers == 'All':
@@ -166,6 +167,8 @@ def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
                     try:
                         new_object = Data(frame_no, stringer_no, weld_no, type)
                         new_object.frame
+                        if valid_power == True:
+                            new_object.frame['Power']
                     except:
                         pass
                     else:
