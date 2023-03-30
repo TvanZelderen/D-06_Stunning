@@ -14,7 +14,7 @@ for frame in range(1,13):
     for weld in range(1,7):
         all_peaks = []
         try:
-            obj = dt(frame, 9, weld, 1)
+            obj = dt(frame, 20, weld, 1)
         except:
             continue
         else:
