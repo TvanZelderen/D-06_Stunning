@@ -1,5 +1,5 @@
 #this is power throng's property
-# print("\U0001F601")
+print("\U0001F601 \U0001F410")
 
 from load import *
 import numpy as np
@@ -42,9 +42,6 @@ def get_peaks(obj, power_norm=False, time_norm=False):
     return peaks_valleys
 
 if __name__ == '__main__': 
-	main()
-        
-def main():
     i = Data(1,2,2,1)
 
     total = iterate_points(type=1)

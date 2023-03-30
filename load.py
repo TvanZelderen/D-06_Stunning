@@ -109,8 +109,12 @@ class Data:
                 legend.append('')
 
     def power_norm(self):
+        power = self.frame['Power'].dropna()
+        idx = power.index[-1]
+
         average_power = avg_power(self)
         self.frame['Normalized power'] = self.frame['Power'].div(average_power)
+        self.frame['Normalized power'][idx] = np.nan
 
         total_time = tot_time(self)
         self.frame['Normalized time'] = self.frame['Time'].div(total_time)
@@ -191,7 +195,7 @@ def test():
 
 def tot_time(obj):
     power = obj.frame['Power'].dropna()
-    idx = power.index[-1]
+    idx = power.index[-2]
     time = obj.frame['Time'][idx]
     return time
 
