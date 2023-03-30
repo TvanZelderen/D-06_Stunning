@@ -68,7 +68,7 @@ class Data:
         power_frame['Smooth power'] = smooth_power.tolist()
         self.frame = self.frame.join(power_frame['Smooth power'])
     
-    def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False):
+    def plot(self, axes, power=False, displacement=False, force=False, smooth_power = False, norm_power = False):
         if self.type == True:
             loc = 'Frame'
         else:
@@ -99,6 +99,21 @@ class Data:
             else:  
                 legend.append(main_label+' Smooth power')
                 legend.append('')
+        if norm_power==True:
+            try:
+                sns.lineplot(data=self.frame, x='Normalized time', y='Normalized power', ax=axes)
+            except:
+                print('Normalized power data for '+main_label+' is not available.')
+            else:  
+                legend.append(main_label+' Normalized power')
+                legend.append('')
+
+    def power_norm(self):
+        average_power = avg_power(self)
+        self.frame['Normalized power'] = self.frame['Power'].div(average_power)
+
+        total_time = tot_time(self)
+        self.frame['Normalized time'] = self.frame['Time'].div(total_time)
 
     #def __del__(self):
     #    print('Destructor called, kill me too please.')
@@ -110,6 +125,22 @@ def plot_legends():
 def save_with_legends(filename):
     plt.legend(loc = 2, bbox_to_anchor = (1,1), labels=legend)
     plt.savefig(filename, bbox_inches = 'tight')      
+
+def energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int = 1):
+    from scipy.integrate import simpson
+
+    data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
+    energy = []
+    for i in data:
+        try: 
+            p = i.frame['Power'].dropna().to_numpy()
+            t = i.frame['Time'].drop(i.frame['Power'].isna()*range(len(i.frame['Power']))).to_numpy()
+            energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, simpson(p, t)])
+        except:
+            energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, 0])
+    #print('Energy: ' + str(energy))
+    df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
+    return df_energy
 
 def iterate_points(type = 1, frames='All', stringers='All', welds='All'):
     if frames == 'All':
@@ -155,8 +186,6 @@ def test():
     a = Data(11, 25, 2, 1)
     print(a.frame)
 
-from total_energy import energy
-
 def tot_time(obj):
     power = obj.frame['Power'].dropna()
     idx = power.index[-1]
@@ -167,3 +196,9 @@ def avg_power(obj):
     energy_df = energy(frame=[obj.frame_no], stringer=[obj.stringer_no], weld=[obj.weld_no], type= obj.type)
     power = energy_df['Energy'][0]/tot_time(obj)
     return power
+
+ax = plot_ini('Normalized')
+obj = Data(1,2,2,1)
+obj.power_norm()
+obj.plot(ax, norm_power = True)
+plot_legends()
