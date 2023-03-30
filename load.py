@@ -197,8 +197,8 @@ def avg_power(obj):
     power = energy_df['Energy'][0]/tot_time(obj)
     return power
 
-ax = plot_ini('Normalized')
-obj = Data(1,2,2,1)
-obj.power_norm()
-obj.plot(ax, norm_power = True)
-plot_legends()
+# ax = plot_ini('Normalized')
+# obj = Data(1,2,2,1)
+# obj.power_norm()
+# obj.plot(ax, norm_power = True)
+# plot_legends()
