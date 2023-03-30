@@ -2,11 +2,12 @@ from load import Data as dt
 import numpy as np
 import matplotlib.pyplot as plt
 from load import *
-a = dt('08', '03', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
-
+import pandas as pd
+from scipy.integrate import trapz
+a = dt('05', '15', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def boxplots(): #boxplots of upper pressure graph peaks
-    atotal = iterate_points(type=1, frames=[8], stringers='All', welds = [1]) #choose type, frames, stringers, welds
+    atotal = iterate_points(type=1, frames='05', stringers='All', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -27,7 +28,7 @@ def boxplots(): #boxplots of upper pressure graph peaks
             ax.set_ylabel("Pressure peaks [bar]")
 
         text = f"Weld {i.weld_no}, Stringer {i.stringer_no}, Frame {i.frame_no}"
-        ax.text(0.5, -0.2, text, fontsize=6, ha='center', transform=ax.transAxes)
+        ax.text(0.5, -0.2, text, fontsize=5, ha='center', transform=ax.transAxes)
 
         for i in atotal:
             ax.tick_params(
@@ -98,7 +99,7 @@ def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak
 
 
 def boxplots2(): #boxplots of upper and lower pressure graph peaks
-    atotal = iterate_points(type=1, frames='All', stringers='05', welds = [1]) #choose type, frames, stringers, welds
+    atotal = iterate_points(type=1, frames='05', stringers='All', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -124,7 +125,7 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
             ax.set_ylabel("Pressure peaks [bar]")
 
         text = f"Weld {i.weld_no}, Stringer {i.stringer_no}, Frame {i.frame_no}"
-        ax.text(0.5, -0.2, text, fontsize=6, ha='center', transform=ax.transAxes)
+        ax.text(0.5, -0.2, text, fontsize=5, ha='center', transform=ax.transAxes)
 
         for i in atotal:
             ax.tick_params(
@@ -137,8 +138,26 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
     plt.tight_layout()
     plt.show()
 
+def test(): #pressure graph, with its corresponding upper peak values and number of upper peak values
+    atotal = iterate_points(type=1, frames='06', stringers='All', welds = [1]) #choose type, frames, stringers, welds
+    lst = []
+    for i in (atotal):
+        f = i.frame['Force'].to_numpy()
+        d = i.frame['Displacement'].to_numpy()
+        #add legend
+        vector_norm1 = f / np.linalg.norm(f)
+        vector_norm2 = d / np.linalg.norm(d)
+        plt.plot(vector_norm2, vector_norm1)
 
-boxplots()
+        g = trapz(vector_norm1,vector_norm2)
+        lst.append(g)
+    plt.show()
+
+
+
+
+test()
+#boxplots()
 #peakvalues(a)
 #peakvalues2(a)
 #boxplots2()
