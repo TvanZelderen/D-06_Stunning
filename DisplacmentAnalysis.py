@@ -14,7 +14,7 @@ TotalWelds = 0
 FrameNumber= 1
 while FrameNumber != 13 : 
 
-    data = iterate_points(frames=[FrameNumber] ,type = False)
+    data = iterate_points(frames=[FrameNumber] ,type = True)
 
     d = []
     kAlarm = []
@@ -50,8 +50,8 @@ while FrameNumber != 13 :
         plt.plot(d[kAlarm[q]])
         # print(len(kAlarm))
         # print(q, iAlarm[q])
-        # plt.annotate('Positive slope',xy=(iAlarm[q] -1, d[kAlarm[q]][iAlarm[q] -1]), xycoords='data',xytext=(0.1, 0.95), textcoords='axes fraction',
-                    # arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
+        plt.annotate('Positive slope',xy=(iAlarm[q] -1, d[kAlarm[q]][iAlarm[q] -1]), xycoords='data',xytext=(0.1, 0.95), textcoords='axes fraction',
+                    arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
         # plt.show()
         q = q + 1
 
