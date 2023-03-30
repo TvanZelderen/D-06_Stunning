@@ -8,11 +8,13 @@ from math import isnan
 from load import Data as dt
 from shape import *
 
-for i in range(1,13):
-    all_peaks = []
-    for a in range(1,7):
+colors = ['xkcd:red', 'xkcd:green', 'xkcd:blue', 'xkcd:cyan', 'xkcd:magenta', 'xkcd:periwinkle', 'xkcd:dark blue', 'xkcd:light blue', 'xkcd:orange', 'xkcd:lime', 'xkcd:pink', 'xkcd:salmon']
+
+for frame in range(1,13):
+    for weld in range(1,7):
+        all_peaks = []
         try:
-            obj = dt(i, 2, a, 1)
+            obj = dt(frame, 9, weld, 1)
         except:
             continue
         else:
@@ -22,9 +24,10 @@ for i in range(1,13):
                 obj.smoothing()
                 peaks = get_peaks(obj)
                 all_peaks += peaks
-    print(str(i)+str(all_peaks))
-    if len(all_peaks)!= 0:
-        roots, values, second_devs = zip(*all_peaks)
-        plt.scatter(roots, values)
+    # print(str(i)+str(all_peaks))
+        if len(all_peaks)!= 0:
+            roots, values, second_devs = zip(*all_peaks)
+            plt.scatter(roots, values, color=colors[frame-1])
+            plt.plot(roots, values, color=colors[frame-1])
+
 plt.show()
-    
