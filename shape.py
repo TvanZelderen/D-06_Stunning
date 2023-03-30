@@ -1,5 +1,5 @@
 #this is power throng's property
-print("\U0001F601")
+# print("\U0001F601")
 
 from load import *
 import numpy as np
@@ -17,7 +17,7 @@ def root_finder(var, time):
     
     return root_loc
 
-def get_peaks(obj):
+def get_peaks(obj, power_norm=False, time_norm=False):
     peaks_valleys = []
     
     power = obj.frame['Smooth power'].to_numpy()    
@@ -30,21 +30,37 @@ def get_peaks(obj):
     for t in roots:
         value = np.interp(t, time, power)
         second_dev = np.interp(t, time, power_2)
+        if power_norm == True:
+            avg_p = avg_power(obj)
+            value /= avg_p
+            second_dev /= avg_p
+        if time_norm == True:
+            tot_t = tot_time(obj)
+            t /= tot_t
+            second_dev *= tot_t
         peaks_valleys.append((t,value,second_dev))
     return peaks_valleys
 
-total = iterate_points(type=1)
-all_peaks = []
-for obj in total:
-    
-    obj.smoothing()
-    peaks = get_peaks(obj)
-    all_peaks += peaks
+if __name__ == '__main__': 
+	main()
+        
+def main():
+    i = Data(1,2,2,1)
 
-print(all_peaks)
-roots, values, second_devs = zip(*all_peaks)
-plt.scatter(roots, values)
-plt.show()
+    total = iterate_points(type=1)
+    all_peaks = []
+    for obj in total:
+        if 'Power' not in obj.frame.keys() or len(obj.frame['Power'].dropna())==0:
+            continue
+        else:
+            obj.smoothing()
+            peaks = get_peaks(obj, time_norm=True, power_norm=True)
+            all_peaks += peaks
+
+    all_peaks = [x for x in all_peaks if x[2]<0]
+    roots, values, second_devs = zip(*all_peaks)
+    plt.scatter(roots, values)
+    plt.show()
 
 
 
