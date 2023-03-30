@@ -1,6 +1,12 @@
 from load import *
+
 ax = plot_ini('test')    
-i = Data(2,2,2,1)
-i.smoothing()
-i.plot(ax, smooth_power=True)
+all_obj = iterate_points(type = 1)
+for i in all_obj:
+    try:
+        i.power_norm()
+    except:
+        pass
+    else:
+        i.plot(ax, norm_power=True)
 plot_legends()

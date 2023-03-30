@@ -4,7 +4,7 @@ import numpy as np
 from total_energy import energy 
 
 #Calculate the total energy of a weld on all stringers
-a = energy([1],list(range(0,29)),[2],1)
+a = energy([1],list(range(0,29)),[2],2)
 
 #Calculate the mean of the energies
 mean = np.mean(a["Energy"])
