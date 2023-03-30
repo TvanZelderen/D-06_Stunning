@@ -152,8 +152,9 @@ def nan_filter(var, time):
     return var_fil, time_fil
 
 def test():
-    a = Data(11, 25, 2, 1)
-    print(a.frame)
+    a = Data(1, 2, 2, 1)
+    a.smoothing()
+    plot(a, smooth_power=True)
 
 from total_energy import energy
 
@@ -167,3 +168,6 @@ def avg_power(obj):
     energy_df = energy(frame=[obj.frame_no], stringer=[obj.stringer_no], weld=[obj.weld_no], type= obj.type)
     power = energy_df['Energy'][0]/tot_time(obj)
     return power
+
+if __name__ == '__main__': 
+	test()

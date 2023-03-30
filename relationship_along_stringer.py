@@ -8,9 +8,9 @@ from math import isnan
 from load import Data as dt
 from shape import *
 
-for i in range(1,13):
+for i in range(1,2):
     all_peaks = []
-    for a in range(1,7):
+    for a in range(2,3):
         try:
             obj = dt(i, 2, a, 1)
         except:
@@ -20,7 +20,7 @@ for i in range(1,13):
                 continue
             else:
                 obj.smoothing()
-                peaks = get_peaks(obj, time_norm=True, power_norm=True)
+                peaks = get_peaks(obj)
                 all_peaks += peaks
     print(str(i)+str(all_peaks))
     if len(all_peaks)!= 0:
