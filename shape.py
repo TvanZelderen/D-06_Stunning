@@ -1,5 +1,5 @@
 #this is power throng's property
-print("\U0001F601 \U0001F410")
+# print("\U0001F601 \U0001F410")
 
 from load import *
 import numpy as np
