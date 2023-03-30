@@ -27,8 +27,6 @@ while FrameNumber != 13 :
         dt = t[1]-t[0]
         
 
-    # print(len(d))
-
     i = 1
     k = 0
 
