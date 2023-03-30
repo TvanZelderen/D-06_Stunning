@@ -183,8 +183,11 @@ def nan_filter(var, time):
     return var_fil, time_fil
 
 def test():
-    a = Data(11, 25, 2, 1)
-    print(a.frame)
+    ax = plot_ini('Normalized')
+    obj = Data(1,2,2,1)
+    obj.power_norm()
+    obj.plot(ax, norm_power = True)
+    plot_legends()
 
 def tot_time(obj):
     power = obj.frame['Power'].dropna()
@@ -197,8 +200,7 @@ def avg_power(obj):
     power = energy_df['Energy'][0]/tot_time(obj)
     return power
 
-# ax = plot_ini('Normalized')
-# obj = Data(1,2,2,1)
-# obj.power_norm()
-# obj.plot(ax, norm_power = True)
-# plot_legends()
+if __name__ == '__main__': 
+	test()
+
+

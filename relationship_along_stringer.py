@@ -20,7 +20,7 @@ for i in range(1,13):
                 continue
             else:
                 obj.smoothing()
-                peaks = get_peaks(obj, time_norm=True, power_norm=True)
+                peaks = get_peaks(obj)
                 all_peaks += peaks
     print(str(i)+str(all_peaks))
     if len(all_peaks)!= 0:

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from load import energy 
+from total_energy import energy 
 
 #Calculate the total energy of a weld on all stringers
 a = energy([1],list(range(0,29)),[2],1)
