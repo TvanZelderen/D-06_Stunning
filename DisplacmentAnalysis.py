@@ -31,7 +31,6 @@ while FrameNumber != 15 :
     k = 0
     b = 0
     y = 0
-# if d[k][i-1] > d[k][i] and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6] and d[k][i-1] != d[k][i+7] and d[k][i-1] != d[k][i+8] and d[k][i-1] != d[k][i+9] and iAlarm[y] != iAlarm[y]:
 
     while k != len(d) :
         while i != len(d[k]) :
