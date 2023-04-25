@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 from load import *
 from sklearn.preprocessing import Normalizer, StandardScaler
 import seaborn as sns
-from scipy.interpolate import interp1d
+#from scipy.interpolate import interp1d
 from sklearn.neighbors import LocalOutlierFactor
+from sklearn.metrics.pairwise import cosine_distances
 
 def Data(total):
     X = pd.DataFrame()
@@ -36,11 +37,16 @@ def Data(total):
         X = pd.concat([X, tmp_col_1], axis=1)
         X.fillna(0, inplace=True)
     return X.T
+#clip_to_skin
+frame0 = [1,2,3,4,5,6,7,8,9,10,11,12]
+stringer0 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]
 
-frame = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-stringer = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+#clip_to_frame
+frame1 = [1,2,3,4,5,6,7,8,9,10,11,12]
+stringer1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]
 
-total = iterate_points(type = 0, frames = frame[::], stringers = stringer[::])
+
+total = iterate_points(type = 1, frames = frame1[::], stringers = stringer1[::])
 X = Data(total)
 #print(X)
 
@@ -50,10 +56,10 @@ scaler = Normalizer()
 normalized_features = scaler.fit_transform(normalized_features_1)
 normalized_data = pd.DataFrame(normalized_features, columns = X.columns)
 
-print(normalized_data)
+#print(normalized_data)
 
 original_dim = X.shape[1]
-encoding_dim = 2
+encoding_dim = 4
 
 encoder = Sequential(
     [
@@ -88,7 +94,7 @@ print('Base line model: loss', results[0])
 model_history = encoder_decoder_model.fit(
      x = normalized_data,
      y = normalized_data,
-     epochs = 50,
+     epochs = 30,
      batch_size = 32,
      verbose = 1,
      validation_split= 0.3
@@ -103,43 +109,43 @@ print('Base line model: loss', post_results[0])
 
 encodings = encoder(normalized_data.values)
 X1 = encodings.numpy()
-#print(encodings.numpy())
+#print(X1)
+cosine_dist_matrix = cosine_distances(X1)
 
 #clustering
 np.random.seed(42)
-clf = LocalOutlierFactor(n_neighbors = 20, contamination = 'auto')
-y_pred = clf.fit_predict(encodings)
-#n_errors = (y_pred != ground_truth).sum()
-X_scores = clf.negative_outlier_factor_
+clf = LocalOutlierFactor(n_neighbors = 20, contamination = 'auto', metric = 'precomputed')
+
+y_1 = clf.fit(cosine_dist_matrix)
+X_scores_1 = clf.negative_outlier_factor_
+
+#report the outlier
+threshold = -1.5
+outlier_indice = np.where(X_scores_3 < threshold)[0]
+print(total[outlier_indice[0]].main_label)
+#print(X_scores_3)
 
 plt.title("Local Outlier Factor (LOF)")
-plt.scatter(X1[:,0], X1[:, 1], color="k", s=3.0, label="Data points")
+
+plt.scatter(X1[:,0], X1[:, 1], color="m", s=3.0, label="Data points")
 # plot circles with radius proportional to the outlier scores
-radius = (X_scores.max() - X_scores) / (X_scores.max() - X_scores.min())
+radius_1 = (X_scores_1.max() - X_scores_1) / (X_scores_1.max() - X_scores_1.min())
 plt.scatter(
     X1[:, 0],
     X1[:, 1],
-    s=1000 * radius,
-    edgecolors="r",
+    s=1000 * radius_1,
+    edgecolors="g",
     facecolors="none",
     label="Outlier scores",
 )
+
 plt.axis("tight")
 plt.xlim((-0.1, 1.5))
 plt.ylim((-0.1, 1.5))
-#plt.xlabel("prediction errors: %d" % (n_errors))
 legend = plt.legend(loc="upper left")
 plt.show()
 
 
-'''
-plt.figure(figsize=(8,8))
-print('Encoded representation dimension', encodings.ndim)
-sns.scatterplot(encodings[:,0], encodings[:,1], color='g')
-plt.xlabel('Dimension 1')
-plt.ylabel('Dimension 2')
-plt.show()
-'''
 
 
 
