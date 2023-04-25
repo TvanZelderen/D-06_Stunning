@@ -1,7 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-from total_energy import energy as tot
+from load import energy as tot
 
 # Set the style
 # sns.set_style("darkgrid")
