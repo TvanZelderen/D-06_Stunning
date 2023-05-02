@@ -1,6 +1,3 @@
-# Small summary, IT does what it needs to do, but not for the clip to frame. Still need to make a list of border 
-# 
-
 from load import Data
 from scipy.integrate import simpson
 import pandas as pd
@@ -12,16 +9,20 @@ import pylab as py
 
 TotalWelds = 0
 FrameNumber= 1
-while FrameNumber != 15 : 
+TypeFile = False
 
-    data = iterate_points(frames=[FrameNumber] ,type = True)
+while FrameNumber != 13 : 
+    data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
 
-    d = []
-    kAlarm = []
-    iAlarm = []
-    aAlarm = []
-    Delete = []
-    print("e0")
+    d = []           #
+    kAlarm = []      #
+    iAlarm = []      #
+    aAlarm = []      #
+    k2Alarm = []     #
+    i2Alarm = []     #
+    a2Alarm = []     #
+    Delete = []      #
+
     for i in data:
         d.append(i.frame['Displacement'].dropna().to_numpy())
         t = (i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy())
@@ -31,11 +32,38 @@ while FrameNumber != 15 :
     k = 0
     b = 0
     y = 0
+    
+    while k != len(d) :
+            while i != (len(d[k])) :
+                if d[k][i] >= 5 :
+                    print("Very big graph!", " k = ", k) 
+                    k2Alarm.append(k) 
+                    a2Alarm.append(d[k][i])
+                    b = b +1
+
+                i = i + 1
+            
+            k = k + 1
+            i = 1
+
+    i = 1
+    k = 0
+    b = 0
+    y = 0
+
+
+
+
+    if TypeFile == True :
+        IgnoreLength = 1
+
+    else :
+        IgnoreLength = 6000
 
     while k != len(d) :
-        while i != len(d[k]) :
-            if d[k][i-1] > d[k][i] and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2]  :
-                print("Positive slope Alarm! i = ", i,"k = ", k)
+        while i != (len(d[k]) - IgnoreLength) :
+            if d[k][i-1] > d[k][i] and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6]  :
+                # print("Positive slope Alarm! i = ", i,"k = ", k)
                 iAlarm.append(i) 
                 kAlarm.append(k) 
                 aAlarm.append(d[k][i])
@@ -45,27 +73,29 @@ while FrameNumber != 15 :
         
         k = k + 1
         i = 1
+
     y = 0
+
+    print("What the numbers mean", i, b, k)
     while y != len(aAlarm) :
-        print(aAlarm[y], aAlarm[y-1])
+        # print(aAlarm[y], aAlarm[y-1])
         if aAlarm[y] == aAlarm[y-1]:
             Delete.append(y)
             Delete.append(y - 1)
 
         y = y + 1
+    
     z = 0
 
     for File in Delete :
-        print(len(kAlarm), "Alarm length")
-
         aAlarm[File] = 0 
         iAlarm[File] = 0 
         kAlarm[File] = 0 
-    print(kAlarm)
+
     list(filter(lambda a: a != 0, aAlarm))
     list(filter(lambda a: a != 0, iAlarm))
     list(filter(lambda a: a != 0, kAlarm))
-
+    list(filter(lambda a: a != 0, k2Alarm))
 
     q = 0
     while q != len(kAlarm) :
@@ -74,14 +104,16 @@ while FrameNumber != 15 :
         # plt.show()
         q = q + 1
 
-    
     print("Clip-to-frame||" , "TotalFrameNumber = ", FrameNumber, "TotalWeldsNumber = ", k)
-    # plt.plot(d[1])
-    plt.show()
+    plt.plot(d[1])
+    # plt.show()
     TotalWelds = TotalWelds + k
     FrameNumber = FrameNumber +1
 
-
-# 29 stringers and 13 frames 300 welds
+# 29 stringers and 13 frames 299 welds
 print(y, b)
 print(TotalWelds)
+print(aAlarm, len(aAlarm))
+print(iAlarm, len(iAlarm))
+print(kAlarm, len(kAlarm))
+print(k2Alarm, len(k2Alarm))
