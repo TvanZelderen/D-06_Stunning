@@ -73,5 +73,19 @@ for key in final_weld_comparison:
     elif final_weld_comparison[key] >= max_score:
         red_list.append(key)
 
-print(f'Amber list: {amber_list}')
-print(f'Red list: {red_list}')
+# print(f'Amber list: {amber_list}')
+# print(f'Red list: {red_list}')
+
+def main():
+    with open('suspectedwelds.txt', 'w') as f:
+        print(f'Opened {f.name} for writing')
+        f.write(f'Amber list: with a score of higher than {amber_score}\n')
+        for i in amber_list:
+            f.write(str(i)+'\n')
+        f.write(f'Red list: with a score of higher than {max_score}\n')
+        for i in red_list:
+            f.write(str(i)+'\n')
+
+main()
+
+# TODO check formatting of Wei Wei's output. Go through all the files and check if they are formatted correctly.
