@@ -5,7 +5,7 @@ print('this is power throng\'s property')
 from load import *
 import numpy as np
 import matplotlib.pyplot as plt
-
+import csv
 import seaborn as sns
 sns.set_theme()
 
@@ -97,7 +97,7 @@ def rank(obj):
 if __name__ == '__main__':
 
     ax = plot_ini('test')    
-    all_obj = iterate_points(type = 1)
+    all_obj = iterate_points(type = 0)
     for i in all_obj:
         try:
             i.power_norm()
@@ -112,6 +112,7 @@ if __name__ == '__main__':
     pm = []
     x_plot = []
     y_plot = []
+    file_list = []
 
     for i in all_obj:
         if 'Power' not in i.frame.keys() or len(i.frame['Power'].dropna())==0:
@@ -121,55 +122,20 @@ if __name__ == '__main__':
             get_peaks(i, time_norm=True, power_norm=True)
             ssds.append(square_diff(x_axis, y_mean, i))
             pm.append(peak_metric(x_axis, y_mean, i))
-            x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
-            y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
-
+            #x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
+            #y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
+            file_list.append([i.frame_no, i.stringer_no, i.weld_no, i.type])
+    
         # if i.diff < 0:
         #     i.plot(ax, norm_power=True)
     #plt.plot(x_axis, y_mean, linewidth=3, color='black')
    # plot_legends()
 
-    x_plot = np.array(x_plot)
-    y_plot = np.array(y_plot)
+    file_list = np.array(file_list)
+    ssds = np.array(ssds).reshape((-1,1))
+    pm = np.array(pm).reshape((-1,1))
+    file_write = np.concatenate((file_list, ssds, pm), axis=1)
 
-    idx = np.argsort(ssds)
-    sorted_x_plot = x_plot[idx]
-    sorted_y_plot = y_plot[idx]
-    ssd_rank = np.arange(1,len(ssds)+1)
-    plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
-    plt.colorbar()
-    plt.show()
-
-    # good_ones = [i for i in all_obj if i.diff<9 and i.peak_m>0.53]
-    # ax = plot_ini('test') 
-    # for i in good_ones:
-    #     i.plot(ax, norm_power=True)
-    # plt.plot(x_axis, y_mean, linewidth=3, color='black')
-    # plot_legends()
-
-    # diff_list = [obj.diff for obj in all_obj]
-
-    # ranked_obj = sorted(all_obj, key=lambda x: x.diff)
-    # ranked_diff = sorted(diff_list)
-
-    # for i in range(0,10):
-    #     print(all_obj[i].main_label + ': Rank ' + str(rank(all_obj[i])) + ' out of ' + str(len(all_obj)))
-
-
-    # plt.hist(diff_list,bins=30)
-    # plt.show()
-
-    # total = iterate_points(type=1)
-    # all_peaks = []
-    # for obj in total:
-    #     if 'Power' not in obj.frame.keys() or len(obj.frame['Power'].dropna())==0:
-    #         continue
-    #     else:
-    #         obj.smoothing()
-    #         peaks = get_peaks(obj, time_norm=True, power_norm=True, first_only=True)
-    #         all_peaks += peaks
-
-    # all_peaks = [x for x in all_peaks if x[2]<0]
-    # roots, values, second_devs = zip(*all_peaks)
-    # plt.scatter(roots, values)
-    # plt.show()
+    with open('powerthrong_0.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(file_write)
