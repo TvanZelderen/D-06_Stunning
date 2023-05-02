@@ -115,15 +115,13 @@ if __name__ == '__main__':
     file_list = []
 
     for i in all_obj:
-        if 'Power' not in i.frame.keys() or len(i.frame['Power'].dropna())==0:
+        if 'Power' not in i.frame.keys() or len(i.frame['Power'].dropna())==0 or (i.type==1 and i.weld_no>2):
             continue
         else:
             i.smoothing()
             get_peaks(i, time_norm=True, power_norm=True)
             ssds.append(square_diff(x_axis, y_mean, i))
             pm.append(peak_metric(x_axis, y_mean, i))
-            #x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
-            #y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
             file_list.append([i.frame_no, i.stringer_no, i.weld_no, i.type])
     
         # if i.diff < 0:
@@ -136,6 +134,6 @@ if __name__ == '__main__':
     pm = np.array(pm).reshape((-1,1))
     file_write = np.concatenate((file_list, ssds, pm), axis=1)
 
-    with open('powerthrong_0.csv', 'w', newline='') as file:
+    with open('powerthrong_1.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(file_write)

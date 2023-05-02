@@ -1,7 +1,25 @@
 print('this is power throng\'s SECOND property')
 
-# x_plot = np.array(x_plot)
-# y_plot = np.array(y_plot)
+from load import *
+import numpy as np
+import matplotlib.pyplot as plt
+import csv
+import seaborn as sns
+sns.set_theme()
+
+with open('powerthrong_1.csv', 'r', newline='') as file:
+    data = list(csv.reader(file))
+data = np.array(data)
+data = data.astype('float64')
+
+ssds = data[:,4].reshape(-1)
+pm = data[:,5].reshape(-1)
+frame_no = data[:,0].reshape(-1)
+stringer_no = data[:,1].reshape(-1)
+weld_no = data[:,2].reshape(-1)
+
+x_plot = frame_no + ((weld_no-1)%3)/10 - 0.10
+y_plot = stringer_no + ((weld_no-1)//3)/2.5 - 0.20
 
 # idx = np.argsort(ssds)
 # sorted_x_plot = x_plot[idx]
@@ -10,6 +28,38 @@ print('this is power throng\'s SECOND property')
 # plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
 # plt.colorbar()
 # plt.show()
+
+ssd_array = np.empty((12,27,2))
+ssd_array[:] = np.nan
+for i in range(data.shape[0]):
+    ssd_array[int(data[i,0])-1,int(data[i,1])-1,int(data[i,2])-1] = data[i,4]
+
+mean_ssd = np.nanmean(ssd_array, axis=2)
+
+x_plot = []
+y_plot = []
+ssd_plot = []
+
+for i in range(mean_ssd.shape[0]):
+    for j in range(mean_ssd.shape[1]):
+        if mean_ssd[i,j] != np.nan:
+            x_plot.append(i)
+            y_plot.append(j)
+            ssd_plot.append(np.log(mean_ssd[i,j]))
+
+plt.scatter(x_plot, y_plot, c=ssd_plot, cmap='coolwarm')
+plt.colorbar()
+plt.show()
+
+frame_mean_ssd = np.nanmean(mean_ssd, axis=1)
+x_plot = range(1,13)
+plt.plot(x_plot,frame_mean_ssd)
+plt.show()
+
+string_mean_ssd = np.nanmean(mean_ssd, axis=0)
+x_plot = range(1,28)
+plt.plot(x_plot,string_mean_ssd)
+plt.show()
 
 # good_ones = [i for i in all_obj if i.diff<9 and i.peak_m>0.53]
 # ax = plot_ini('test') 
