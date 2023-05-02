@@ -14,7 +14,7 @@ TotalWelds = 0
 FrameNumber= 1
 while FrameNumber != 15 : 
 
-    data = iterate_points(frames=[FrameNumber] ,type = False)
+    data = iterate_points(frames=[FrameNumber] ,type = True)
 
     d = []
     kAlarm = []
@@ -56,7 +56,7 @@ while FrameNumber != 15 :
     z = 0
 
     for File in Delete :
-        print(len(kAlarm), "Alaarm lenth")
+        print(len(kAlarm), "Alarm length")
 
         aAlarm[File] = 0 
         iAlarm[File] = 0 
