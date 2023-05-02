@@ -1,4 +1,4 @@
-import csv
+import pandas as pd
 
 # Weights for the final comparison of the models
 w_displacement = 1
@@ -8,22 +8,39 @@ w_power = 2
 
 # Suspect welds in displacement
 suspectwelds = [[1,2,2,3], [1,4,2,3], [2,3,3,5]]
+suspectwelds_2 = [[1,1,2,3], [1,4,3,6], [2,1,1,1]]
+suspectwelds_3 = [[1,1,1,1]]
 
-# Write the data to CSV file
-def write_to_csv(suspectwelds, data_type='displacement'):
-    with open('final_comparison.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['Weldnumber', 'Displacement', 'Pressure', 'Power'])
-        for weld in suspectwelds:
-            clip_type = weld[0]
-            frame = weld[1]
-            stringer = weld[2]
-            weld = weld[3]
-            if data_type == 'displacement':
-                writer.writerow([weld, 1, 0, 0])
-            elif data_type == 'pressure':
-                writer.writerow([weld, 0, 1, 0])
-            elif data_type == 'power':
-                writer.writerow([weld, 0, 0, 1])
+# Open the csv with pandas and create a dataframe
+df = pd.read_csv('final_comparison.csv', header=0, names=['Weld', 'Displacement', 'Pressure', 'Power'])
 
-write_to_csv(suspectwelds)
+# Write suspect position welds to a txt file
+with open('suspectwelds_position.txt', 'w') as f:
+    print(f'Opened {f.name} for writing')
+    for i in suspectwelds:
+        f.write(str(i)+'\n')
+
+# Write suspect pressure welds to a txt file
+with open('suspectwelds_pressure.txt', 'w') as f:
+    print(f'Opened {f.name} for writing')
+    for i in suspectwelds_2:
+        f.write(str(i)+'\n')
+
+# Write suspect power welds to a txt file
+with open('suspectwelds_power.txt', 'w') as f:
+    print(f'Opened {f.name} for writing')
+    for i in suspectwelds_3:
+        f.write(str(i)+'\n')
+
+# Pull the welds from text files into a dictionary
+final_weld_comparison = {}
+with open('suspectwelds_position.txt', 'r') as f:
+    for line in f.readlines():
+        final_weld_comparison[str(line)] = w_displacement
+with open('suspectwelds_pressure.txt', 'r') as f:
+    for line in f.readlines():
+        final_weld_comparison[str(line)] = w_pressure
+with open('suspectwelds_power.txt', 'r') as f:
+    for line in f.readlines():
+        final_weld_comparison[str(line)] = w_power
+print(final_weld_comparison)
