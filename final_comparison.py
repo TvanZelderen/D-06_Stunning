@@ -2,6 +2,11 @@
 w_displacement = 1
 w_pressure = 1
 w_power = 2
+
+red_list = []
+amber_list = []
+
+amber_score = 2
 max_score = 3
 
 # Suspect welds in displacement
@@ -62,6 +67,14 @@ with open('suspectwelds_power.txt', 'r') as f_power:
     print(f'Wrote power welds to dict')
 # print(final_weld_comparison)
 
+
+
 for key in final_weld_comparison:
-    if final_weld_comparison[key] >= max_score:
-        print(key)
+    if final_weld_comparison[key] >= amber_score:
+        amber_list.append(key)
+    elif final_weld_comparison[key] >= max_score:
+        red_list.append(key)
+
+print(f'Amber list: {amber_list}')
+print(f'Red list: {red_list}')
+    
