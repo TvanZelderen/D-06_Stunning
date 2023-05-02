@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from load import *
 import pandas as pd
 from scipy.integrate import trapz
-a = dt('03', '12', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+a = dt('03', '02', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def boxplots(): #boxplots of upper pressure graph peaks
     atotal = iterate_points(type=1, frames='03', stringers='All', welds = [1]) #choose type, frames, stringers, welds
@@ -137,27 +137,79 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
 
     plt.tight_layout()
     plt.show()
-
-def test(): #pressure graph, with its corresponding upper peak values and number of upper peak values
-    atotal = iterate_points(type=1, frames='06', stringers='All', welds = [1]) #choose type, frames, stringers, welds
-    lst = []
-    for i in (atotal):
-        f = i.frame['Force'].to_numpy()
-        d = i.frame['Displacement'].to_numpy()
-        #add legend
-        vector_norm1 = f / np.linalg.norm(f)
-        vector_norm2 = d / np.linalg.norm(d)
-        plt.plot(vector_norm2, vector_norm1)
-
-        g = trapz(vector_norm1,vector_norm2)
-        lst.append(g)
-    plt.show()
     
+def boxplots22(): 
+    atotal = iterate_points(type='All', frames='All', stringers='All', welds='All') 
+    fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
+    outliers_list = []  # initialize an empty list to store outliers
+
+    for i, ax in zip(atotal, axs):
+        p = i.frame['Pressure'].to_numpy()
+        t = i.frame['Time'].to_numpy()
+        avg = np.average(p)
+        std = np.std(p)
+        n = 2
+
+        p_peak_high = p[np.where(p > (avg+n*std))]
+        p_peak_low = p[np.where(p < (avg-n*std))]
+        p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
+        Vp_peak_merged = np.unique(p_peak_merged)
+
+        # identify outliers and append information to the list
+        box = ax.boxplot([np.unique(Vp_peak_merged)])
+        outliers = box["fliers"][0].get_data()[1]
+        if len(outliers) > 0:
+            outliers_list.append({
+                'type': i.type,
+                'frame': i.frame_no,
+                'stringer': i.stringer_no,
+                'weld': i.weld_no
+            })
+        if i == atotal[0]:
+            ax.set_ylabel("Pressure peaks [bar]")
+        text = f"Weld {i.weld_no}, Stringer {i.stringer_no}, Frame {i.frame_no}"
+        ax.text(0.5, -0.2, text, fontsize=5, ha='center', transform=ax.transAxes)
+        for i in atotal:
+            ax.tick_params(
+                axis='x', 
+                bottom=False,  
+                labelbottom=False
+            )
+
+    #plt.tight_layout()
+    #plt.show()
+
+    if outliers_list:
+        print("The following combinations of weld, type, stringer, and frame have outliers:")
+        for item in outliers_list:
+            print(f"Type {item['type']}, Weld {item['weld']}, Stringer {item['stringer']}, Frame {item['frame']}")
 
 
+    ssds = []
+    pm = []
+    x_plot = []
+    y_plot = []
 
-#test()   #force against displacement
+    i.smoothing()
+    get_peaks(i, time_norm=True, power_norm=True)
+    ssds.append(square_diff(x_axis, y_mean, i))
+    pm.append(peak_metric(x_axis, y_mean, i))
+    x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
+    y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
+
+    x_plot = np.array(x_plot)
+    y_plot = np.array(y_plot)
+
+    idx = np.argsort(ssds)
+    sorted_x_plot = x_plot[idx]
+    sorted_y_plot = y_plot[idx]
+    ssd_rank = np.arange(1,len(ssds)+1)
+    plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
+    plt.colorbar()
+    plt.show()
+
+
 #boxplots()  #boxplots of upper pressure peaks
 #peakvalues(a)  #plots of pressure peaks with upper maximum values
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-#boxplots2() #boxplots of upper and lower pressure peaks
+boxplots22() #boxplots of upper and lower pressure peaks
