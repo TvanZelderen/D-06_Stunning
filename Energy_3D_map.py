@@ -29,7 +29,7 @@ side_offset = 0.25
 number_of_stringers = 20
 
 Xc,Yc,Zc = data_for_cylinder_along_z(0,4,fuselage_radius,fuselage_length)
-ax.plot_surface(Xc, Yc, Zc, alpha=0.5) # Plot a the fuselage surface with half transparency.
+#ax.plot_surface(Xc, Yc, Zc, alpha=0.5) # Plot a the fuselage surface with half transparency.
 for i in range(number_of_frames): # Plot the frame lines
     theta = np.linspace(0, -np.pi, 50)
     x = fuselage_radius*np.cos(theta) + 0
@@ -52,23 +52,27 @@ for position in positions:
     y = side_offset + fuselage_length/number_of_frames*position[1]
     ax.scatter(x, y, z, color='r', marker='o', s=100) # Plot a point at the origin
 
-for frame in range(number_of_frames):
+y_grid = np.zeros([1,1])
+x_grid = np.zeros([1,1])
+z_grid = np.zeros([1,1])
+E = np.zeros([1,1])
+
+for frame in range(1, 2):
     y_0 = fuselage_length/number_of_frames*frame
     dy = fuselage_length/(number_of_frames*2)
-    y = np.linspace(y_0-dy, y_0+dy,50)
+    y = np.linspace(y_0-dy, y_0+dy,1)
     #print(y)
-    for stringer in range(number_of_stringers):
+    for stringer in range(1, 3):
         theta_mean = -np.pi/number_of_stringers*stringer
         dtheta = np.pi/(2*number_of_stringers)
-        theta = np.linspace(theta_mean - dtheta , theta_mean + dtheta, 50)
-        theta_grid, y_grid=np.meshgrid(theta, y)
-        x_grid = fuselage_radius*np.cos(theta_grid) + 0
-        z_grid = fuselage_radius*np.sin(theta_grid) + fuselage_radius
-        
-        E = tot([2], [1]).to_numpy()
-        print(E)
-        #ax.scatter(x_grid, y_grid, z_grid, c = E, cmap='gist_heat')
+        theta = np.linspace(theta_mean - dtheta , theta_mean + dtheta, 1)
+        theta_grid, y_tmpgrid=np.meshgrid(theta, y)
+        x_grid = np.concatenate((x_grid, fuselage_radius*np.cos(theta_grid) + 0))
+        z_grid = np.concatenate((z_grid, fuselage_radius*np.sin(theta_grid) + fuselage_radius))
+        y_grid = np.concatenate((y_grid, y_tmpgrid))
+        E = np.concatenate((E, tot([frame], [stringer])['Energy'].to_numpy()[0]*np.ones([1, 1])))
         #ax.plot_surface(x_grid, y_grid, z_grid)
-        
+    ax.scatter(x_grid, y_grid, z_grid, c = E, cmap='gist_heat')
+    print(x_grid)
         #print(E)
 plt.show()

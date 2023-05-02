@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from load import *
 import pandas as pd
 from scipy.integrate import trapz
-a = dt('05', '15', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+a = dt('03', '12', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def boxplots(): #boxplots of upper pressure graph peaks
-    atotal = iterate_points(type=1, frames='05', stringers='All', welds = [1]) #choose type, frames, stringers, welds
+    atotal = iterate_points(type=1, frames='03', stringers='All', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -99,7 +99,7 @@ def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak
 
 
 def boxplots2(): #boxplots of upper and lower pressure graph peaks
-    atotal = iterate_points(type=1, frames='05', stringers='All', welds = [1]) #choose type, frames, stringers, welds
+    atotal = iterate_points(type=1, frames='03', stringers='All', welds = [1]) #choose type, frames, stringers, welds
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
 
     for i, ax in zip(atotal, axs):
@@ -152,12 +152,12 @@ def test(): #pressure graph, with its corresponding upper peak values and number
         g = trapz(vector_norm1,vector_norm2)
         lst.append(g)
     plt.show()
+    
 
 
 
-
-test()
-#boxplots()
-#peakvalues(a)
-#peakvalues2(a)
-#boxplots2()
+#test()   #force against displacement
+#boxplots()  #boxplots of upper pressure peaks
+#peakvalues(a)  #plots of pressure peaks with upper maximum values
+#peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
+#boxplots2() #boxplots of upper and lower pressure peaks

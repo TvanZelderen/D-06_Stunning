@@ -16,6 +16,8 @@ def energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int =
         except:
             energy.append([i.frame_no, i.stringer_no, i.weld_no, i.type, 0])
     #print('Energy: ' + str(energy))
+    if len(energy) == 0:
+        energy.append([0, 0, 0, 0, 0])
     df_energy = pd.DataFrame(energy, columns=['Frame', 'Stringer', 'Weld', 'Type', 'Energy'])
     return df_energy
 #plt.scatter(np.ones(len(energy)), energy)
