@@ -27,8 +27,8 @@ while FrameNumber != 5 :
 
     for i in data:
         d.append(i.frame['Displacement'].dropna().to_numpy())
-        t = (i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy())
-        dt = t[1]-t[0]
+        # t = (i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy())
+        # dt = t[1]-t[0]
 
     i = 1
     k = 0
