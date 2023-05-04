@@ -8,10 +8,10 @@ import seaborn as sns
 import pylab as py
 
 TotalWelds = 0
-FrameNumber= 1
+FrameNumber= 2
 TypeFile = False
 
-while FrameNumber != 13 : 
+while FrameNumber != 3 : 
     data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
 
     d = []           #
@@ -22,6 +22,8 @@ while FrameNumber != 13 :
     i2Alarm = []     #
     a2Alarm = []     #
     Delete = []      #
+    uAlarm = []      # length of the neagtive
+    wAlarm = []      # List of the list of negatoves
 
     for i in data:
         d.append(i.frame['Displacement'].dropna().to_numpy())
@@ -36,7 +38,7 @@ while FrameNumber != 13 :
     while k != len(d) :
             while i != (len(d[k])) :
                 if d[k][i] >= 5 :
-                    print("Very big graph!", " k = ", k) 
+                    # print("Very big graph!", " k = ", k) 
                     k2Alarm.append(k) 
                     a2Alarm.append(d[k][i])
                     b = b +1
@@ -51,23 +53,50 @@ while FrameNumber != 13 :
     b = 0
     y = 0
 
-
-
-
     if TypeFile == True :
         IgnoreLength = 1
 
     else :
         IgnoreLength = 6000
 
+
+    u = 0
+    v = 0
+
+    if d[k][i-1] > d[k][i] :
+        w = i 
+        while d[k][i] > d[k][w] :
+            u = u + 1
+            w = w + 1
+
+        uAlarm.append(u)
+        u = 0
+# and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6]
     while k != len(d) :
         while i != (len(d[k]) - IgnoreLength) :
-            if d[k][i-1] > d[k][i] and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6]  :
+            if d[k][i-1] > d[k][i]   :
                 # print("Positive slope Alarm! i = ", i,"k = ", k)
                 iAlarm.append(i) 
                 kAlarm.append(k) 
                 aAlarm.append(d[k][i])
+
+                if d[k][i-1] > d[k][i] :
+                    w = i 
+
+                    while d[k][i-1] > d[k][w] :
+                        u = u + 1
+                        w = w + 1
+
+                    uAlarm.append(k)
+                    uAlarm.append(i)
+                    uAlarm.append(u)
+                    wAlarm.append(uAlarm)
+                    uAlarm = []
+                    u = 0
+
                 b = b +1
+
+        
 
             i = i + 1
         
@@ -111,9 +140,12 @@ while FrameNumber != 13 :
     FrameNumber = FrameNumber +1
 
 # 29 stringers and 13 frames 299 welds
-print(y, b)
-print(TotalWelds)
-print(aAlarm, len(aAlarm))
-print(iAlarm, len(iAlarm))
-print(kAlarm, len(kAlarm))
-print(k2Alarm, len(k2Alarm))
+# print(y, b)
+# print(TotalWelds)
+# print(aAlarm, len(aAlarm))
+# print(iAlarm, len(iAlarm))
+# print(kAlarm, len(kAlarm))
+# print(k2Alarm, len(k2Alarm))
+
+print(uAlarm)
+print(wAlarm)
