@@ -8,10 +8,10 @@ import seaborn as sns
 import pylab as py
 
 TotalWelds = 0
-FrameNumber= 2
-TypeFile = False
+FrameNumber= 1
+TypeFile = True
 
-while FrameNumber != 3 : 
+while FrameNumber != 5 : 
     data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
 
     d = []           #
@@ -57,7 +57,7 @@ while FrameNumber != 3 :
         IgnoreLength = 1
 
     else :
-        IgnoreLength = 6000
+        IgnoreLength = 1000
 
 
     u = 0
@@ -71,7 +71,7 @@ while FrameNumber != 3 :
 
         uAlarm.append(u)
         u = 0
-# and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6]
+
     while k != len(d) :
         while i != (len(d[k]) - IgnoreLength) :
             if d[k][i-1] > d[k][i]   :
@@ -138,14 +138,17 @@ while FrameNumber != 3 :
     # plt.show()
     TotalWelds = TotalWelds + k
     FrameNumber = FrameNumber +1
+    # print(len(d), "!!!!")
+    # print(len(d[1]), "!!!!")
 
 # 29 stringers and 13 frames 299 welds
-# print(y, b)
-# print(TotalWelds)
+print(y, b)
+print(TotalWelds)
 # print(aAlarm, len(aAlarm))
 # print(iAlarm, len(iAlarm))
 # print(kAlarm, len(kAlarm))
 # print(k2Alarm, len(k2Alarm))
 
-print(uAlarm)
-print(wAlarm)
+# print(uAlarm)
+# print(wAlarm)
+# print(d)
