@@ -2,14 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from load import Data as dt
 from load import iterate_points
+import csv
 #from Pressure_Curves_analysis import peakvalues 
 from math import isnan
 import seaborn as sns
 sns.set_theme()
 
-a = dt('01', '02', '02', 1) #choose (frame_no, stringer_no, weld_no, type)
+"""a = dt('01', '02', '02', 1) #choose (frame_no, stringer_no, weld_no, type)
 b = dt('04', '12', '01', 1) #choose (frame_no, stringer_no, weld_no, type)
-d=dt(1,2,2,1)
+d=dt(1,2,2,1)"""
 #print("hi")
 #timea=peakvalues(a)
 #timeb=peakvalues(b)
@@ -130,8 +131,8 @@ def av_freq(tn, pn):
     return tav, pav, ma, mi
 
 
-objects = iterate_points(type=1)
-print(len(objects))
+objects = iterate_points(type=0) + iterate_points(type=1,welds=[1,2])
+
 number=[]
 i=1
 weld_list = []
@@ -143,7 +144,6 @@ for obj in objects:
     #print(max_time_freq)
     av_time, av_pressure, ma, mi = av_freq(max_time_freq, max_pressure_freq)
     number.append(i)
-    print(ma, mi, av_time)
 
     weld_location = [obj.frame_no, obj.stringer_no, obj.weld_no, obj.type]
     
@@ -179,24 +179,23 @@ col=0
 color=[]
 for num in range(len(averages_averages)):
     
-    if averages_averages[num]> total_average_avarage+value*std_avarges:
+    if averages_averages[num]> total_average_avarage+value*std_avarges or averages_averages[num]< total_average_avarage-value*std_avarges:
         bad_weld_avg_avg.append(weld_list[num][0])
-        col=col+1
+        col=col+10/3
 
     if averages_minimums[num]< total_average_minimums+value*std_minimums:
         bad_weld_avg_min.append(weld_list[num][0])
-        col=col+1
+        col=col+10/3
 
     if averages_maximums[num]> total_average_maximumx+value*std_maximums:
         bad_weld_avg_max.append(weld_list[num][0])
-        col=col+1
+        col=col+10/3
     color.append([weld_list[num], col])
     
     col=0
 #print(bad_weld_avg_avg)
-print(color)
-print(color[0])
-print(color[0][1])
+
+
 
 
 color_plot = []
@@ -210,11 +209,32 @@ plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
 plt.colorbar()
 plt.show()
 
-for weld in bad_weld_avg_avg:
+"""for weld in bad_weld_avg_avg:
     x_plot.append(weld[0][0] + ((weld[0][2]-1)%3)/10 - 0.10)
     y_plot.append(weld[0][1] + ((weld[0][2]-1)//3)/2.5 - 0.20)
     color_plot.append(weld[1])
 plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
 plt.colorbar()
+plt.show()"""
+
+#Next session, see if I can tune the values to get a hypothesis
+
+"""score_array = np.empty((12,27,6))
+score_array[:] = np.nan
+for i in range(len(color)):
+    score_array[color[i][0][0][0]-1,color[i][0][0][1]-1,color[i][0][0][2]-1] = color[i][1]
+
+frame_mean = np.nanmean(score_array, axis=(1,2))
+stringer_mean = np.nanmean(score_array, axis=(0,2))
+
+plt.plot(range(1,13),frame_mean)
 plt.show()
+
+plt.plot(range(1,28),stringer_mean)
+plt.show()"""
+
+with open('pca2.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(len(color)):
+        writer.writerow([repr(color[i][0][0]),color[i][1]])
 
