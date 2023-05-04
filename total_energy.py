@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def energy(frame:list = [1], stringer:list = [2, 3], weld:list = [1], type:int = 1):
+def energy(frame:list = range(13), stringer:list = range(31), weld:list = range(7), type:int = range(2)):
     data = iterate_points(frames=frame, stringers=stringer, welds =weld, type=type)
     energy = []
     for i in data:
