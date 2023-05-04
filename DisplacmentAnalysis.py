@@ -10,8 +10,9 @@ import pylab as py
 TotalWelds = 0
 FrameNumber= 1
 TypeFile = True
+index_csv = []
 
-while FrameNumber != 5 : 
+while FrameNumber != 13: 
     data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
 
     d = []           #
@@ -27,8 +28,7 @@ while FrameNumber != 5 :
 
     for i in data:
         d.append(i.frame['Displacement'].dropna().to_numpy())
-        # t = (i.frame['Time'].drop(i.frame['Displacement'].isna()*range(len(i.frame['Displacement']))).to_numpy())
-        # dt = t[1]-t[0]
+        index_csv.append(repr([i.frame_no,i.stringer_no,i.weld_no,int(i.type)]))
 
     i = 1
     k = 0
@@ -57,8 +57,7 @@ while FrameNumber != 5 :
         IgnoreLength = 1
 
     else :
-        IgnoreLength = 1000
-
+        IgnoreLength = 6000
 
     u = 0
     v = 0
@@ -75,7 +74,6 @@ while FrameNumber != 5 :
     while k != len(d) :
         while i != (len(d[k]) - IgnoreLength) :
             if d[k][i-1] > d[k][i]   :
-                # print("Positive slope Alarm! i = ", i,"k = ", k)
                 iAlarm.append(i) 
                 kAlarm.append(k) 
                 aAlarm.append(d[k][i])
@@ -96,8 +94,6 @@ while FrameNumber != 5 :
 
                 b = b +1
 
-        
-
             i = i + 1
         
         k = k + 1
@@ -107,7 +103,6 @@ while FrameNumber != 5 :
 
     print("What the numbers mean", i, b, k)
     while y != len(aAlarm) :
-        # print(aAlarm[y], aAlarm[y-1])
         if aAlarm[y] == aAlarm[y-1]:
             Delete.append(y)
             Delete.append(y - 1)
@@ -138,17 +133,7 @@ while FrameNumber != 5 :
     # plt.show()
     TotalWelds = TotalWelds + k
     FrameNumber = FrameNumber +1
-    # print(len(d), "!!!!")
-    # print(len(d[1]), "!!!!")
 
 # 29 stringers and 13 frames 299 welds
-print(y, b)
-print(TotalWelds)
-# print(aAlarm, len(aAlarm))
-# print(iAlarm, len(iAlarm))
-# print(kAlarm, len(kAlarm))
-# print(k2Alarm, len(k2Alarm))
-
-# print(uAlarm)
-# print(wAlarm)
-# print(d)
+print(uAlarm)
+print(wAlarm)
