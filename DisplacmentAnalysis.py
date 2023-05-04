@@ -9,14 +9,19 @@ import pylab as py
 
 TotalWelds = 0
 FrameNumber= 1
-while FrameNumber != 13 : 
-    data = iterate_points(frames=[FrameNumber] ,type = False)
+TypeFile = False
 
-    d = []          #
-    kAlarm = []     #
-    iAlarm = []     #
-    aAlarm = []     #
-    Delete = []     #
+while FrameNumber != 13 : 
+    data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
+
+    d = []           #
+    kAlarm = []      #
+    iAlarm = []      #
+    aAlarm = []      #
+    k2Alarm = []     #
+    i2Alarm = []     #
+    a2Alarm = []     #
+    Delete = []      #
 
     for i in data:
         d.append(i.frame['Displacement'].dropna().to_numpy())
@@ -28,12 +33,35 @@ while FrameNumber != 13 :
     b = 0
     y = 0
     
-    # print(d, "data")
-    # print(len(d), "ddd")
-    # print(d)
-    # print(len(d[k]), "ttt")
     while k != len(d) :
-        while i != (len(d[k]) - 500) :
+            while i != (len(d[k])) :
+                if d[k][i] >= 5 :
+                    print("Very big graph!", " k = ", k) 
+                    k2Alarm.append(k) 
+                    a2Alarm.append(d[k][i])
+                    b = b +1
+
+                i = i + 1
+            
+            k = k + 1
+            i = 1
+
+    i = 1
+    k = 0
+    b = 0
+    y = 0
+
+
+
+
+    if TypeFile == True :
+        IgnoreLength = 1
+
+    else :
+        IgnoreLength = 6000
+
+    while k != len(d) :
+        while i != (len(d[k]) - IgnoreLength) :
             if d[k][i-1] > d[k][i] and d[k][i-1] != d[k][i] and d[k][i-1] != d[k][i+1] and d[k][i-1] != d[k][i+2] and d[k][i-1] != d[k][i+3] and d[k][i-1] != d[k][i+4] and d[k][i-1] != d[k][i+5] and d[k][i-1] != d[k][i+6]  :
                 # print("Positive slope Alarm! i = ", i,"k = ", k)
                 iAlarm.append(i) 
@@ -67,6 +95,7 @@ while FrameNumber != 13 :
     list(filter(lambda a: a != 0, aAlarm))
     list(filter(lambda a: a != 0, iAlarm))
     list(filter(lambda a: a != 0, kAlarm))
+    list(filter(lambda a: a != 0, k2Alarm))
 
     q = 0
     while q != len(kAlarm) :
@@ -77,7 +106,7 @@ while FrameNumber != 13 :
 
     print("Clip-to-frame||" , "TotalFrameNumber = ", FrameNumber, "TotalWeldsNumber = ", k)
     plt.plot(d[1])
-    plt.show()
+    # plt.show()
     TotalWelds = TotalWelds + k
     FrameNumber = FrameNumber +1
 
@@ -87,3 +116,4 @@ print(TotalWelds)
 print(aAlarm, len(aAlarm))
 print(iAlarm, len(iAlarm))
 print(kAlarm, len(kAlarm))
+print(k2Alarm, len(k2Alarm))

@@ -139,7 +139,7 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
     plt.show()
     
 def boxplots22(): 
-    atotal = iterate_points(type='All', frames='All', stringers='All', welds='All') 
+    atotal = iterate_points(type='01', frames='03', stringers='All', welds='01') 
     fig, axs = plt.subplots(nrows=1, ncols=len(atotal), figsize=(25, 4))
     outliers_list = []  # initialize an empty list to store outliers
 
@@ -176,37 +176,20 @@ def boxplots22():
                 labelbottom=False
             )
 
-    #plt.tight_layout()
-    #plt.show()
-
-    if outliers_list:
-        print("The following combinations of weld, type, stringer, and frame have outliers:")
-        for item in outliers_list:
-            print(f"Type {item['type']}, Weld {item['weld']}, Stringer {item['stringer']}, Frame {item['frame']}")
-
-
-    ssds = []
-    pm = []
-    x_plot = []
-    y_plot = []
-
-    i.smoothing()
-    get_peaks(i, time_norm=True, power_norm=True)
-    ssds.append(square_diff(x_axis, y_mean, i))
-    pm.append(peak_metric(x_axis, y_mean, i))
-    x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
-    y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
-
-    x_plot = np.array(x_plot)
-    y_plot = np.array(y_plot)
-
-    idx = np.argsort(ssds)
-    sorted_x_plot = x_plot[idx]
-    sorted_y_plot = y_plot[idx]
-    ssd_rank = np.arange(1,len(ssds)+1)
-    plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
-    plt.colorbar()
+    plt.tight_layout()
     plt.show()
+
+    for item in outliers_list:
+        outlists = [np.array([item['type'], item['weld'], item['stringer'], item['frame']])]
+
+        for outlist in outlists:
+            print(outlist)
+            return(outlist)
+
+#with open('suspectwelds_pressure.txt', 'w') as f:
+    #print(f'Opened {f.name} for writing')
+    #for i in suspectwelds_2:
+        #f.write(str(i)+'\n')
 
 
 #boxplots()  #boxplots of upper pressure peaks
