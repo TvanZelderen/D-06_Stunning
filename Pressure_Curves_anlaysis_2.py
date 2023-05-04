@@ -216,10 +216,7 @@ plt.show()
 plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
 plt.colorbar()
 plt.show()"""
-
-#Next session, see if I can tune the values to get a hypothesis
-
-"""score_array = np.empty((12,27,6))
+score_array = np.empty((12,29,2))
 score_array[:] = np.nan
 for i in range(len(color)):
     score_array[color[i][0][0][0]-1,color[i][0][0][1]-1,color[i][0][0][2]-1] = color[i][1]
@@ -230,11 +227,13 @@ stringer_mean = np.nanmean(score_array, axis=(0,2))
 plt.plot(range(1,13),frame_mean)
 plt.show()
 
-plt.plot(range(1,28),stringer_mean)
-plt.show()"""
+plt.plot(range(1,30),stringer_mean)
+plt.show()
 
 with open('pca2.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color)):
         writer.writerow([repr(color[i][0][0]),color[i][1]])
 
+
+#next session do analysis through the average of the pressure
