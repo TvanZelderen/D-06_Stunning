@@ -105,8 +105,10 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
 
     
 def boxplots22(): 
-    atotal = iterate_points(type='01', frames='01', stringers='All', welds='01')
+    atotal = iterate_points(type='All', frames='All', stringers='All', welds='All')
     outliers_list = []  # initialize an empty list to store outliers
+    outliers_list2 = []
+    all_medians = []
 
     for i in atotal:
         p = i.frame['Pressure'].to_numpy()
@@ -119,10 +121,10 @@ def boxplots22():
         p_peak_low = p[np.where(p < (avg-n*std))]
         p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
         Vp_peak_merged = np.unique(p_peak_merged)
-
+        all_medians = np.concatenate((all_medians, Vp_peak_merged))
         # identify outliers and append information to the list
         box = plt.boxplot([np.unique(Vp_peak_merged)])
-        #mean = box["average"][0].get_data()[1]
+
         outliers = box["fliers"][0].get_data()[1]
         if len(outliers) > 0:
             outliers_list.append({
@@ -132,15 +134,30 @@ def boxplots22():
                 'weld': i.weld_no
             })
 
+    avgmed = np.average(all_medians)
+    stdmed = np.std(all_medians)
+
+    for i, Vp_peak_merged in zip(atotal, all_medians):
+        if Vp_peak_merged < avgmed-2*stdmed or Vp_peak_merged > avgmed+2*stdmed:
+            outliers_list2.append({
+                'type': i.type,
+                'frame': i.frame_no,
+                'stringer': i.stringer_no,
+                'weld': i.weld_no
+            })
+
+
     color_plot = []
     x_plot = []
     y_plot = []
-
+    
     for i in atotal:
         x_plot.append(i.frame_no)
         y_plot.append(i.stringer_no)
         if any(outlier['frame'] == i.frame_no and outlier['stringer'] == i.stringer_no for outlier in outliers_list):
             color_plot.append('red')
+        elif any(outlier['frame'] == i.frame_no and outlier['stringer'] == i.stringer_no for outlier in outliers_list2):
+            color_plot.append('orange')
         else:
             color_plot.append('blue')
 
@@ -156,24 +173,21 @@ def boxplots22():
         ])
         for item in outliers_list
     ]
-
-    # print the list of arrays
-    for outlist in outlists:
-        print(outlist)
     
-    max_outliers = max(len(outliers['frame']) for outliers in outliers_list)
+    outlists2 = [    np.array([        item['type'],
+            item['weld'],
+            item['stringer'],
+            item['frame']
+        ])
+        for item in outliers_list2
+    ]
 
-    outlists = [np.array([item['type'], item['weld'], item['stringer'], item['frame']])
-                for item in outliers_list]
+    for arr in outlists:
+        print(arr.tolist())
+    for arr in outlists2:
+        print(arr.tolist())
 
-    # print the list of arrays with scores
-    for i, outlist in enumerate(outlists):
-        num_outliers = len(outliers_list[i]['frame'])
-        if num_outliers == max_outliers:
-            score = 10
-        else:
-            score = 0
-        print(f"Array {i+1}: {outlist} Score: {score}")
+
 
 #with open('suspectwelds_pressure.txt', 'w') as f:
     #print(f'Opened {f.name} for writing')
