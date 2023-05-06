@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from load import *
 import pandas as pd
 from scipy.integrate import trapz
-a = dt('09', '10', '01', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+import random
+a = dt('02', '02', '01', 0) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def peakvalues(a): #pressure graph, with its corresponding upper peak values and number of upper peak values
     a.create_array()
@@ -51,9 +52,9 @@ def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak
     p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
     t_peak_merged = np.concatenate((t_peak_high, t_peak_low))
 
-
     Np_peak_merged = len(np.unique(p_peak_merged)) #number of peaks in merged pressure graph
     Vp_peak_merged = np.unique(p_peak_merged) #array of peak values for merged pressure
+
 
     plt.scatter(t_peak_merged, p_peak_merged)
     print("The merged peak values are:", Vp_peak_merged)
@@ -122,6 +123,7 @@ def boxplots22():
         p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
         Vp_peak_merged = np.unique(p_peak_merged)
         all_medians = np.concatenate((all_medians, Vp_peak_merged))
+
         # identify outliers and append information to the list
         box = plt.boxplot([np.unique(Vp_peak_merged)])
 
@@ -188,6 +190,97 @@ def boxplots22():
         print(arr.tolist())
 
 
+def boxplots222(): 
+    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
+    outliers_list = []  # initialize an empty list to store outliers
+    outliers_list2 = []
+    all_medians = []
+    variances = []
+    stdmeds = []
+    x_plot = []
+    y_plot = []
+    dot_alpha = 0.7
+
+    jitter_amount = 0.2  # Adjust the amount of jitter as needed
+
+    for i in atotal:
+        p = i.frame['Pressure'].to_numpy()
+        t = i.frame['Time'].to_numpy()
+        avg = np.average(p)
+        std = np.std(p)
+        n = 2
+
+        p_peak_high = p[np.where(p > (avg+n*std))]
+        p_peak_low = p[np.where(p < (avg-n*std))]
+        p_peak_merged = np.concatenate((p_peak_high, p_peak_low))
+        Vp_peak_merged = np.unique(p_peak_merged)
+        Np_peak_merged = len(np.unique(p_peak_merged))
+        all_medians = np.concatenate((all_medians, Vp_peak_merged))
+        VAR = (np.sum((Vp_peak_merged-avg)**2))/(Np_peak_merged-1)
+        variances.append(VAR)
+
+        # identify outliers and append information to the list
+        box = plt.boxplot([np.unique(Vp_peak_merged)])
+
+        outliers = box["fliers"][0].get_data()[1]
+        #if len(outliers) > 0:
+            #outliers_list.append({
+               # 'type': i.type,
+               # 'frame': i.frame_no,
+              #  'stringer': i.stringer_no,
+              #  'weld': i.weld_no
+           # })
+        if VAR > 0.08:
+            outliers_list.append({
+                'type': i.type,
+                'frame': i.frame_no,
+                'stringer': i.stringer_no,
+                'weld': i.weld_no
+            })        
+
+        stdmed = (np.std(Vp_peak_merged))**2
+        stdmeds.append(stdmed)
+        if stdmed > 0.1:
+            outliers_list2.append({
+                'type': i.type,
+                'frame': i.frame_no,
+                'stringer': i.stringer_no,
+                'weld': i.weld_no
+            })
+
+
+    for i in atotal:
+        x_jittered = i.frame_no + random.uniform(-jitter_amount, jitter_amount)
+        x_plot.append(x_jittered)
+        y_plot.append(i.stringer_no)
+
+    plt.scatter(x_plot, y_plot, c=variances, cmap='coolwarm', alpha=dot_alpha)
+    plt.colorbar()
+    plt.ylabel("Stringer number")
+    plt.show()
+
+    outlists = [    np.array([        item['type'],
+            item['weld'],
+            item['stringer'],
+            item['frame']
+        ])
+        for item in outliers_list
+    ]
+    
+    outlists2 = [    np.array([        item['type'],
+            item['weld'],
+            item['stringer'],
+            item['frame']
+        ])
+        for item in outliers_list2
+    ]
+
+    for arr in outlists:
+        print(arr.tolist())
+    for arr in outlists2:
+        print(arr.tolist(), "HALLO")
+
+
 
 #with open('suspectwelds_pressure.txt', 'w') as f:
     #print(f'Opened {f.name} for writing')
@@ -198,4 +291,8 @@ def boxplots22():
 #boxplots2()  #boxplots of upper pressure peaks
 #peakvalues(a)  #plots of pressure peaks with upper maximum values
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-boxplots22() #boxplots of upper and lower pressure peaks
+boxplots222() #boxplots of upper and lower pressure peaks
+
+#convert to force
+#upper/lower peaks only
+#mean value of peaks in plot for types
