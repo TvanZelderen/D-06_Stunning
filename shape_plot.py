@@ -12,12 +12,13 @@ with open('powerthrong_0.csv', 'r', newline='') as file:
     data0 = list(csv.reader(file))
 data0 = np.array(data0)
 data0 = data0.astype('float64')
-# data = data0
-with open('powerthrong_1.csv', 'r', newline='') as file:
-    data1 = list(csv.reader(file))
-data1 = np.array(data1)
-data1 = data1.astype('float64')
-data = np.vstack([data0,data1])
+data = data0
+# with open('powerthrong_1.csv', 'r', newline='') as file:
+#     data1 = list(csv.reader(file))
+# data1 = np.array(data1)
+# data1 = data1.astype('float64')
+# data = np.vstack([data0,data1])
+# data = data1
 
 log_ssds = np.log(data[:,4].reshape(-1))
 max_log = np.max(log_ssds)
@@ -33,20 +34,20 @@ for i in range(index.shape[0]):
     index_csv.append(repr(list(index[i,:])))
 print(index_csv)
 
-with open('ssd.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    for i in range(index.shape[0]):
-        writer.writerow([index_csv[i],scaled_log[i]])
+# with open('ssd.csv', 'w', newline='') as file:
+#     writer = csv.writer(file)
+#     for i in range(index.shape[0]):
+#         writer.writerow([index_csv[i],scaled_log[i]])
 
-with open('dummy1.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    for i in range(index.shape[0]):
-        writer.writerow([index_csv[i],10*random()])
+# with open('dummy1.csv', 'w', newline='') as file:
+#     writer = csv.writer(file)
+#     for i in range(index.shape[0]):
+#         writer.writerow([index_csv[i],10*random()])
 
-with open('dummy2.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    for i in range(index.shape[0]):
-        writer.writerow([index_csv[i],10*random()])
+# with open('dummy2.csv', 'w', newline='') as file:
+#     writer = csv.writer(file)
+#     for i in range(index.shape[0]):
+#         writer.writerow([index_csv[i],10*random()])
 
 ssds = data[:,4].reshape(-1)
 pm = data[:,5].reshape(-1)

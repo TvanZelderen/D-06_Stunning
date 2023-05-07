@@ -41,6 +41,14 @@ def counter(abnomal_skin, b):
      
      return list_of_suspicious, list_of_baddy
 
+def standard(X0):
+     scaler_0 = StandardScaler()
+     normalized_features_0 = scaler_0.fit_transform(X0)
+     scaler0 = Normalizer()
+     normalized_features0 = scaler0.fit_transform(normalized_features_0)
+     normalized_data0 = pd.DataFrame(normalized_features0, columns = X0.columns)
+     return normalized_data0
+
 '''Data processing'''
 #clip_to_skin
 total0 = iterate_points(type = 0)
@@ -50,20 +58,12 @@ total1 = iterate_points(type = 1)
 X1 = Data(total1)
 #print(X1)
 
-     #Data Normalization
-scaler_0 = StandardScaler()
-scaler_1 = StandardScaler()
-normalized_features_0 = scaler_0.fit_transform(X0)
-normalized_features_1 = scaler_1.fit_transform(X1)
-scaler0 = Normalizer()
-scaler1 = Normalizer()
-normalized_features0 = scaler0.fit_transform(normalized_features_0)
-normalized_data0 = pd.DataFrame(normalized_features0, columns = X0.columns)
-normalized_features1 = scaler1.fit_transform(normalized_features_1)
-normalized_data1 = pd.DataFrame(normalized_features1, columns = X1.columns)
+#Data Normalization
+normalized_data0 = standard(X0)
+normalized_data1 = standard(X1)
 #print(normalized_data0)
 
-a = 5
+a = 4
 abnomal_skin, abnomal_frame, X_0, X_scores_0, X_1, X_scores_1, outlier_indice_0, outlier_indice_1 = LOF(a, X0, X1, total0, total1, normalized_data0, normalized_data1)
 
 '''List of ill-welding'''
@@ -73,12 +73,14 @@ print(list_of_baddy_skin, list_of_baddy_frame, list_of_suspicious_skin, list_of_
 
 
 '''Visualization'''
+radius_0 = (X_scores_0.max() - X_scores_0) / (X_scores_0.max() - X_scores_0.min())
+radius_1 = (X_scores_1.max() - X_scores_1) / (X_scores_1.max() - X_scores_1.min())
 
 fig, (ax0, ax1) = plt.subplots(1, 2)
 
 ax0.scatter(X_0[:, 0], X_0[:, 1], color="m", s=3.0, label="Data points")
 # plot circles with radius proportional to the outlier scores
-radius_0 = (X_scores_0.max() - X_scores_0) / (X_scores_0.max() - X_scores_0.min())
+
 ax0.scatter(
     X_0[:, 0],
     X_0[:, 1],
@@ -91,7 +93,7 @@ ax0.legend(loc="upper left")
 ax0.title.set_text("Local Outlier Factor (LOF) for clip-to-skin")
 ax1.scatter(X_1[:, 0], X_1[:, 1], color="b", s=3.0, label="Data points")
 # plot circles with radius proportional to the outlier scores
-radius_1 = (X_scores_1.max() - X_scores_1) / (X_scores_1.max() - X_scores_1.min())
+
 ax1.scatter(
     X_1[:, 0],
     X_1[:, 1],
@@ -116,11 +118,13 @@ for i in total0:
 x_plot = np.array(x_plot)
 y_plot = np.array(y_plot)
 
+#print(x_plot[0:5], y_plot[0:5])
+
 idx = np.argsort(radius_0)
 sorted_x_plot = x_plot[idx]
 sorted_y_plot = y_plot[idx]
-ssd_rank = np.arange(1,len(X_scores_0)+1)
-im1 = ax_0.scatter(sorted_x_plot, sorted_y_plot, c=radius_0, cmap='Oranges')
+#ssd_rank = np.arange(1,len(X_scores_0)+1)
+im1 = ax_0.scatter(sorted_x_plot, sorted_y_plot, c=radius_0*10, cmap='Oranges')
 fig.colorbar(im1, ax = ax_0)
 
 x_plot = []
@@ -135,8 +139,8 @@ y_plot = np.array(y_plot)
 idx = np.argsort(radius_1)
 sorted_x_plot = x_plot[idx]
 sorted_y_plot = y_plot[idx]
-ssd_rank = np.arange(1,len(X_scores_1)+1)
-im2 = ax_1.scatter(sorted_x_plot, sorted_y_plot, c=radius_1, cmap='Blues')
+#ssd_rank = np.arange(1,len(X_scores_1)+1)
+im2 = ax_1.scatter(sorted_x_plot, sorted_y_plot, c=radius_1*10, cmap='Blues')
 fig.colorbar(im2, ax = ax_1)
 plt.show()
 
