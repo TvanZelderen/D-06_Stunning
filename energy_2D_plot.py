@@ -32,8 +32,8 @@ for j in range(0, 12):
     ax = next(ax_iter)
     #ax.set_ylim([1, max(radii)])
 
-    ax.xaxis.set_ticks(np.arange(0, -189, -18)*np.pi/180)
-    ax.set_xticklabels(['1', '3', '5', '7', '9', '11', '13', '15', '17', '19', '21'])
+    ax.xaxis.set_ticks(np.arange(0, -189, -13)*np.pi/180) #was np.arange(0, -189, -18)
+    ax.set_xticklabels(['1', '3', '5', '7', '9', '11', '13', '15', '17', '19', '21', '23', '25', '27','29']) 
     ax.yaxis.set_ticks([1, 2, 3, 4])
 
     ax.bar(theta, radii, bottom = 0.0, width = 9*np.pi/180, label = 'Weld Enegry [kJ]')

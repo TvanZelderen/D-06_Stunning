@@ -7,7 +7,7 @@ import csv
 import seaborn as sns
 sns.set_theme()
 from numpy.random import random
-
+from sklearn.linear_model import LinearRegression as LiRe
 with open('powerthrong_0.csv', 'r', newline='') as file:
     data0 = list(csv.reader(file))
 data0 = np.array(data0)
@@ -23,6 +23,7 @@ data = data0
 log_ssds = np.log(data[:,4].reshape(-1))
 max_log = np.max(log_ssds)
 min_log = np.min(log_ssds)
+print(max_log, min_log)
 scaled_log = 10*((log_ssds-min_log)/(max_log-min_log))
 plt.hist(scaled_log,bins=30)
 plt.show()
@@ -32,7 +33,6 @@ index = index.astype(int)
 index_csv = []
 for i in range(index.shape[0]):
     index_csv.append(repr(list(index[i,:])))
-print(index_csv)
 
 # with open('ssd.csv', 'w', newline='') as file:
 #     writer = csv.writer(file)
@@ -49,56 +49,104 @@ print(index_csv)
 #     for i in range(index.shape[0]):
 #         writer.writerow([index_csv[i],10*random()])
 
+# data = data[data[:,2]==1.0]
+
 ssds = data[:,4].reshape(-1)
-pm = data[:,5].reshape(-1)
+# pm = data[:,5].reshape(-1)
 frame_no = data[:,0].reshape(-1)
 stringer_no = data[:,1].reshape(-1)
 weld_no = data[:,2].reshape(-1)
 
-x_plot = frame_no + ((weld_no-1)%3)/10 - 0.10
-y_plot = stringer_no + ((weld_no-1)//3)/2.5 - 0.20
+x_plot = frame_no #+ ((weld_no-1)%3)/10 - 0.10
+y_plot = stringer_no #+ ((weld_no-1)//3)/2.5 - 0.20
 
 idx = np.argsort(ssds)
 sorted_x_plot = x_plot[idx]
 sorted_y_plot = y_plot[idx]
 
 #ssd analysis
-ssd_rank = np.arange(1,len(ssds)+1)
-plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
-plt.colorbar()
+# ssd_rank = np.arange(1,len(ssds)+1)
+# plt.scatter(sorted_x_plot, sorted_y_plot, c=ssd_rank, cmap='coolwarm')
+# plt.colorbar()
+# plt.show()
+
+# plots by type
+fig, axs = plt.subplots(2,3)
+for i in range(0,6):
+    data_i = data[data[:,2]==i+1]
+    ssds = np.log(data_i[:,4].reshape(-1))
+    frame_no = data_i[:,0].reshape(-1)
+    stringer_no = data_i[:,1].reshape(-1)
+    axs[i//3,i%3].scatter(frame_no, stringer_no, c=ssds, cmap='coolwarm', clim=(-1.5, 4))
+    # axs[i//3,i%3].colorbar()
 plt.show()
+
 
 ssd_array = np.empty((12,27,6))
 ssd_array[:] = np.nan
 for i in range(data.shape[0]):
     ssd_array[int(data[i,0])-1,int(data[i,1])-1,int(data[i,2])-1] = data[i,4]
 
-mean_ssd = np.nanmean(ssd_array, axis=2)
+#mean_ssd = np.nanmean(ssd_array, axis=2)
 
-x_plot = []
-y_plot = []
-ssd_plot = []
+frame_range = range(1,13)
+stringer_range = range(1,28)
+fig, axs = plt.subplots(2)
+for weld in range(1,7):
+    ssd_i = ssd_array[:,:,weld-1]
+    lin_ssd = ssd_i.reshape(-1)
+    print('Weld ',weld,': mean ',np.nanmean(lin_ssd),' and std ',np.nanstd(lin_ssd), sep='')
 
-for i in range(mean_ssd.shape[0]):
-    for j in range(mean_ssd.shape[1]):
-        if mean_ssd[i,j] != np.nan:
-            x_plot.append(i)
-            y_plot.append(j)
-            ssd_plot.append(np.log(mean_ssd[i,j]))
+    frame_mean_ssd = np.nanmean(ssd_i, axis=1)
+    axs[0].plot(frame_range,frame_mean_ssd)
 
-plt.scatter(x_plot, y_plot, c=ssd_plot, cmap='coolwarm')
+    string_mean_ssd = np.nanmean(ssd_i, axis=0)
+    axs[1].plot(stringer_range,string_mean_ssd)
+axs[0].legend(['Weld '+str(i) for i in range(1,7)])
+axs[1].legend(['Weld '+str(i) for i in range(1,7)])
+plt.show()
+
+slope = []
+x_slope = []
+y_slope = []
+for i in range(ssd_array.shape[0]):
+    for j in range(ssd_array.shape[1]):
+        X = list(range(1,7))
+        y = ssd_array[i,j,:]
+        reg = LiRe().fit(X,y)
+        slope.append(reg.coef_[0])
+        x_slope.append(i)
+        y_slope.append(j)
+plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm')
 plt.colorbar()
 plt.show()
 
-frame_mean_ssd = np.nanmean(mean_ssd, axis=1)
-x_plot = range(1,13)
-plt.plot(x_plot,frame_mean_ssd)
-plt.show()
 
-string_mean_ssd = np.nanmean(mean_ssd, axis=0)
-x_plot = range(1,28)
-plt.plot(x_plot,string_mean_ssd)
-plt.show()
+
+# x_plot = []
+# y_plot = []
+# ssd_plot = []
+
+# for i in range(mean_ssd.shape[0]):
+#     for j in range(mean_ssd.shape[1]):
+#         if mean_ssd[i,j] != np.nan:
+#             x_plot.append(i)
+#             y_plot.append(j)
+#             ssd_plot.append(np.log(mean_ssd[i,j]))
+
+# plt.scatter(x_plot, y_plot, c=ssd_plot, cmap='coolwarm')
+# plt.colorbar()
+# plt.show()
+
+# frame_mean_ssd = np.nanmean(mean_ssd, axis=1)
+# x_plot = range(1,13)
+# plt.plot(x_plot,frame_mean_ssd)
+# plt.show()
+
+# string_mean_ssd = np.nanmean(mean_ssd, axis=0)
+# x_plot = range(1,28)
+# plt.plot(x_plot,string_mean_ssd)
+# plt.show()
 
 #pm analysis
 '''pm_rank = np.arange(1,len(pm)+1)

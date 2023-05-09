@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pylab as py
+import csv 
+
 
 TotalWelds = 0
 FrameNumber= 1
@@ -108,8 +110,6 @@ while FrameNumber != 13:
             Delete.append(y - 1)
 
         y = y + 1
-    
-    z = 0
 
     for File in Delete :
         aAlarm[File] = 0 
@@ -136,4 +136,21 @@ while FrameNumber != 13:
 
 # 29 stringers and 13 frames 299 welds
 print(uAlarm)
-print(wAlarm)
+# print(wAlarm)
+# print(len(index_csv), "??")
+
+
+
+with open('SuperDuperImportantDisplacementMainFinalVersion87FinalFinalReallyFinalV2.csv', 'w', newline='') as file:
+     writer = csv.writer(file)
+     
+     writer.writerow([index_csv])
+
+
+
+
+
+
+
+
+
