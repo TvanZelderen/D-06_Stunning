@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from load import *
 import random
-a = dt('2', '2', '1', 0) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+a = dt('2', '2', '1', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak values and number of upper and lower peak values
     a.create_array()
@@ -36,7 +36,7 @@ def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak
 
 
 def boxplots2(): #boxplots of upper and lower pressure graph peaks
-    atotal = iterate_points(type=1, frames='All', stringers='All', welds='All')  # choose type, frames, stringers, welds
+    atotal = iterate_points(type=0, frames='All', stringers='All', welds='All')  # choose type, frames, stringers, welds
     diffl = []
 
     for i in atotal:
