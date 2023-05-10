@@ -71,14 +71,19 @@ sorted_y_plot = y_plot[idx]
 # plt.show()
 
 # plots by type
-fig, axs = plt.subplots(2,3)
+fig, axs = plt.subplots(2,3, sharex=True, sharey=True)
 for i in range(0,6):
+    axs[i//3,i%3].set_title('Weld '+str(i+1))
     data_i = data[data[:,2]==i+1]
     ssds = np.log(data_i[:,4].reshape(-1))
     frame_no = data_i[:,0].reshape(-1)
     stringer_no = data_i[:,1].reshape(-1)
-    axs[i//3,i%3].scatter(frame_no, stringer_no, c=ssds, cmap='coolwarm', clim=(-1.5, 4))
+    color = axs[i//3,i%3].scatter(frame_no, stringer_no, c=ssds, cmap='coolwarm', clim=(-1.5, 4))
     # axs[i//3,i%3].colorbar()
+#fig.colorbar(plt.cm.ScalarMappable(cmap='coolwarm'), ax=axs[:,:])
+mappable = axs[0,0].collections[0]
+fig.colorbar(mappable=mappable, ax=axs[:,:])
+fig.suptitle('Log of SSDs per frame (horizontal axis) and stringer (vertical axis)')
 plt.show()
 
 
@@ -102,6 +107,9 @@ for weld in range(1,7):
 
     string_mean_ssd = np.nanmean(ssd_i, axis=0)
     axs[1].plot(stringer_range,string_mean_ssd)
+fig.suptitle('Average SSD per weld by...')
+axs[0].set_title('...frame')
+axs[1].set_title('...stringer')
 axs[0].legend(['Weld '+str(i) for i in range(1,7)])
 axs[1].legend(['Weld '+str(i) for i in range(1,7)])
 plt.show()
@@ -111,13 +119,16 @@ x_slope = []
 y_slope = []
 for i in range(ssd_array.shape[0]):
     for j in range(ssd_array.shape[1]):
-        X = list(range(1,7))
+        X = np.array(range(1,7)).reshape(-1, 1)
         y = ssd_array[i,j,:]
-        reg = LiRe().fit(X,y)
-        slope.append(reg.coef_[0])
-        x_slope.append(i)
-        y_slope.append(j)
-plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm')
+        y,X = nan_filter(y,X)
+        if len(y)>1:
+            reg = LiRe().fit(X,y)
+            slope.append(reg.coef_[0])
+            x_slope.append(i)
+            y_slope.append(j)
+plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm', clim =(-5,5))
+plt.title('Average increase of SSD between weld spots per location')
 plt.colorbar()
 plt.show()
 
