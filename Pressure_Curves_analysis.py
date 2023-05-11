@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 from load import *
 import random
 from scipy.signal import savgol_filter
-from sklearn.linear_model import LinearRegression
 
-a = dt('09', '07', '06', 0) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+a = dt('01', '21', '02', 0) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak values and number of upper and lower peak values
     a.create_array()
@@ -120,19 +119,19 @@ def test():
             'weld': i.weld_no
         })        
         
-    min_var = min(stdmed)
-    max_var = max(stdmed)
+    max_var = np.sqrt(max(stdmed))
 
-    log_min_var = np.sqrt(1.0*(min_var))
-    log_max_var = np.sqrt(1.0*(max_var))
+    log_max_var = (1.0 * max_var)
 
+    scores = []
     for var in stdmed:
-        log_var = np.sqrt(1.0*(var))
-        score = 10 * (log_var - log_min_var) / (log_max_var - log_min_var)
+        log_var = np.sqrt(1.0 * var)
+        score = 10.0 * (log_var / log_max_var)
         scores.append(score)
 
     for i, item in enumerate(outliers_list):
         item['score'] = scores[i]
+
 
 
     for i in atotal:
@@ -147,17 +146,23 @@ def test():
     plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
     plt.show()
 
-    outlists = [    np.array([        item['frame'],
+    outlists = [
+        np.array([
+            item['frame'],
             item['stringer'],
             item['weld'],
             item['type']
         ])
         for item in outliers_list
     ]
+
     for arr, score in zip(outlists, scores):
-        print(arr.tolist(), score)
+        print(f"{arr.tolist()} {score}")
 
-
+    with open('pressure_peak2.csv', 'w') as f:
+        print(f'Opened {f.name} for writing')
+        for arr, score in zip(outlists, scores):
+            f.write(f"{arr.tolist()} {score}\n")
 
 
 def boxplots222(): 
@@ -191,15 +196,14 @@ def boxplots222():
             'weld': i.weld_no
         })        
         
-    min_var = min(variances)
-    max_var = max(variances)
+    max_var = np.sqrt(max(variances))
 
-    log_min_var = (min_var)
-    log_max_var = (max_var)
+    log_max_var = (1.0 * max_var)
 
+    scores = []
     for var in variances:
-        log_var = (var)
-        score = 10 * (log_var - log_min_var) / (log_max_var - log_min_var)
+        log_var = np.sqrt(1.0 * var)
+        score = 10.0 * (log_var / log_max_var)
         scores.append(score)
 
     for i, item in enumerate(outliers_list):
@@ -226,12 +230,13 @@ def boxplots222():
         for item in outliers_list
     ]
     
-    
-    #with open('suspectwelds_pressure.txt', 'w') as f:
-      #  print(f'Opened {f.name} for writing')
-      #  for arr, score in zip(outlists, scores):
-      #      print(arr.tolist(), score)
-      #      f.write(str(arr.tolist()) + ' ' + str(score) + '\n')
+    for arr, score in zip(outlists, scores):
+        print(f"{arr.tolist()} {score}")
+
+    with open('pressure_peak2.csv', 'w') as f:
+        print(f'Opened {f.name} for writing')
+        for arr, score in zip(outlists, scores):
+            f.write(f"{arr.tolist()} {score}\n")
 
 
 #boxplots2()  #boxplots of upper pressure peaks
