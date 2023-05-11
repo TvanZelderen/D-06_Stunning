@@ -130,9 +130,11 @@ def av_freq(tn, pn):
     pav=np.average(pn)
     return tav, pav, ma, mi
 
+#to activate type 0
+objects = iterate_points(type=0)  
 
-objects = iterate_points(type=0) + iterate_points(type=1,welds=[1,2])
-
+#to activate type 1
+#objects = iterate_points(type=1,welds=[1,2])
 number=[]
 i=1
 weld_list = []
@@ -147,7 +149,7 @@ for obj in objects:
 
     weld_location = [obj.frame_no, obj.stringer_no, obj.weld_no, obj.type]
     
-    """if i==13:
+    if i==13:
         plt.figure()
         plt.plot(peakst, peaksp, "o")
         plt.plot(max_time_freq, max_pressure_freq, "o")
@@ -156,11 +158,12 @@ for obj in objects:
         plt.plot(t, p)
         plt.xlabel("time")
         plt.ylabel("pressure")
-        plt.show()"""
+        plt.show()
 
-    weld_list.append([weld_location, ma, mi, av_time])#creates a matrix with the weld location, maximum and minimum time difference and average time
+    weld_list.append([weld_location, ma, mi, av_time, av_pressure])#creates a matrix with the weld location, maximum and minimum time difference and average time
     i=i+1
-
+average_pressures = [lst[4] for lst in weld_list]
+total_average_pressure=np.average(average_pressures)
 averages_averages = [lst[3] for lst in weld_list]
 total_average_avarage = np.average(averages_averages)
 averages_minimums = [lst[2] for lst in weld_list]
@@ -170,29 +173,92 @@ total_average_maximumx = np.average(averages_maximums)
 std_avarges=np.std(averages_averages)
 std_minimums=np.std(averages_minimums)
 std_maximums=np.std(averages_maximums)
+std_pressure= np.std(average_pressures)
 
-value=0.5
+value=1
+bad_weld_avg_pre=[]
 bad_weld_avg_avg=[]
 bad_weld_avg_max=[]
 bad_weld_avg_min=[]
 col=0
-color=[]
+col_p=0
+color_time=[]
+color_pressure=[]
 for num in range(len(averages_averages)):
     
-    if averages_averages[num]> total_average_avarage+value*std_avarges or averages_averages[num]< total_average_avarage-value*std_avarges:
+    """if averages_averages[num]> total_average_avarage+value*std_avarges or averages_averages[num]< total_average_avarage-value*std_avarges:
         bad_weld_avg_avg.append(weld_list[num][0])
-        col=col+10/3
+        col=col+10/3"""
 
-    if averages_minimums[num]< total_average_minimums+value*std_minimums:
+    if averages_minimums[num]< total_average_minimums-value*4/3*std_minimums:
         bad_weld_avg_min.append(weld_list[num][0])
-        col=col+10/3
+        col=col-2.5
 
-    if averages_maximums[num]> total_average_maximumx+value*std_maximums:
+    if averages_minimums[num]< total_average_minimums-value*1*std_minimums:
+        bad_weld_avg_min.append(weld_list[num][0])
+        col=col-2.5
+
+    if averages_minimums[num]< total_average_minimums-value*2/3*std_minimums:
+        bad_weld_avg_min.append(weld_list[num][0])
+        col=col-2.5
+
+    if averages_minimums[num]< total_average_minimums-value*1/3*std_minimums:
+        bad_weld_avg_min.append(weld_list[num][0])
+        col=col-2.5
+
+    if averages_maximums[num]> total_average_maximumx+value*1/3*std_maximums:
         bad_weld_avg_max.append(weld_list[num][0])
-        col=col+10/3
-    color.append([weld_list[num], col])
-    
+        col=col+2.5
+
+    if averages_maximums[num]> total_average_maximumx+2/3*value*std_maximums:
+        bad_weld_avg_max.append(weld_list[num][0])
+        col=col+2.5
+
+    if averages_maximums[num]> total_average_maximumx+1*value*std_maximums:
+        bad_weld_avg_max.append(weld_list[num][0])
+        col=col+2.5
+
+    if averages_maximums[num]> total_average_maximumx+4/3*value*std_maximums:
+        bad_weld_avg_max.append(weld_list[num][0])
+        col=col+2.5
+#Pressure calulations
+    if average_pressures[num]< total_average_pressure-value*4/3*std_pressure:
+        
+        col_p=col_p-2.5
+
+    if average_pressures[num]< total_average_pressure-value*1*std_pressure:
+        
+        col_p=col_p-2.5
+
+    if average_pressures[num]< total_average_pressure-value*2/3*std_pressure:
+        
+        col_p=col_p-2.5
+
+    if average_pressures[num]< total_average_pressure-1/3*value*std_pressure:
+        
+        col_p=col_p-2.5
+
+    if average_pressures[num]> total_average_pressure+1/3*value*std_pressure:
+
+        col_p=col_p+2.5
+
+    if average_pressures[num]> total_average_pressure+2/3*value*std_pressure:
+
+        col_p=col_p+2.5
+
+    if average_pressures[num]> total_average_pressure+1*value*std_pressure:
+
+        col_p=col_p+2.5
+
+    if average_pressures[num]> total_average_pressure+4/3*value*std_pressure:
+
+        col_p=col_p+2.5
+
+    color_time.append([weld_list[num], col])
+    color_pressure.append([weld_list[num], col_p])
     col=0
+    col_p=0
+print(color_time[1][0][0][0], color_time[1][0][0][1], color_time[1][0][0][2], color_time[1][1], len(color_time))
 #print(bad_weld_avg_avg)
 
 
@@ -201,7 +267,7 @@ for num in range(len(averages_averages)):
 color_plot = []
 x_plot = []
 y_plot = []
-for weld in color:
+for weld in color_time:
     x_plot.append(weld[0][0][0] + ((weld[0][0][2]-1)%3)/10 - 0.10)
     y_plot.append(weld[0][0][1] + ((weld[0][0][2]-1)//3)/2.5 - 0.20)
     color_plot.append(weld[1])
@@ -209,31 +275,117 @@ plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
 plt.colorbar()
 plt.show()
 
-"""for weld in bad_weld_avg_avg:
-    x_plot.append(weld[0][0] + ((weld[0][2]-1)%3)/10 - 0.10)
-    y_plot.append(weld[0][1] + ((weld[0][2]-1)//3)/2.5 - 0.20)
-    color_plot.append(weld[1])
-plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
+color_plot_p = []
+x_plot_p = []
+y_plot_p = []
+for weld in color_pressure:
+    x_plot_p.append(weld[0][0][0] + ((weld[0][0][2]-1)%3)/10 - 0.10)
+    y_plot_p.append(weld[0][0][1] + ((weld[0][0][2]-1)//3)/2.5 - 0.20)
+    color_plot_p.append(weld[1])
+plt.scatter(x_plot_p, y_plot_p, c=color_plot_p, cmap='coolwarm')
 plt.colorbar()
-plt.show()"""
-score_array = np.empty((12,29,2))
-score_array[:] = np.nan
-for i in range(len(color)):
-    score_array[color[i][0][0][0]-1,color[i][0][0][1]-1,color[i][0][0][2]-1] = color[i][1]
-
-frame_mean = np.nanmean(score_array, axis=(1,2))
-stringer_mean = np.nanmean(score_array, axis=(0,2))
-
-plt.plot(range(1,13),frame_mean)
 plt.show()
 
-plt.plot(range(1,30),stringer_mean)
-plt.show()
 
-with open('pca2.csv', 'w', newline='') as file:
+
+#for type 0
+
+with open('pca1_time.csv', 'w', newline='') as file:
     writer = csv.writer(file)
-    for i in range(len(color)):
-        writer.writerow([repr(color[i][0][0]),color[i][1]])
+    for i in range(len(color_time)):
+        writer.writerow([repr(color_time[i][0][0]),abs(color_time[i][1])])
+
+with open('pca1_pressure.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(len(color_pressure)):
+        writer.writerow([repr(color_pressure[i][0][0]),abs(color_pressure[i][1])])  
+
+score_array_time = np.empty((12,27,6))
+score_array_time[:] = np.nan
+
+score_array_pressure = np.empty((12,27,6))
+score_array_pressure[:] = np.nan
+for i in range(len(color_time)):
+    score_array_time[color_time[i][0][0][0]-1,color_time[i][0][0][1]-1,color_time[i][0][0][2]-1] = color_time[i][1]
+
+for i in range(len(color_pressure)):
+    score_array_pressure[color_pressure[i][0][0][0]-1,color_pressure[i][0][0][1]-1,color_pressure[i][0][0][2]-1] = color_pressure[i][1]
+
+frame_mean_time = np.nanmean(score_array_time, axis=(1,2))
+stringer_mean_time = np.nanmean(score_array_time, axis=(0,2))
+
+frame_mean_pressure = np.nanmean(score_array_pressure, axis=(1,2))
+stringer_mean_pressure = np.nanmean(score_array_pressure, axis=(0,2))
 
 
-#next session do analysis through the average of the pressure
+plt.bar(range(1,13),frame_mean_time)
+plt.title("clip to framme mean time")
+plt.show()
+
+plt.bar(range(1,28),stringer_mean_time)
+plt.title("clip to stringer mean time")
+plt.show()
+
+plt.bar(range(1,13),frame_mean_pressure)
+plt.title("clip to framme mean pressure")
+plt.show()
+
+plt.bar(range(1,28),stringer_mean_pressure)
+plt.title("clip to steringer mean pressure")
+plt.show()
+
+
+#for type 1
+"""
+with open('pca1_time.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(len(color_time)):
+        writer.writerow([repr(color_time[i][0][0]),abs(color_time[i][1])])
+
+with open('pca1_pressure.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(len(color_pressure)):
+        writer.writerow([repr(color_pressure[i][0][0]),abs(color_pressure[i][1])])  
+
+score_array_time = np.empty((12,29,2))
+score_array_time[:] = np.nan
+
+score_array_pressure = np.empty((12,29,2))
+score_array_pressure[:] = np.nan
+for i in range(len(color_time)):
+    score_array_time[color_time[i][0][0][0]-1,color_time[i][0][0][1]-1,color_time[i][0][0][2]-1] = color_time[i][1]
+
+for i in range(len(color_pressure)):
+    score_array_pressure[color_pressure[i][0][0][0]-1,color_pressure[i][0][0][1]-1,color_pressure[i][0][0][2]-1] = color_pressure[i][1]
+
+frame_mean_time = np.nanmean(score_array_time, axis=(1,2))
+stringer_mean_time = np.nanmean(score_array_time, axis=(0,2))
+
+frame_mean_pressure = np.nanmean(score_array_pressure, axis=(1,2))
+stringer_mean_pressure = np.nanmean(score_array_pressure, axis=(0,2))
+
+
+plt.bar(range(1,13),frame_mean_time)
+plt.title("clip to framme mean time")
+plt.show()
+
+plt.bar(range(1,30),stringer_mean_time)
+plt.title("clip to stringer mean time")
+plt.show()
+
+plt.bar(range(1,13),frame_mean_pressure)
+plt.title("clip to framme mean pressure")
+plt.show()
+
+plt.bar(range(1,30),stringer_mean_pressure)
+plt.title("clip to steringer mean pressure")
+plt.show()
+
+"""
+#--------------------------------------------------------------------------------------#
+
+
+ax = plt.axes(projection='3d')
+ax.plot_surface(x_plot_p, y_plot, color_plot_p, rstride=1, cstride=1,
+                cmap='viridis', edgecolor='none')
+ax.set_title('surface');
