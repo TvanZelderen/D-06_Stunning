@@ -24,7 +24,7 @@ for frame in range(1,13):
                 obj.smoothing()
                 peaks = get_peaks(obj)
                 all_peaks += peaks
-    # print(str(i)+str(all_peaks))
+        #print(str(i)+str(all_peaks))
         if len(all_peaks)!= 0:
             roots, values, second_devs = zip(*all_peaks)
             plt.scatter(roots, values, color=colors[frame-1])
