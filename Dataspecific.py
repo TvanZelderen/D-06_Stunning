@@ -98,15 +98,16 @@ def standard(X0):
 
 #activation
 vis = 0
-map = 1
-local = 1
+map = 0
+local = 0
 list_ = 0
 power = 1
 pressure = 0
 displacement = 0
 loc_maximum = 0
+clustering_list = 1
 
-a = 5
+a = 1
 
 '''Data processing'''
 if power == 1:
@@ -157,7 +158,7 @@ if list_ == 1:
 if vis == 1:
      fig, (ax0, ax1) = plt.subplots(1, 2)
 
-     ax0.scatter(X_0[:, 1], X_0[:, 2], color="m", s=3.0, label="Data points")
+     ax0.scatter(X_0[:, 0], X_0[:, 1], color="m", s=3.0, label="Data points")
      # plot circles with radius proportional to the outlier scores
 
      ax0.scatter(
@@ -170,7 +171,7 @@ if vis == 1:
      )
      ax0.legend(loc="upper left")
      ax0.title.set_text("Local Outlier Factor (LOF) for clip-to-skin")
-     ax1.scatter(X_1[:, 1], X_1[:, 2], color="b", s=3.0, label="Data points")
+     ax1.scatter(X_1[:, 0], X_1[:, 1], color="b", s=3.0, label="Data points")
      # plot circles with radius proportional to the outlier scores
 
      ax1.scatter(
@@ -236,6 +237,7 @@ if local == 1:
           score_skin_frame[i.frame_no-1] += radius_0[c]
           score_skin_stringer[i.stringer_no-1] += radius_0[c]
           c+=1
+     score_skin_frame = np.abs(score_skin_frame)/(np.abs(score_skin_frame)).max*10.0
 
 
      for j in total1:
@@ -245,16 +247,45 @@ if local == 1:
 
      fig, axs = plt.subplots(2, 2)
      
-     axs[0,0].bar(np.linspace(1,12,12),np.abs(score_skin_frame), color='orange')
+     axs[0,0].bar(np.linspace(1,12,12),score_skin_frame, color='orange')
      axs[0,0].set_title('Outlier scores of clip-to-skin weldings along the frames')
 
-     axs[0,1].barh(np.linspace(1,27,27),np.abs(score_skin_stringer), color='orange')
-     axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
+     # axs[0,1].barh(np.linspace(1,27,27),np.abs(score_skin_stringer)/np.abs(score_skin_stringer).max*10.0, color='orange')
+     # axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
 
-     axs[1,0].bar(np.linspace(1,12,12),np.abs(score_frame_frame), color='blue')
-     axs[1,0].set_title('Outlier scores of clip-to-frame weldings along the frames')
+     # axs[1,0].bar(np.linspace(1,12,12),np.abs(score_frame_frame)/(np.abs(score_frame_frame)).max*10.0, color='blue')
+     # axs[1,0].set_title('Outlier scores of clip-to-frame weldings along the frames')
 
-     axs[1,1].barh(np.linspace(1,29,29),np.abs(score_frame_stringer), color='blue')
-     axs[1,1].set_title('Outlier scores of clip-to-frame weldings along the stringers')
+     # axs[1,1].barh(np.linspace(1,29,29),np.abs(score_frame_stringer)/(np.abs(score_frame_stringer)).max*10.0, color='blue')
+     # axs[1,1].set_title('Outlier scores of clip-to-frame weldings along the stringers')
 
      plt.show()
+
+if clustering_list == 1:
+     file_list0 = []
+     file_list1 = []
+
+     for i in total0:
+          file_list0.append([int(i.frame_no), int(i.stringer_no), int(i.weld_no), int(i.type)])
+
+     #print((file_list0), len(radius_0))
+     file_list_0 = np.concatenate((np.array(file_list0), np.array(radius_0*10).reshape(-1,1)), axis=1)
+
+     for j in total1:
+          file_list1.append([int(j.frame_no), int(j.stringer_no), int(j.weld_no), int(j.type)])
+
+     file_list_1 = np.concatenate((np.array(file_list1), np.array(radius_1*10).reshape(-1,1)), axis=1)
+     
+     file_list = np.concatenate((file_list_0, file_list_1), axis=0)
+
+     if power == 1:
+          str = 'Power'
+     if pressure == 1:
+          str = 'Pressure'
+     if displacement == 1:
+          str = 'Displacement'
+
+     with open('Clustering.csv', 'w', newline='') as file:
+          writer = csv.writer(file)
+          writer.writerows(file_list)
+     
