@@ -5,7 +5,8 @@ from sklearn.preprocessing import Normalizer, StandardScaler
 import seaborn as sns
 from Autoencoder import LOF
 from collections import defaultdict
-from shape import *
+import csv
+#from shape import get_peaks
 
 
 def Data_Power(total):
@@ -68,8 +69,9 @@ def counter(abnomal_skin, b):
           counts[result] += 1
 
      for result, count in counts.items():
-          if count == b-2 or b-1:
-               list_of_suspicious.append(result)
+          if b > 4:
+               if count == b-2 or b-1:
+                    list_of_suspicious.append(result)
           if count == b:
                list_of_baddy.append(result)
      
@@ -84,35 +86,27 @@ def standard(X0):
      normalized_data0 = pd.DataFrame(normalized_features0, columns = X0.columns)
      return normalized_data0
 
-def peaks():
-     for frame in range(1,13):
-          for weld in range(1,7):
-               all_peaks = []
-               try:
-                    obj = dt(frame, 20, weld, 1)
-               except:
-                    continue
-               else:
-                    if 'Power' not in obj.frame.keys() or len(obj.frame['Power'].dropna())==0:
-                         continue
-                    else:
-                         obj.smoothing()
-                         peaks = get_peaks(obj)
-                         all_peaks += peaks
-          # print(str(i)+str(all_peaks))
-               if len(all_peaks)!= 0:
-                    roots, values, second_devs = zip(*all_peaks)
-     return values
+# def peaks(total):
+#      all_peak =[]
+#      for i in total:
+#           i.smoothing()
+#           peak = get_peaks(i)
+#           all_peak += peak
+#           if len(all_peak) != 0:
+#                roots, values, second_devs = zip(*all_peak)
+#      return values, second_devs
 
 #activation
 vis = 0
-map = 0
-local = 0
+map = 1
+local = 1
 list_ = 0
-power = 0
-pressure = 1
+power = 1
+pressure = 0
 displacement = 0
 loc_maximum = 0
+
+a = 5
 
 '''Data processing'''
 if power == 1:
@@ -134,8 +128,10 @@ if displacement == 1:
      #clip_to_frame
      total1 = iterate_points(type = 1)
      X1 = Data_Disp(total1)
-if loc_maximum == 1:
-     X0 = peaks()
+# if loc_maximum == 1:
+#      total2 = iterate_points(type = 0)
+#      X0 = peaks(total2)
+#      print(X0)
 
 
 #Data Normalization
@@ -143,7 +139,7 @@ normalized_data0 = standard(X0)
 normalized_data1 = standard(X1)
 #print(normalized_data0)
 
-a = 3
+
 abnomal_skin, abnomal_frame, X_0, X_scores_0, X_1, X_scores_1, outlier_indice_0, outlier_indice_1 = LOF(a, X0, X1, total0, total1, normalized_data0, normalized_data1)
 radius_0 = (X_scores_0.max() - X_scores_0) / (X_scores_0.max() - X_scores_0.min())
 radius_1 = (X_scores_1.max() - X_scores_1) / (X_scores_1.max() - X_scores_1.min())
@@ -153,7 +149,9 @@ if list_ == 1:
      list_of_suspicious_skin, list_of_baddy_skin = counter(abnomal_skin, a)
      list_of_suspicious_frame, list_of_baddy_frame = counter( abnomal_frame, a)
      print(list_of_baddy_skin, list_of_baddy_frame, list_of_suspicious_skin, list_of_suspicious_frame)
-
+     with open('list of ill-welding from AI model.csv', mode='w') as file:
+          writer = csv.writer(file)
+          writer.writerows(list_of_baddy_skin)
 
 #Visualization
 if vis == 1:
@@ -247,9 +245,16 @@ if local == 1:
 
      fig, axs = plt.subplots(2, 2)
      
-     axs[0,0].bar(np.linspace(0,12,12),np.abs(score_skin_frame))
-     axs[0,1].barh(np.linspace(0,27,27),np.abs(score_skin_stringer))
-     axs[1,0].bar(np.linspace(0,12,12),np.abs(score_frame_frame))
-     axs[1,1].barh(np.linspace(0,29,29),np.abs(score_frame_stringer))
+     axs[0,0].bar(np.linspace(1,12,12),np.abs(score_skin_frame), color='orange')
+     axs[0,0].set_title('Outlier scores of clip-to-skin weldings along the frames')
+
+     axs[0,1].barh(np.linspace(1,27,27),np.abs(score_skin_stringer), color='orange')
+     axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
+
+     axs[1,0].bar(np.linspace(1,12,12),np.abs(score_frame_frame), color='blue')
+     axs[1,0].set_title('Outlier scores of clip-to-frame weldings along the frames')
+
+     axs[1,1].barh(np.linspace(1,29,29),np.abs(score_frame_stringer), color='blue')
+     axs[1,1].set_title('Outlier scores of clip-to-frame weldings along the stringers')
 
      plt.show()
