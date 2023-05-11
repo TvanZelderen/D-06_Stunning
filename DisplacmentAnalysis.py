@@ -11,7 +11,7 @@ import csv
 # 29 stringers and 13 frames 299 welds
 
 FrameNumber= 1                                      # Integer that tells which frame number is being considered, starting with frame 1.
-TypeFile = True                                     # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
+TypeFile = False                                     # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
                                                     #frame (True) data.
 index_csv = []                                      # A list where the position of the welds is going to be put.
 ListOfMaximumValues =[]                             # A list of the maximum values of all the frames.
@@ -64,17 +64,14 @@ while FrameNumber != 13:
         IgnoreLength = 1
 
     else :
-        IgnoreLength = 1000
+        IgnoreLength = 5000
 
-    # The big for loop that cycles through all the welds and dispalcement sto find where the sonotrodes goes up
+    # The big for loop that cycles through all the welds and dispalcements to find where the sonotrodes goes up
     for Weld in ImportedData :
-        while Time != (len(Weld) - IgnoreLength) :
-
+        while Time != (len(Weld) - IgnoreLength) and (Time < (len(Weld) - IgnoreLength)) :
+            # print(Time, (len(Weld) - IgnoreLength))
             if Weld[Time-1] > Weld[Time] :
-                TimaAtPositiveDisplacement.append(Time) 
-                WeldNumberWithPositiveDisplacement.append(Weldnumber) 
-                DisplacementValueOfPositiveDisplacement.append(Weld[Time])
-                
+
                 # When a positive displacement is found, the length of this needs to be known to determine if it is
                 #noise or an indication of a bad weld. Therefore, the length of this negative displacement needs to
                 #be calculated. This is done by having a separate while loop that looks for this length. First the
@@ -82,17 +79,20 @@ while FrameNumber != 13:
                 #displacements and increment the counter until the displacement is equal to the original threshold
                 #Then, everything below a certain value is filtered out as this is probably noise. Finally, the 
                 #original loop continues from the last "w" value, so it is continuing from the value that equals or
-                # is higher than the threshold.
+                # is higher than the threshold. The else statement is there to save the coordinates of the negative
+                #displacement for the graphs.
 
                 w = Time   
-
+                print(Weld, len(Weld), w, Time)
                 while Weld[Time-1] > Weld[w] :
-
                     LengthOfPositiveDisplacement = LengthOfPositiveDisplacement + 1
                     w = w + 1
-
-                if LengthOfPositiveDisplacement <= 5 :
+                if LengthOfPositiveDisplacement <= 30:
                     LengthOfPositiveDisplacement = 0 
+                else :
+                    TimaAtPositiveDisplacement.append(Time) 
+                    WeldNumberWithPositiveDisplacement.append(Weldnumber) 
+                    DisplacementValueOfPositiveDisplacement.append(Weld[Time])
 
                 Time = w
 
