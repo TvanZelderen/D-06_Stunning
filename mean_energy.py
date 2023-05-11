@@ -23,5 +23,5 @@ print(score_skin_frame)
 plt.bar(np.linspace(1,12,12),score_skin_frame)
 
 #data.to_csv('.\energy_score_clip_to_skin.csv', header=False, index=False)
-#print(energy)
+#print(energy) 
 plt.show()
