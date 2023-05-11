@@ -5,6 +5,8 @@ import pandas as pd
 
 energy = en.energy(type=0).to_numpy()
 mean = np.mean(energy[:,-1])
+#energy = np.concatenate((energy, en.energy(type=1).to_numpy()), axis = 0)
+print(energy)
 mse = np.sqrt((energy[:,-1]-mean)**2)
 mse = np.reshape((mse-min(mse))/(max(mse)-min(mse))*10, (-1,1))
 energy = np.concatenate((energy, mse), axis=1)
@@ -19,9 +21,9 @@ data = pd.DataFrame(data)
 score_skin_frame = np.zeros(13)
 for i in energy:
     score_skin_frame[int(i[0])] += float(i[4])
-print(score_skin_frame)
+#print(score_skin_frame)
 plt.bar(np.linspace(1,12,12),score_skin_frame)
 
 #data.to_csv('.\energy_score_clip_to_skin.csv', header=False, index=False)
-#print(energy)
+#print(energy) 
 plt.show()
