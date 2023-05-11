@@ -28,6 +28,8 @@ df6=pd.read_csv('pressure_peak.csv', header = None, index_col = 0, names = ['Ind
 df7=pd.read_csv('displ.csv', header = None, index_col = 0, names = ['Index','displacement'])
 
 dftotal=pd.concat([df1, df2, df3], axis= 1)
+corr_matrix = dftotal.corr()
+print(corr_matrix)
 
 dftotal['Final Score'] = dftotal['disp_heavy']*w_disp_heavy + dftotal['power']*w_power + dftotal['energy']*w_energy + dftotal['pressure_time']*w_pressure_time + dftotal['pressure_filter']*w_pressure_filter + dftotal['pressure_peak']*w_pressure_peak + dftotal['displacement']*w_displ
 dftotal['Final Score'] /= w_total
