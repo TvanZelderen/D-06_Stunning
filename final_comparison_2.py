@@ -18,6 +18,8 @@ df2=pd.read_csv('dummy1.csv', header = None, index_col = 0, names = ['Index','du
 df3=pd.read_csv('dummy2.csv', header = None, index_col = 0, names = ['Index','dummy2'])
 
 dftotal=pd.concat([df1, df2, df3], axis= 1)
+corr_matrix = dftotal.corr()
+print(corr_matrix)
 
 dftotal['Final Score'] = dftotal['SSD']*w_ssd + dftotal['dummy1']*w_dummy1 + dftotal['dummy2']*w_dummy2
 dftotal['Final Score'] /= w_total
