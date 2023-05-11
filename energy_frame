@@ -1,0 +1,12 @@
+from load import Data
+from total_energy import energy
+from matplotlib import pyplot as plt
+from matplotlib import patches
+from matplotlib.gridspec import GridSpec
+import numpy as np
+import seaborn as sns
+mean_en = np.array([])
+for i in range(13):
+    mean_en = np.append(mean_en, np.mean(energy(frame = [i], type=0)['Energy'].to_numpy()))
+plt.hist(mean_en)
+plt.show()
