@@ -76,7 +76,7 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
     print(outliers_list)
 
 def test():
-    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
+    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
     outliers_list = [] 
     x_plot = []
     y_plot = []
@@ -117,20 +117,20 @@ def test():
             'frame': i.frame_no,
             'stringer': i.stringer_no,
             'weld': i.weld_no
-        })        
-        
-    max_var = np.sqrt(max(stdmed))
+        })     
 
-    log_max_var = (1.0 * max_var)
+    max_var = max(stdmed)
+    min_var = min(stdmed)
 
     scores = []
     for var in stdmed:
-        log_var = np.sqrt(1.0 * var)
-        score = 10.0 * (log_var / log_max_var)
+        score = 10.0 * (var - min_var) / (max_var - min_var)
         scores.append(score)
 
+
     for i, item in enumerate(outliers_list):
-        item['score'] = scores[i]
+        item['score'] = scores[i]        
+
 
 
 
@@ -157,16 +157,21 @@ def test():
     ]
 
     for arr, score in zip(outlists, scores):
-        print(f"{arr.tolist()} {score}")
+        arr_str = ', '.join(str(x) for x in arr.tolist())
+        print(f"[{arr_str}], {score}")
 
-    with open('pressure_peak2.csv', 'w') as f:
+    average_score = np.average(scores)
+    print(f"Average Score: {average_score}")
+
+    with open('Pressure_Scores_Clip_to_skin_PEAKS222.txt', 'w') as f:
         print(f'Opened {f.name} for writing')
         for arr, score in zip(outlists, scores):
-            f.write(f"{arr.tolist()} {score}\n")
+            arr_str = ', '.join(str(x) for x in arr.tolist())
+            f.write(f'"[{arr_str}]",{score}\n')
 
 
 def boxplots222(): 
-    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
+    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
     outliers_list = [] 
     variances = []
     x_plot = []
@@ -196,15 +201,14 @@ def boxplots222():
             'weld': i.weld_no
         })        
         
-    max_var = np.sqrt(max(variances))
-
-    log_max_var = (1.0 * max_var)
+    max_var = max(variances)
+    min_var = min(variances)
 
     scores = []
     for var in variances:
-        log_var = np.sqrt(1.0 * var)
-        score = 10.0 * (log_var / log_max_var)
+        score = 10.0 * (var - min_var) / (max_var - min_var)
         scores.append(score)
+
 
     for i, item in enumerate(outliers_list):
         item['score'] = scores[i]
@@ -222,24 +226,37 @@ def boxplots222():
     plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
     plt.show()
 
-    outlists = [    np.array([        item['frame'],
+    outlists = [
+        np.array([
+            item['frame'],
             item['stringer'],
             item['weld'],
             item['type']
         ])
         for item in outliers_list
     ]
-    
-    for arr, score in zip(outlists, scores):
-        print(f"{arr.tolist()} {score}")
 
-    with open('pressure_peak2.csv', 'w') as f:
+    for arr, score in zip(outlists, scores):
+        arr_str = ', '.join(str(x) for x in arr.tolist())
+        print(f"[{arr_str}], {score}")
+
+    average_score = np.average(scores)
+    print(f"Average Score: {average_score}")
+
+    with open('Pressure_Scores_Clip_to_skin_PEAKS222.txt', 'w') as f:
         print(f'Opened {f.name} for writing')
         for arr, score in zip(outlists, scores):
-            f.write(f"{arr.tolist()} {score}\n")
+            arr_str = ', '.join(str(x) for x in arr.tolist())
+            f.write(f'"[{arr_str}]",{score}\n')
+
+
+
+
+
+
 
 
 #boxplots2()  #boxplots of upper pressure peaks
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-boxplots222() #boxplots of upper and lower pressure peaks
-#test()
+#boxplots222() #boxplots of upper and lower pressure peaks
+test()
