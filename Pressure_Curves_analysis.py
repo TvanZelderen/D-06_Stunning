@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 from load import *
 import random
 from scipy.signal import savgol_filter
-from sklearn.linear_model import LinearRegression
+from scipy.optimize import curve_fit
 
-a = dt('09', '07', '06', 0) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
+
+a = dt('5', '23', '2', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
 def peakvalues2(a): #pressure graph, with its corresponding upper and lower peak values and number of upper and lower peak values
     a.create_array()
@@ -76,14 +77,16 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
     plt.show()
     print(outliers_list)
 
-def test():
-    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
+def filter():
+    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
     outliers_list = [] 
     x_plot = []
     y_plot = []
     stdmed = []
     scores = []
     dot_alpha = 1
+    def sine_function(x, A, B, C, D):
+        return A * np.sin(B * x + C) + D
 
     jitter_amount = 0.2
 
@@ -96,43 +99,67 @@ def test():
         p_smooth = savgol_filter(p, window_size, poly_order)
         aveg = np.average(p_smooth)
 
-        
+        ##### TYPE 0 ####
+
         #Calculate residuals
-        residuals = np.abs(p_smooth - aveg)
+        #residuals = np.abs(p_smooth - aveg)
         # Calculate the standard deviation of the residuals # ROOT MEAN SQUARE ERROR
+        #std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
+        #stdmed.append(std_deviation)
+
+        ##### TYPE 1 ####
+
+        amplitude = 0.6
+        frequency = 3
+        phase = 0
+        mean_value = aveg
+
+        initial_guess = [amplitude, frequency, phase, mean_value]
+        optimized_params, _ = curve_fit(sine_function, t, p_smooth, p0=initial_guess)
+        p_fitted = sine_function(t, *optimized_params)
+        residuals = np.abs(p_smooth - p_fitted)
         std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
-        #std_deviation = (np.std(residuals))
         stdmed.append(std_deviation)
 
-      #  plt.plot(t, p, label='Original Data')
-       # plt.plot(t, p_smooth, label='Smoothed Data')
-       # plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
-       # plt.xlabel('Time')
-       # plt.ylabel('Pressure')
-       # plt.title('Smoothed Pressure Graph with Linear Regression')
-        #plt.legend()
-        #plt.show()
+        # plt.plot(t, p, label='Original Data')
+        # plt.plot(t, p_smooth, label='Smoothed Data')
+        # plt.plot(t, p_fitted, label='Fitted Sine Curve')
+        # plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
+        # plt.xlabel('Time')
+        # plt.ylabel('Pressure')
+        # plt.title('Smoothed Pressure Graph with Sine Curve Fit')
+        # plt.legend()
+        # plt.show()
+
+        # plt.plot(t, p, label='Original Data')
+        # plt.plot(t, p_smooth, label='Smoothed Data')
+        # plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
+        # plt.xlabel('Time')
+        # plt.ylabel('Pressure')
+        # plt.title('Smoothed Pressure Graph with Linear Regression')
+        # plt.legend()
+        # plt.show()
 
         outliers_list.append({
             'type': i.type,
             'frame': i.frame_no,
             'stringer': i.stringer_no,
             'weld': i.weld_no
-        })        
-        
-    min_var = min(stdmed)
+        })     
+
     max_var = max(stdmed)
+    min_var = min(stdmed)
 
-    log_min_var = np.sqrt(1.0*(min_var))
-    log_max_var = np.sqrt(1.0*(max_var))
-
+    scores = []
     for var in stdmed:
-        log_var = np.sqrt(1.0*(var))
-        score = 10 * (log_var - log_min_var) / (log_max_var - log_min_var)
+        score = 10.0 * (var - min_var) / (max_var - min_var)
         scores.append(score)
 
+
     for i, item in enumerate(outliers_list):
-        item['score'] = scores[i]
+        item['score'] = scores[i]        
+
+
 
 
     for i in atotal:
@@ -147,21 +174,32 @@ def test():
     plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
     plt.show()
 
-    outlists = [    np.array([        item['frame'],
+    outlists = [
+        np.array([
+            item['frame'],
             item['stringer'],
             item['weld'],
             item['type']
         ])
         for item in outliers_list
     ]
+
     for arr, score in zip(outlists, scores):
-        print(arr.tolist(), score)
+        arr_str = ', '.join(str(x) for x in arr.tolist())
+        print(f"[{arr_str}], {score}")
 
+    average_score = np.average(scores)
+    print(f"Average Score: {average_score}")
 
+    # with open('Pressure_Scores_Clip_to_skin_PEAKS222.txt', 'w') as f:
+    #     print(f'Opened {f.name} for writing')
+    #     for arr, score in zip(outlists, scores):
+    #         arr_str = ', '.join(str(x) for x in arr.tolist())
+    #         f.write(f'"[{arr_str}]",{score}\n')
 
 
 def boxplots222(): 
-    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
+    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
     outliers_list = [] 
     variances = []
     x_plot = []
@@ -191,16 +229,14 @@ def boxplots222():
             'weld': i.weld_no
         })        
         
-    min_var = min(variances)
     max_var = max(variances)
+    min_var = min(variances)
 
-    log_min_var = (min_var)
-    log_max_var = (max_var)
-
+    scores = []
     for var in variances:
-        log_var = (var)
-        score = 10 * (log_var - log_min_var) / (log_max_var - log_min_var)
+        score = 10.0 * (var - min_var) / (max_var - min_var)
         scores.append(score)
+
 
     for i, item in enumerate(outliers_list):
         item['score'] = scores[i]
@@ -218,23 +254,37 @@ def boxplots222():
     plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
     plt.show()
 
-    outlists = [    np.array([        item['frame'],
+    outlists = [
+        np.array([
+            item['frame'],
             item['stringer'],
             item['weld'],
             item['type']
         ])
         for item in outliers_list
     ]
-    
-    
-    #with open('suspectwelds_pressure.txt', 'w') as f:
-      #  print(f'Opened {f.name} for writing')
-      #  for arr, score in zip(outlists, scores):
-      #      print(arr.tolist(), score)
-      #      f.write(str(arr.tolist()) + ' ' + str(score) + '\n')
+
+    for arr, score in zip(outlists, scores):
+        arr_str = ', '.join(str(x) for x in arr.tolist())
+        print(f"[{arr_str}], {score}")
+
+    average_score = np.average(scores)
+    print(f"Average Score: {average_score}")
+
+    with open('Pressure_Scores_Clip_to_skin_PEAKS222.txt', 'w') as f:
+        print(f'Opened {f.name} for writing')
+        for arr, score in zip(outlists, scores):
+            arr_str = ', '.join(str(x) for x in arr.tolist())
+            f.write(f'"[{arr_str}]",{score}\n')
+
+
+
+
+
+
 
 
 #boxplots2()  #boxplots of upper pressure peaks
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-boxplots222() #boxplots of upper and lower pressure peaks
-#test()
+#boxplots222() #boxplots of upper and lower pressure peaks
+filter()
