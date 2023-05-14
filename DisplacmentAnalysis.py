@@ -11,7 +11,7 @@ import csv
 # 29 stringers and 12 frames 299 welds
 
 FrameNumber= 1                                      # Integer that tells which frame number is being considered, starting with frame 1.
-TypeFile = True                                    # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
+TypeFile = False                                    # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
                                                     #frame (True) data.
 index_csv = []                                      # A list where the position of the welds is going to be put.
 ListOfMaximumValues =[]                             # A list of the maximum values of all the frames.
@@ -125,7 +125,6 @@ while FrameNumber != 13:
     # To help the human during the debugging proces and to find ways to improve the code, a graph can be made which points to the welds which have
     #a positive displacement. 
     for (WeldNumber, TimeStamp) in zip(WeldNumberWithPositiveDisplacement, TimeAtPositiveDisplacement) :
-        # print(WeldNumber)
         plt.plot(ImportedData[WeldNumber])
         plt.annotate('Positive slope',xy=(TimeStamp -1, ImportedData[WeldNumber][TimeStamp -1]), xycoords='data',xytext=(0.1, 0.95), textcoords='axes fraction', arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
         # plt.show()    
@@ -168,8 +167,7 @@ for RawAlarmDataFrameList in TotalNegativeDisplacementAlarmABS :
 
 
 
-# Everything is now calculated and can be writen in a CSV file, that teh perpuse of the next bit of code.
-
+# Everything is now calculated and can be writen in a CSV file, that is the Purpose of the next bit of code.
 
 TemporaryListForWritingCSV1 = []
 TemporaryListForWritingCSV2 = []
@@ -179,10 +177,7 @@ TemporaryListForWritingCSV4 = []
 # plt.show()
 CounterForCSVFile1 = 0
 CounterForCSVFile2 = 0
-
-# print(DisplacementAnomalyList)
-# print()
-# print(TotalNegativeDisplacementAlarmREL)
+CounterForCSVFile3 = 0
 
 if TypeFile == True :
     with open('DisplacementVeryHighWeldsClipToFrame.csv', 'w', newline='') as file:
@@ -204,12 +199,8 @@ if TypeFile == True :
 
     with open('DisplacementPositiveClipToFrame.csv', 'w', newline='') as file:
         while CounterForCSVFile3 != len(TotalNegativeDisplacementAlarmREL) :
-            print(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3])
-            while CounterForCSVFile1 != len(index_csv) :
-                OPPER2 = (index_csv[CounterForCSVFile1] + " " +  str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
-                print(OPPER2, str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
-                TemporaryListForWritingCSV2.append(OPPER2)
-                CounterForCSVFile1 = CounterForCSVFile1 + 1
+            OPPER2 = (index_csv[CounterForCSVFile3] + " " +  str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
+            TemporaryListForWritingCSV2.append(OPPER2)
             CounterForCSVFile3 = CounterForCSVFile3 + 1
 
         writer = csv.writer(file)
@@ -223,10 +214,10 @@ if TypeFile == True :
 if TypeFile == False :
     with open('DisplacementVeryHighWeldsClipToSkin.csv', 'w', newline='') as file:
         for frame in DisplacementAnomalyList :
-            while CounterForCSVFile1 != len(index_csv) :
-                OPPER3 = index_csv[CounterForCSVFile1] + " " +  str(frame)
-                TemporaryListForWritingCSV3.append(OPPER3)
-                CounterForCSVFile1 = CounterForCSVFile1 + 1
+            # while CounterForCSVFile1 != len(index_csv) :
+            OPPER3 = index_csv[CounterForCSVFile1] + " " +  str(frame)
+            TemporaryListForWritingCSV3.append(OPPER3)
+            CounterForCSVFile1 = CounterForCSVFile1 + 1
 
         writer = csv.writer(file)
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV3) :
@@ -235,78 +226,17 @@ if TypeFile == False :
             
     CounterForCSVFile1 = 0
     CounterForCSVFile2 = 0
+    CounterForCSVFile3 = 0
 
     with open('DisplacementPositiveClipToSkin.csv', 'w', newline='') as file:
-        for frame in TotalNegativeDisplacementAlarmREL :
-            while CounterForCSVFile1 != len(index_csv) :
-                OPPER4 = index_csv[CounterForCSVFile1] + " " +  str(frame)
-                TemporaryListForWritingCSV4.append(OPPER4)
-                CounterForCSVFile1 = CounterForCSVFile1 + 1
+        while CounterForCSVFile3 != len(TotalNegativeDisplacementAlarmREL) :
+            OPPER2 = (index_csv[CounterForCSVFile3] + " " +  str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
+            TemporaryListForWritingCSV2.append(OPPER2)
+            CounterForCSVFile3 = CounterForCSVFile3 + 1
 
         writer = csv.writer(file)
-        while CounterForCSVFile2 != len(TemporaryListForWritingCSV4) :
-            writer.writerow([TemporaryListForWritingCSV4[CounterForCSVFile2]])
+        while CounterForCSVFile2 != len(TemporaryListForWritingCSV2) :
+            writer.writerow([TemporaryListForWritingCSV2[CounterForCSVFile2]])
             CounterForCSVFile2 = CounterForCSVFile2 +1
 
 
-
-#     with open('DisplacementVeryHighWeldsClipToFrame.csv', 'w', newline='') as file:
-#         writer = csv.writer(file)
-#         for frame in DisplacementAnomalyList :
-#             for  IndexForWelds in index_csv :
-#                 writer.writerow([IndexForWelds] + [frame] + [BreakCounter])
-#                 if BreakCounter >=  len(index_csv) :
-                    
-#                     file.close()
-#                 BreakCounter = BreakCounter + 1
-#                 print(len(IndexForWelds), BreakCounter, "very high")
-#                 # file.close()
-
-
-#     with open('DisplacementPositiveClipToFrame.csv', 'w', newline='') as file:
-#         writer = csv.writer(file)
-#         for frame in TotalNegativeDisplacementAlarmREL :
-#             for (weld2, IndexForWelds) in zip (frame, index_csv) :
-#                 writer.writerow([IndexForWelds] + [weld2])
-#                 if BreakCounter >=  len(index_csv) :
-#                     break
-#                 BreakCounter = BreakCounter + 1
-
-
-# BreakCounter = 0
-# if TypeFile == False :
-#     with open('DisplacementVeryHighWeldsClipToSkin.csv', 'w', newline='') as file:
-#         writer = csv.writer(file)
-#         for frame in DisplacementAnomalyList :
-#             for  IndexForWelds in index_csv :
-#                 writer.writerow([IndexForWelds] + [frame])
-#                 if BreakCounter >=  len(index_csv) :
-#                     break
-#                 BreakCounter = BreakCounter + 1
-#                 # print(BreakCounter, "very high")
-
-
-#     BreakCounter = 0
-#     with open('DisplacementPositiveClipToSkin.csv', 'w', newline='') as file:
-#         writer = csv.writer(file)
-#         for frame in TotalNegativeDisplacementAlarmREL :
-#             # print(len(frame), )
-#             for (weld2, IndexForWelds) in zip (frame, index_csv) :
-#                 writer.writerow([IndexForWelds] + [weld2])
-#                 if BreakCounter >=  len(index_csv) :
-#                     break
-#                 BreakCounter = BreakCounter + 1
- 
-
-
-
-# for (WeldNumber, TimeStamp) in zip(WeldNumberWithPositiveDisplacement, TimeAtPositiveDisplacement) :
-
-#! things to do, differentioate between kind of dips. So dips in the beginning are fine but late roen are bad. 
-#! Beter noise reduction. 
-# Combine the CVS files beter write. 
-#! Try to calcualte the "area" of the dips (so dept times width fo the dip).
-#  and that dtermines the score fo the dispalcment. 
-# AMke a index files 
-# and try to get teh smae as the rest of the peopels csv files
-# Make Wei Wei List
