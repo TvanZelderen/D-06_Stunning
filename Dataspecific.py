@@ -92,6 +92,7 @@ def numb(total0):
      count1 = defaultdict(int)
      num0_frame = []
      num0_stringer = []
+     c = 0
 
      for i in total0:
           count[i.frame_no] += 1
@@ -103,8 +104,10 @@ def numb(total0):
      for i in total0:
           count1[i.stringer_no] += 1
      count1 = collections.OrderedDict(sorted(count1.items()))
+     print(count1.items())
      for i, count1 in count1.items():
           num0_stringer.append(count1)
+          c+=1
 
      return num0_frame, num0_stringer
      
@@ -237,12 +240,13 @@ if local == 1:
      score_skin_frame = np.zeros(12)
      score_skin_stringer = np.zeros(27)
      score_frame_frame = np.zeros(12)
-     score_frame_stringer = np.zeros(29)
+     score_frame_stringer = np.array(29)
      c = 0
      d = 0
 
      num_0_frame, num_0_stringer = numb(total0)
      num_1_frame, num_1_stringer = numb(total1)
+     num_1_stringer = [1, 14, 4, 21, 14, 20, 19, 5, 8, 7, 10, 16, 13, 16, 19, 20, 15, 14, 6, 1, 1, 6, 11, 13, 14, 6, 6, 1, 2]
 
 
      for i in total0:
@@ -250,14 +254,17 @@ if local == 1:
           score_skin_stringer[i.stringer_no-1] += radius_0[c]
           c+=1
      #score_skin_frame = np.abs(score_skin_frame)/(np.abs(score_skin_frame)).max*10.0
-     score_skin_frame = score_skin_frame/num_0_frame*10
-     score_skin_stringer = score_skin_stringer/num_0_stringer*10
+     score_skin_frame = score_skin_frame/num_0_frame
+     score_skin_frame = score_skin_frame/max(score_skin_frame)*10
+     score_skin_stringer = score_skin_stringer/num_0_stringer
+     score_skin_stringer = score_skin_stringer/max(score_skin_stringer)*10
 
      for j in total1:
           score_frame_frame[j.frame_no-1] += radius_1[d]
           score_frame_stringer[j.stringer_no-1] += radius_1[d]
           d+=1
      score_frame_frame = score_frame_frame/num_1_frame*10
+     print(num_1_stringer)
      score_frame_stringer = score_frame_stringer/num_1_stringer*10
 
      fig, axs = plt.subplots(2, 2)
