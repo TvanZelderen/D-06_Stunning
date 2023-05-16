@@ -10,21 +10,21 @@ from numpy.random import random
 from sklearn.linear_model import LinearRegression as LiRe
 
 
-# with open('powerthrong_0.csv', 'r', newline='') as file:
-#     data0 = list(csv.reader(file))
-# data0 = np.array(data0)
-# data0 = data0.astype('float64')
-# data = data0
-# s = 27
-# w = 6
+with open('powerthrong_0.csv', 'r', newline='') as file:
+    data0 = list(csv.reader(file))
+data0 = np.array(data0)
+data0 = data0.astype('float64')
+data = data0
+s = 27
+w = 6
 
-with open('powerthrong_1.csv', 'r', newline='') as file:
-    data1 = list(csv.reader(file))
-data1 = np.array(data1)
-data1 = data1.astype('float64')
-data = data1
-s = 29
-w = 2
+# with open('powerthrong_1.csv', 'r', newline='') as file:
+#     data1 = list(csv.reader(file))
+# data1 = np.array(data1)
+# data1 = data1.astype('float64')
+# data = data1
+# s = 29
+# w = 2
 
 # data = np.vstack([data0,data1])
 
@@ -42,10 +42,10 @@ index_csv = []
 for i in range(index.shape[0]):
     index_csv.append(repr(list(index[i,:])))
 
-with open('power.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    for i in range(index.shape[0]):
-        writer.writerow([index_csv[i],scaled_log[i]])
+# with open('power.csv', 'w', newline='') as file:
+#     writer = csv.writer(file)
+#     for i in range(index.shape[0]):
+#         writer.writerow([index_csv[i],scaled_log[i]])
 
 # with open('dummy1.csv', 'w', newline='') as file:
 #     writer = csv.writer(file)
@@ -155,6 +155,8 @@ plt.show()
 frame_mean_slope = np.nanmean(slope_array, axis=1)
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_slope)
+plt.xlabel('Frame number')
+plt.ylabel('Mean slope of SoS [-]')
 plt.show()
 
 string_mean_slope = np.nanmean(slope_array, axis=0)
@@ -181,6 +183,8 @@ plt.show()
 frame_mean_ssd = np.nanmean(ssd_array, axis=(1,2))
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_ssd)
+plt.xlabel('Frame number')
+plt.ylabel('SoS [-]')
 plt.ylim(bottom = 0)
 plt.show()
 
