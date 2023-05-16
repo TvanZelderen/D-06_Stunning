@@ -11,7 +11,7 @@ import csv
 # 29 stringers and 12 frames 299 welds
 
 FrameNumber= 1                                      # Integer that tells which frame number is being considered, starting with frame 1.
-TypeFile = False                                    # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
+TypeFile = True                                    # Boolean that tells the program if it needs to get the data from the clip to skin (False) or clip to 
                                                     #frame (True) data.
 index_csv = []                                      # A list where the position of the welds is going to be put.
 ListOfMaximumValues =[]                             # A list of the maximum values of all the frames.
@@ -131,8 +131,11 @@ while FrameNumber != 13:
     #a positive displacement. 
     for (WeldNumber, TimeStamp) in zip(WeldNumberWithPositiveDisplacement, TimeAtPositiveDisplacement) :
         plt.plot(ImportedData[WeldNumber])
+        plt.xlabel('Time [s]')
+        plt.ylabel('Displacement [mm]')
         plt.annotate('Positive slope',xy=(TimeStamp -1, ImportedData[WeldNumber][TimeStamp -1]), xycoords='data',xytext=(0.1, 0.95), textcoords='axes fraction', arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
-        # plt.show()    
+        print(Weldnumber, FrameNumber)
+        plt.show()    
 
     # Printed tekst used for debugging 
     if TypeFile == True :
