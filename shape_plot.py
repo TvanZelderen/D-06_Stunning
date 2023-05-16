@@ -10,11 +10,11 @@ from numpy.random import random
 from sklearn.linear_model import LinearRegression as LiRe
 
 
-with open('powerthrong_0.csv', 'r', newline='') as file:
-    data0 = list(csv.reader(file))
-data0 = np.array(data0)
-data0 = data0.astype('float64')
-data = data0
+# with open('powerthrong_0.csv', 'r', newline='') as file:
+#     data0 = list(csv.reader(file))
+# data0 = np.array(data0)
+# data0 = data0.astype('float64')
+# data = data0
 # s = 27
 # w = 6
 
@@ -23,10 +23,10 @@ with open('powerthrong_1.csv', 'r', newline='') as file:
 data1 = np.array(data1)
 data1 = data1.astype('float64')
 data = data1
-# s = 29
-# w = 2
+s = 29
+w = 2
 
-data = np.vstack([data0,data1])
+# data = np.vstack([data0,data1])
 
 log_ssds = np.log(data[:,4].reshape(-1))
 max_log = np.max(log_ssds)
@@ -181,11 +181,13 @@ plt.show()
 frame_mean_ssd = np.nanmean(ssd_array, axis=(1,2))
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_ssd)
+plt.ylim(bottom = 0)
 plt.show()
 
 string_mean_ssd = np.nanmean(ssd_array, axis=(0,2))
 x_plot = range(1,s+1)
 plt.plot(x_plot,string_mean_ssd)
+plt.ylim(bottom = 0)
 plt.show()
 
 '''#pm analysis

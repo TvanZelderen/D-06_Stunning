@@ -1,12 +1,23 @@
 from load import *
 
-ax = plot_ini('')    
+sns.set_theme()
+fig, axs = plt.subplots(1,2, sharey=True)
+
+all_obj = iterate_points(type = 0)
+for i in all_obj:
+    try:
+        i.plot(axs[0], displacement = True)
+    except:
+        pass
+
 all_obj = iterate_points(type = 1)
 for i in all_obj:
     try:
-        i.plot(ax, displacement = True)
+        i.plot(axs[1], displacement = True)
     except:
         pass
-plt.xlabel('Time [s]')
-plt.ylabel('Displacement [mm]')
+
+axs[0].set_xlabel('Time [s]')
+axs[1].set_xlabel('Time [s]')
+axs[0].set_ylabel('Displacement [mm]')
 plt.show()
