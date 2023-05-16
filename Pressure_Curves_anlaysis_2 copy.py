@@ -149,7 +149,7 @@ for obj in objects:
 
     weld_location = [obj.frame_no, obj.stringer_no, obj.weld_no, obj.type]
     
-    if i==1:
+    if i==13:
         plt.figure()
         plt.plot(peakst, peaksp, "o")
         plt.plot(max_time_freq, max_pressure_freq, "o")
@@ -162,105 +162,88 @@ for obj in objects:
 
     weld_list.append([weld_location, ma, mi, av_time, av_pressure])#creates a matrix with the weld location, maximum and minimum time difference and average time
     i=i+1
-average_pressures = [lst[4] for lst in weld_list]
-total_average_pressure=np.average(average_pressures)
-averages_averages = [lst[3] for lst in weld_list]
-total_average_avarage = np.average(averages_averages)
-averages_minimums = [lst[2] for lst in weld_list]
-total_average_minimums = np.average(averages_minimums)
-averages_maximums = [lst[1] for lst in weld_list]
-total_average_maximumx = np.average(averages_maximums)
-std_avarges=np.std(averages_averages)
-std_minimums=np.std(averages_minimums)
-std_maximums=np.std(averages_maximums)
-std_pressure= np.std(average_pressures)
 
-value=1
-bad_weld_avg_pre=[]
-bad_weld_avg_avg=[]
-bad_weld_avg_max=[]
-bad_weld_avg_min=[]
-col=0
-col_p=0
-color_time=[]
-color_pressure=[]
-for num in range(len(averages_averages)):
-    
-    """if averages_averages[num]> total_average_avarage+value*std_avarges or averages_averages[num]< total_average_avarage-value*std_avarges:
-        bad_weld_avg_avg.append(weld_list[num][0])
-        col=col+10/3"""
+weld_1=[]
+weld_2=[]
+weld_3=[]
+weld_4=[]
+weld_5=[]
+weld_6=[]
+for weld in weld_list:
+    if weld[0][2]==1:
+        weld_1.append(weld)
+    if weld[0][2]==2:
+        weld_2.append(weld)
+    if weld[0][2]==3:
+        weld_3.append(weld)
+    if weld[0][2]==4:
+        weld_4.append(weld)
+    if weld[0][2]==5:
+        weld_5.append(weld)
+    if weld[0][2]==6:
+        weld_6.append(weld)
 
-    if averages_minimums[num]< total_average_minimums-value*4/3*std_minimums:
-        bad_weld_avg_min.append(weld_list[num][0])
-        col=col-2.5
+averages_pressures_1= [lst[4] for lst in weld_1]
+averages_pressures_2= [lst[4] for lst in weld_2]
+averages_pressures_3= [lst[4] for lst in weld_3]
+averages_pressures_4= [lst[4] for lst in weld_4]
+averages_pressures_5= [lst[4] for lst in weld_5]
+averages_pressures_6= [lst[4] for lst in weld_6]
+print(np.average(averages_pressures_1), np.average(averages_pressures_2), np.average(averages_pressures_3), np.average(averages_pressures_4), np.average( averages_pressures_5), np.average( averages_pressures_6))
+print()
+averages_maximums_1= [lst[1] for lst in weld_1]
+averages_maximums_2= [lst[1] for lst in weld_2]
+averages_maximums_3= [lst[1] for lst in weld_3]
+averages_maximums_4= [lst[1] for lst in weld_4]
+averages_maximums_5= [lst[1] for lst in weld_5]
+averages_maximums_6= [lst[1] for lst in weld_6]
+print(np.average(averages_maximums_1), np.average( averages_maximums_2), np.average(averages_maximums_3), np.average( averages_maximums_4), np.average( averages_maximums_5), np.average( averages_maximums_6))
+print()
 
-    if averages_minimums[num]< total_average_minimums-value*1*std_minimums:
-        bad_weld_avg_min.append(weld_list[num][0])
-        col=col-2.5
+averages_minimums_1= [lst[2] for lst in weld_1]
+averages_minimums_2= [lst[2] for lst in weld_2]
+averages_minimums_3= [lst[2] for lst in weld_3]
+averages_minimums_4= [lst[2] for lst in weld_4]
+averages_minimums_5= [lst[2] for lst in weld_5]
+averages_minimums_6= [lst[2] for lst in weld_6]
 
-    if averages_minimums[num]< total_average_minimums-value*2/3*std_minimums:
-        bad_weld_avg_min.append(weld_list[num][0])
-        col=col-2.5
+print(np.average(averages_minimums_1), np.average( averages_minimums_2), np.average(averages_minimums_3), np.average( averages_minimums_4), np.average( averages_minimums_5), np.average( averages_minimums_6))
+print()
 
-    if averages_minimums[num]< total_average_minimums-value*1/3*std_minimums:
-        bad_weld_avg_min.append(weld_list[num][0])
-        col=col-2.5
-
-    if averages_maximums[num]> total_average_maximumx+value*1/3*std_maximums:
-        bad_weld_avg_max.append(weld_list[num][0])
-        col=col+2.5
-
-    if averages_maximums[num]> total_average_maximumx+2/3*value*std_maximums:
-        bad_weld_avg_max.append(weld_list[num][0])
-        col=col+2.5
-
-    if averages_maximums[num]> total_average_maximumx+1*value*std_maximums:
-        bad_weld_avg_max.append(weld_list[num][0])
-        col=col+2.5
-
-    if averages_maximums[num]> total_average_maximumx+4/3*value*std_maximums:
-        bad_weld_avg_max.append(weld_list[num][0])
-        col=col+2.5
-#Pressure calulations
-    if average_pressures[num]< total_average_pressure-value*4/3*std_pressure:
-        
-        col_p=col_p-2.5
-
-    if average_pressures[num]< total_average_pressure-value*1*std_pressure:
-        
-        col_p=col_p-2.5
-
-    if average_pressures[num]< total_average_pressure-value*2/3*std_pressure:
-        
-        col_p=col_p-2.5
-
-    if average_pressures[num]< total_average_pressure-1/3*value*std_pressure:
-        
-        col_p=col_p-2.5
-
-    if average_pressures[num]> total_average_pressure+1/3*value*std_pressure:
-
-        col_p=col_p+2.5
-
-    if average_pressures[num]> total_average_pressure+2/3*value*std_pressure:
-
-        col_p=col_p+2.5
-
-    if average_pressures[num]> total_average_pressure+1*value*std_pressure:
-
-        col_p=col_p+2.5
-
-    if average_pressures[num]> total_average_pressure+4/3*value*std_pressure:
-
-        col_p=col_p+2.5
-
-    color_time.append([weld_list[num], col])
-    color_pressure.append([weld_list[num], col_p])
-    col=0
+averages_average_1= [lst[3] for lst in weld_1]
+averages_average_2= [lst[3] for lst in weld_2]
+averages_average_3= [lst[3] for lst in weld_3]
+averages_average_4= [lst[3] for lst in weld_4]
+averages_average_5= [lst[3] for lst in weld_5]
+averages_average_6= [lst[3] for lst in weld_6]
+print(np.average(averages_minimums_1), np.average( averages_minimums_2), np.average(averages_minimums_3), np.average( averages_minimums_4), np.average( averages_minimums_5), np.average( averages_minimums_6))
+print()
+def give_punctuation(average):
+    avg=np.average(average)
+    std=np.std(average)
+    value=1
     col_p=0
-print(color_time[1][0][0][0], color_time[1][0][0][1], color_time[1][0][0][2], color_time[1][1], len(color_time))
-#print(bad_weld_avg_avg)
+    color=[]
+    for num in range(len(average)):
+        if average[num]< avg-value*4/3*std:
+            col_p=col_p-2.5
+        if average[num]< avg-value*1*std:
+            col_p=col_p-2.5
+        if average[num]< avg-value*2/3*std:
+            col_p=col_p-2.5
+        if average[num]< avg-1/3*value*std:
+            col_p=col_p-2.5
+        if average[num]> avg+1/3*value*std:
+            col_p=col_p+2.5
+        if average[num]> avg+2/3*value*std:
+            col_p=col_p+2.5
+        if average[num]> avg+1*value*std:
+            col_p=col_p+2.5
+        if average[num]> avg+4/3*value*std:
+            col_p=col_p+2.5
 
+        color.append([average, col_p])
+        col_p=0
 
 
 
@@ -342,7 +325,7 @@ with open('pressure_time_1.csv', 'w', newline='') as file:
     for i in range(len(color_time)):
         writer.writerow([repr(color_time[i][0][0]),abs(color_time[i][1])])
 
-with open('pressure_nolook_1.csv', 'w', newline='') as file:
+with open('pressure_1_nolook.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_pressure)):
         writer.writerow([repr(color_pressure[i][0][0]),abs(color_pressure[i][1])])  
@@ -381,7 +364,6 @@ plt.bar(range(1,30),stringer_mean_pressure)
 plt.title("clip to steringer mean pressure")
 plt.show()
 
-
+"""
 #--------------------------------------------------------------------------------------#
 
-"""
