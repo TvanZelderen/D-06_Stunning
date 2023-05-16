@@ -1,12 +1,10 @@
 from load import *
 
-ax = plot_ini('test')    
-all_obj = iterate_points(type = 1)
+ax = plot_ini('All displacement data (for clip-to-skin)')    
+all_obj = iterate_points(type = 0)
 for i in all_obj:
     try:
-        i.power_norm()
+        i.plot(ax, displacement = True)
     except:
         pass
-    else:
-        i.plot(ax, norm_power=True)
-plot_legends()
+plt.show()
