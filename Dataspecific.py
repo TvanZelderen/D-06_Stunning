@@ -110,17 +110,17 @@ def numb(total0):
 
 def scale(list1):
      list1 = np.abs(np.array(list1))
-     list2 = list1/(list1.max())*10 
+     list2 = (list1-list1.min())/(list1.max()-list1.min())*10 
 
      return list2
 
 #activation
-vis = 1
+vis = 0
 map = 1
-local = 1
+local = 0
 list_ = 0
-power = 0
-pressure = 1
+power = 1
+pressure = 0
 displacement = 0
 clustering_list = 0
 
@@ -218,7 +218,7 @@ if map == 1:
      sorted_x_plot = x_plot[idx]
      sorted_y_plot = y_plot[idx]
      #ssd_rank = np.arange(1,len(X_scores_0)+1)
-     im1 = ax_0.scatter(sorted_x_plot, sorted_y_plot, c=radius_0*10, cmap='Oranges')
+     im1 = ax_0.scatter(sorted_x_plot, sorted_y_plot, c=radius_0*10, cmap='coolwarm')
      fig.colorbar(im1, ax = ax_0)
 
      x_plot = []
@@ -234,7 +234,7 @@ if map == 1:
      sorted_x_plot = x_plot[idx]
      sorted_y_plot = y_plot[idx]
      #ssd_rank = np.arange(1,len(X_scores_1)+1)
-     im2 = ax_1.scatter(sorted_x_plot, sorted_y_plot, c=radius_1*10, cmap='Blues')
+     im2 = ax_1.scatter(sorted_x_plot, sorted_y_plot, c=radius_1*10, cmap='coolwarm')
      fig.colorbar(im2, ax = ax_1)
      plt.show()
 
@@ -254,6 +254,10 @@ if local == 1:
           dis_1_frame = scale(dis_1_frame)
           dis_1_stringer = [0, 0, 0.112079701, 13.117995018999999, 2.241594022, 15.0622665, 5.191469488999999, 3.4900373599999996, 11.162826897999999, 16.047633872000002, 5.361145704, 4.027085928, 2.3676836860000003, 10.350249066000002, 22.224470733000004, 11.776151930000001, 7.3178704859999995, 12.190224159, 2.5591531759999997, 0, 0, 3.9663760900000007, 7.182440846, 9.909713575, 9.159402242, 6.660958905, 0.600871731, 0, 0]
           dis_1_stringer = scale(dis_1_stringer)
+          dis_0_frame = [30, 20, 0, 0, 0, 20, 0, 0, 10, 10, 0, 0]
+          dis_0_frame = scale(dis_0_frame)
+          dis_0_stringer = [0, 20, 0, 0, 10, 20, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0]
+          dis_0_stringer = scale(dis_0_stringer)
 
      if pressure == 1:
           pres_0_frame = [ 1.94444444, -7.15217391, -7.00549451, -0.75342466,  4.21511628,  4.34027778, -4.0625, -0.9375, 7.61538462, 5.23076923,  4.24657534, -2.4695122 ]
@@ -293,6 +297,8 @@ if local == 1:
      fig, axs = plt.subplots(2, 2)
      
      axs[0,0].plot(np.linspace(1,12,12),np.abs(score_skin_frame), color='orange', label='Clustering')
+     if displacement == 1:
+          axs[0,0].plot(np.linspace(1,12,12),dis_0_frame, color='green', label='Displacement')
      if pressure == 1:
           axs[0,0].plot(np.linspace(1,12,12),pres_0_frame, color='blue', label='Pressure')
      axs[0,0].set_title('Outlier scores of clip-to-skin weldings along the frames')
@@ -301,6 +307,8 @@ if local == 1:
      axs[0,0].legend(loc="upper right")
 
      axs[0,1].plot(np.linspace(1,27,27),np.abs(score_skin_stringer), color='orange', label='Clustering')
+     if displacement == 1:
+          axs[0,1].plot(np.linspace(1,27,27),dis_0_stringer, color='green', label='Displacement')
      if pressure == 1:
           axs[0,1].plot(np.linspace(1,27,27),pres_0_stringer, color='blue', label='Pressure')
      axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
