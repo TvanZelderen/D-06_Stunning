@@ -40,7 +40,7 @@ for j in range(0, 12):
 
     ax.bar(theta, radii, bottom = 0.0, width = 6*np.pi/180, label = 'Weld Energy [kJ]')
     radii[radii == 0] = np.nan
-    ax.plot(np.linspace(0, 2*np.pi, 50), np.ones(50)*np.nanmean(radii), color = 'green', linewidth= 0.7 , label = 'Mean Weld Enegry [kJ]')
+    ax.plot(np.linspace(0, 2*np.pi, 50), np.ones(50)*np.nanmean(radii), color = 'green', linewidth= 0.7 , label = 'Mean Weld Energy [kJ]')
     
 
     #ax.legend()
