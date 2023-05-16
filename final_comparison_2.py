@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 # Weights and scores for the final comparison of the models
-w_disp_heavy = 10
+w_disp_heavy = 4
 w_energy = 4
 w_power = 4
 w_pressure_time = 1
@@ -10,7 +10,7 @@ w_pressure_filter = 2
 w_pressure_peak = 1
 w_displ = 1
 
-w_total = 24
+w_total = 18
 
 #amber_list = []
 #red_list = []
@@ -56,5 +56,5 @@ for i in index:
         y_plot.append(i[1] + ((i[2]-1)//3)/2.5 - 0.20)
         c_plot.append(c)
 
-plt.scatter(x_plot, y_plot, c=c_plot, cmap='coolwarm', clim=(0,3.5))
+plt.scatter(x_plot, y_plot, c=c_plot, cmap='coolwarm', clim=(0,4.5))
 plt.show()
