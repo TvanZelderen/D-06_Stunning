@@ -4,6 +4,7 @@ from load import *
 from sklearn.preprocessing import Normalizer, StandardScaler
 import seaborn as sns
 from Autoencoder import LOF
+import collections
 from collections import defaultdict
 import csv
 #from shape import get_peaks
@@ -86,26 +87,37 @@ def standard(X0):
      normalized_data0 = pd.DataFrame(normalized_features0, columns = X0.columns)
      return normalized_data0
 
-# def peaks(total):
-#      all_peak =[]
-#      for i in total:
-#           i.smoothing()
-#           peak = get_peaks(i)
-#           all_peak += peak
-#           if len(all_peak) != 0:
-#                roots, values, second_devs = zip(*all_peak)
-#      return values, second_devs
+def numb(total0):
+     count = defaultdict(int)
+     count1 = defaultdict(int)
+     num0_frame = []
+     num0_stringer = []
+
+     for i in total0:
+          count[i.frame_no] += 1
+     count = collections.OrderedDict(sorted(count.items()))
+     for i, count in count.items():
+          num0_frame.append(count)
+          
+     
+     for i in total0:
+          count1[i.stringer_no] += 1
+     count1 = collections.OrderedDict(sorted(count1.items()))
+     for i, count1 in count1.items():
+          num0_stringer.append(count1)
+
+     return num0_frame, num0_stringer
+     
 
 #activation
 vis = 0
 map = 0
-local = 0
+local = 1
 list_ = 0
 power = 1
 pressure = 0
 displacement = 0
-loc_maximum = 0
-clustering_list = 1
+clustering_list = 0
 
 a = 1
 
@@ -129,10 +141,6 @@ if displacement == 1:
      #clip_to_frame
      total1 = iterate_points(type = 1)
      X1 = Data_Disp(total1)
-# if loc_maximum == 1:
-#      total2 = iterate_points(type = 0)
-#      X0 = peaks(total2)
-#      print(X0)
 
 
 #Data Normalization
@@ -233,31 +241,38 @@ if local == 1:
      c = 0
      d = 0
 
+     num_0_frame, num_0_stringer = numb(total0)
+     num_1_frame, num_1_stringer = numb(total1)
+
+
      for i in total0:
           score_skin_frame[i.frame_no-1] += radius_0[c]
           score_skin_stringer[i.stringer_no-1] += radius_0[c]
           c+=1
-     score_skin_frame = np.abs(score_skin_frame)/(np.abs(score_skin_frame)).max*10.0
-
+     #score_skin_frame = np.abs(score_skin_frame)/(np.abs(score_skin_frame)).max*10.0
+     score_skin_frame = score_skin_frame/num_0_frame*10
+     score_skin_stringer = score_skin_stringer/num_0_stringer*10
 
      for j in total1:
           score_frame_frame[j.frame_no-1] += radius_1[d]
           score_frame_stringer[j.stringer_no-1] += radius_1[d]
           d+=1
+     score_frame_frame = score_frame_frame/num_1_frame*10
+     score_frame_stringer = score_frame_stringer/num_1_stringer*10
 
      fig, axs = plt.subplots(2, 2)
      
-     axs[0,0].bar(np.linspace(1,12,12),score_skin_frame, color='orange')
+     axs[0,0].bar(np.linspace(1,12,12),np.abs(score_skin_frame), color='orange')
      axs[0,0].set_title('Outlier scores of clip-to-skin weldings along the frames')
 
-     # axs[0,1].barh(np.linspace(1,27,27),np.abs(score_skin_stringer)/np.abs(score_skin_stringer).max*10.0, color='orange')
-     # axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
+     axs[0,1].barh(np.linspace(1,27,27),np.abs(score_skin_stringer), color='orange')
+     axs[0,1].set_title('Outlier scores of clip-to-skin weldings along the stringers')
 
-     # axs[1,0].bar(np.linspace(1,12,12),np.abs(score_frame_frame)/(np.abs(score_frame_frame)).max*10.0, color='blue')
-     # axs[1,0].set_title('Outlier scores of clip-to-frame weldings along the frames')
+     axs[1,0].bar(np.linspace(1,12,12),np.abs(score_frame_frame), color='blue')
+     axs[1,0].set_title('Outlier scores of clip-to-frame weldings along the frames')
 
-     # axs[1,1].barh(np.linspace(1,29,29),np.abs(score_frame_stringer)/(np.abs(score_frame_stringer)).max*10.0, color='blue')
-     # axs[1,1].set_title('Outlier scores of clip-to-frame weldings along the stringers')
+     axs[1,1].barh(np.linspace(1,29,29),np.abs(score_frame_stringer), color='blue')
+     axs[1,1].set_title('Outlier scores of clip-to-frame weldings along the stringers')
 
      plt.show()
 
@@ -279,11 +294,13 @@ if clustering_list == 1:
      file_list = np.concatenate((file_list_0, file_list_1), axis=0)
 
      if power == 1:
-          str = 'Power'
+          stri = 'Power'
      if pressure == 1:
-          str = 'Pressure'
+          stri = 'Pressure'
      if displacement == 1:
-          str = 'Displacement'
+          stri = 'Displacement'
+
+     title = 'Clustering' + stri + '.csv'
 
      with open('Clustering.csv', 'w', newline='') as file:
           writer = csv.writer(file)
