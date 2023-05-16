@@ -42,10 +42,10 @@ index_csv = []
 for i in range(index.shape[0]):
     index_csv.append(repr(list(index[i,:])))
 
-# with open('ssd.csv', 'w', newline='') as file:
-#     writer = csv.writer(file)
-#     for i in range(index.shape[0]):
-#         writer.writerow([index_csv[i],scaled_log[i]])
+with open('power.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(index.shape[0]):
+        writer.writerow([index_csv[i],scaled_log[i]])
 
 # with open('dummy1.csv', 'w', newline='') as file:
 #     writer = csv.writer(file)
@@ -181,11 +181,13 @@ plt.show()
 frame_mean_ssd = np.nanmean(ssd_array, axis=(1,2))
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_ssd)
+plt.ylim(bottom = 0)
 plt.show()
 
 string_mean_ssd = np.nanmean(ssd_array, axis=(0,2))
 x_plot = range(1,s+1)
 plt.plot(x_plot,string_mean_ssd)
+plt.ylim(bottom = 0)
 plt.show()
 
 '''#pm analysis
