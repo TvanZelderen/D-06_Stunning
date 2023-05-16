@@ -184,18 +184,19 @@ TemporaryListForWritingCSV4 = []
 CounterForCSVFile1 = 0
 CounterForCSVFile2 = 0
 CounterForCSVFile3 = 0
-
+# OPPER1 = [repr(index_csv[CounterForCSVFile1]),frame]
+# OPPER2 = [repr(index_csv[CounterForCSVFile3]),TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]
 if TypeFile == True :
     with open('DisplacementVeryHighWeldsClipToFrame.csv', 'w', newline='') as file:
         for frame in DisplacementAnomalyList :
             while CounterForCSVFile1 != len(index_csv) :
-                OPPER1 = index_csv[CounterForCSVFile1] + " " +  str(frame)
+                OPPER1 = [index_csv[CounterForCSVFile1],frame]
                 TemporaryListForWritingCSV1.append(OPPER1)
                 CounterForCSVFile1 = CounterForCSVFile1 + 1
 
         writer = csv.writer(file)
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV1) :
-            writer.writerow([TemporaryListForWritingCSV1[CounterForCSVFile2]])
+            writer.writerow(TemporaryListForWritingCSV1[CounterForCSVFile2])
             CounterForCSVFile2 = CounterForCSVFile2 +1
             
     CounterForCSVFile1 = 0
@@ -205,13 +206,13 @@ if TypeFile == True :
 
     with open('DisplacementPositiveClipToFrame.csv', 'w', newline='') as file:
         while CounterForCSVFile3 != len(TotalNegativeDisplacementAlarmREL) :
-            OPPER2 = (index_csv[CounterForCSVFile3] + " " +  str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
+            OPPER2 = [index_csv[CounterForCSVFile3],TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]]
             TemporaryListForWritingCSV2.append(OPPER2)
             CounterForCSVFile3 = CounterForCSVFile3 + 1
 
         writer = csv.writer(file)
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV2) :
-            writer.writerow([TemporaryListForWritingCSV2[CounterForCSVFile2]])
+            writer.writerow(TemporaryListForWritingCSV2[CounterForCSVFile2])
             CounterForCSVFile2 = CounterForCSVFile2 +1
 
 
@@ -221,13 +222,13 @@ if TypeFile == False :
     with open('DisplacementVeryHighWeldsClipToSkin.csv', 'w', newline='') as file:
         for frame in DisplacementAnomalyList :
             # while CounterForCSVFile1 != len(index_csv) :
-            OPPER3 = index_csv[CounterForCSVFile1] + " " +  str(frame)
+            OPPER3 = [index_csv[CounterForCSVFile1],frame]
             TemporaryListForWritingCSV3.append(OPPER3)
             CounterForCSVFile1 = CounterForCSVFile1 + 1
 
         writer = csv.writer(file)
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV3) :
-            writer.writerow([TemporaryListForWritingCSV3[CounterForCSVFile2]])
+            writer.writerow(TemporaryListForWritingCSV3[CounterForCSVFile2])
             CounterForCSVFile2 = CounterForCSVFile2 +1
             
     CounterForCSVFile1 = 0
@@ -236,13 +237,13 @@ if TypeFile == False :
 
     with open('DisplacementPositiveClipToSkin.csv', 'w', newline='') as file:
         while CounterForCSVFile3 != len(TotalNegativeDisplacementAlarmREL) :
-            OPPER2 = (index_csv[CounterForCSVFile3] + " " +  str(TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]))
+            OPPER2 = [index_csv[CounterForCSVFile3],TotalNegativeDisplacementAlarmREL[CounterForCSVFile3]]
             TemporaryListForWritingCSV2.append(OPPER2)
             CounterForCSVFile3 = CounterForCSVFile3 + 1
 
         writer = csv.writer(file)
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV2) :
-            writer.writerow([TemporaryListForWritingCSV2[CounterForCSVFile2]])
+            writer.writerow(TemporaryListForWritingCSV2[CounterForCSVFile2])
             CounterForCSVFile2 = CounterForCSVFile2 +1
 
 #  Section to calculted Wei Wei data
@@ -250,54 +251,54 @@ if TypeFile == False :
 
 
 
-Stringer1 = 0
-Stringer2 = 0
-Stringer3 = 0.112079701
-Stringer4 = 13.117995018999999
-Stringer5 = 2.241594022
-Stringer6 = 15.0622665
-Stringer7 = 5.191469488999999
-Stringer8 = 3.4900373599999996
-Stringer9 = 11.162826897999999
-Stringer10 = 16.047633872000002
-Stringer11 = 5.361145704
-Stringer12 = 4.027085928
-Stringer13 = 2.3676836860000003
-Stringer14 = 10.350249066000002
-Stringer15 = 22.224470733000004
-Stringer16 = 11.776151930000001
-Stringer17 = 7.3178704859999995
-Stringer18 = 12.190224159
-Stringer19 = 2.5591531759999997
-Stringer20 = 0
-Stringer21 = 0
-Stringer22 = 3.9663760900000007
-Stringer23 = 7.182440846
-Stringer24 = 9.909713575
-Stringer25 = 9.159402242
-Stringer26 = 6.660958905
-Stringer27 = 0.600871731
-Stringer28 = 0
-Stringer29 = 0
+# Stringer1 = 0
+# Stringer2 = 0
+# Stringer3 = 0.112079701
+# Stringer4 = 13.117995018999999
+# Stringer5 = 2.241594022
+# Stringer6 = 15.0622665
+# Stringer7 = 5.191469488999999
+# Stringer8 = 3.4900373599999996
+# Stringer9 = 11.162826897999999
+# Stringer10 = 16.047633872000002
+# Stringer11 = 5.361145704
+# Stringer12 = 4.027085928
+# Stringer13 = 2.3676836860000003
+# Stringer14 = 10.350249066000002
+# Stringer15 = 22.224470733000004
+# Stringer16 = 11.776151930000001
+# Stringer17 = 7.3178704859999995
+# Stringer18 = 12.190224159
+# Stringer19 = 2.5591531759999997
+# Stringer20 = 0
+# Stringer21 = 0
+# Stringer22 = 3.9663760900000007
+# Stringer23 = 7.182440846
+# Stringer24 = 9.909713575
+# Stringer25 = 9.159402242
+# Stringer26 = 6.660958905
+# Stringer27 = 0.600871731
+# Stringer28 = 0
+# Stringer29 = 0
 
-SumOfPositiveDisplacementScoresAlongStringer = [Stringer1, Stringer2, Stringer3, Stringer4, Stringer5, Stringer6, Stringer7, Stringer8, Stringer9, Stringer10, Stringer11, Stringer12, Stringer13, Stringer14, Stringer15, Stringer16, Stringer17, Stringer18, Stringer19, Stringer20, Stringer21, Stringer22, Stringer23, Stringer24, Stringer25, Stringer26, Stringer27, Stringer28, Stringer29]
-SumOfVeryHighDisplacementScoresAlongStrinegr = [0, 20, 0, 0, 10, 20, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0]
-EmptyListStringer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-EmptyListFrame = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# SumOfPositiveDisplacementScoresAlongStringer = [Stringer1, Stringer2, Stringer3, Stringer4, Stringer5, Stringer6, Stringer7, Stringer8, Stringer9, Stringer10, Stringer11, Stringer12, Stringer13, Stringer14, Stringer15, Stringer16, Stringer17, Stringer18, Stringer19, Stringer20, Stringer21, Stringer22, Stringer23, Stringer24, Stringer25, Stringer26, Stringer27, Stringer28, Stringer29]
+# SumOfVeryHighDisplacementScoresAlongStrinegr = [0, 20, 0, 0, 10, 20, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0]
+# EmptyListStringer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# EmptyListFrame = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-SumOfPositiveDisplacementScoresAlongFrame = [38.119999999999976, 121.26999999999995, 138.94, 3.87, 59.99999999999998, 95.36000000000001, 81.86, 242.05000000000004, 113.83, 45.749999999999986, 167.8, 234.14999999999998]
-SumOfVeryHighDisplacementScoresAlongFrame = [30, 20, 0, 0, 0, 20, 0, 0, 10, 10, 0, 0]
-print("\n\n")
+# SumOfPositiveDisplacementScoresAlongFrame = [38.119999999999976, 121.26999999999995, 138.94, 3.87, 59.99999999999998, 95.36000000000001, 81.86, 242.05000000000004, 113.83, 45.749999999999986, 167.8, 234.14999999999998]
+# SumOfVeryHighDisplacementScoresAlongFrame = [30, 20, 0, 0, 0, 20, 0, 0, 10, 10, 0, 0]
+# print("\n\n")
 
-print("Sum of all the positive displacement scores of clip to frame along the frames", SumOfPositiveDisplacementScoresAlongFrame)
-print("Sum of all the positive displacement scores of clip to skin along the frames", EmptyListFrame)
-print("Sum of all the very high  displacement scores of clip to frame along the frames", EmptyListFrame)
-print("Sum of all the very high  displacement scores of clip to skin along the frames", SumOfVeryHighDisplacementScoresAlongFrame)
+# print("Sum of all the positive displacement scores of clip to frame along the frames", SumOfPositiveDisplacementScoresAlongFrame)
+# print("Sum of all the positive displacement scores of clip to skin along the frames", EmptyListFrame)
+# print("Sum of all the very high  displacement scores of clip to frame along the frames", EmptyListFrame)
+# print("Sum of all the very high  displacement scores of clip to skin along the frames", SumOfVeryHighDisplacementScoresAlongFrame)
 
-print("Sum of all the positive displacement scores of clip to frame along the stringers", SumOfPositiveDisplacementScoresAlongStringer)
-print("Sum of all the positive displacement scores of clip to skin along the stringers", EmptyListStringer)
-print("Sum of all the very high  displacement scores of clip to frame along the stringers", EmptyListStringer)
-print("Sum of all the very high  displacement scores of clip to skin along the stringers", SumOfVeryHighDisplacementScoresAlongStrinegr)
+# print("Sum of all the positive displacement scores of clip to frame along the stringers", SumOfPositiveDisplacementScoresAlongStringer)
+# print("Sum of all the positive displacement scores of clip to skin along the stringers", EmptyListStringer)
+# print("Sum of all the very high  displacement scores of clip to frame along the stringers", EmptyListStringer)
+# print("Sum of all the very high  displacement scores of clip to skin along the stringers", SumOfVeryHighDisplacementScoresAlongStrinegr)
 
 
 
