@@ -26,11 +26,13 @@ DisplacementAnomalyList = []                        # A list which has a list wi
 AllReadyInDisplacementAnomalyList = False            # Boolean that tells the code if a weld is already in the DispalcementAnomalyList                                                    
 DisplacementAnomalyDeptOfDisplacementList = []      # List of how high the sonotrode went during psoitive dispalcement
 ListOfAreasOfPositiveDisplacement = []        # A List of the list of negatives
+SumOfPositiveDisplacementScoresAlongFrame = []  # A list which sums all the scores of the welds along a frame, request for Wei Wei
+SumOfVeryHighDisplacementScoresAlongFrame = []  # Same as above
 
-# The program iterates all the calcualtions over each frame.
+# The program iterates all the calculation over each frame.
 while FrameNumber != 13: 
     data = iterate_points(frames=[FrameNumber] ,type = TypeFile)
-
+    
     # Definition of all the variabels and constants
     ImportedData = []                               # A list of all the data .
     WeldNumberWithPositiveDisplacement = []         # A list that stores all the weldsnumbers which have a positive displacement.
@@ -43,7 +45,9 @@ while FrameNumber != 13:
     LengthOfPositiveDisplacement = 0                # Counter to determine how long it takes for the sonotrode to "go back" to the original displacement. 
     w = 0                                           # Counter that stores the original time when a sonotroes goes up. It is used to determine the size of the
                                                     #gap by remembering the original value and comparing it with the next value.
-    DispalcementDuringPsoitiveDisplacement = []     # A list of how much the sosnotrode goes up during a weld where there is positive displacement
+    DispalcementDuringPositiveDisplacement = []     # A list of how much the sosnotrode goes up during a weld where there is positive displacement
+    SumOfPositiveDisplacementScore = 0              # A float which sums all scores of all the welds for a particular frame, request from Wei Wei
+    SumOfVeryHighDisplacementScore = 0              # Same as above
     
     # Pulls the list of displacement values and generates an index list used for the writing of the CSV file part
     for WeldNumberInData in data:   
@@ -61,6 +65,7 @@ while FrameNumber != 13:
                 IndentificationOfWeldList = [FrameNumber, Weldnumber]
                 DisplacementAnomalyList.append(10)
                 AllReadyInDisplacementAnomalyList = True
+                SumOfVeryHighDisplacementScore = SumOfVeryHighDisplacementScore + 10
             
             if Weld[Time-1] > Weld[Time] :
 
@@ -101,7 +106,7 @@ while FrameNumber != 13:
                     WeldNumberWithPositiveDisplacement.append(Weldnumber) 
                     DisplacementValueOfPositiveDisplacement.append(Weld[Time])
                     AreaOfPositiveDisplacement = (OriginalDispalcement-ReferenceDispalcement) * LengthOfPositiveDisplacement
-
+                SumOfPositiveDisplacementScore = SumOfPositiveDisplacementScore + AreaOfPositiveDisplacement
 
                 Time = w
 
@@ -139,7 +144,8 @@ while FrameNumber != 13:
 
     plt.plot(ImportedData[1])
     # plt.show()
-
+    SumOfPositiveDisplacementScoresAlongFrame.append(SumOfPositiveDisplacementScore)
+    SumOfVeryHighDisplacementScoresAlongFrame.append(SumOfVeryHighDisplacementScore)
     FrameNumber = FrameNumber + 1
     TotalNegativeDisplacementAlarmABS.append(ListOfAreasOfPositiveDisplacement)
 
@@ -195,7 +201,7 @@ if TypeFile == True :
     CounterForCSVFile1 = 0
     CounterForCSVFile2 = 0
     CounterForCSVFile3 = 0
-
+    
 
     with open('DisplacementPositiveClipToFrame.csv', 'w', newline='') as file:
         while CounterForCSVFile3 != len(TotalNegativeDisplacementAlarmREL) :
@@ -238,5 +244,60 @@ if TypeFile == False :
         while CounterForCSVFile2 != len(TemporaryListForWritingCSV2) :
             writer.writerow([TemporaryListForWritingCSV2[CounterForCSVFile2]])
             CounterForCSVFile2 = CounterForCSVFile2 +1
+
+#  Section to calculted Wei Wei data
+# Do note that almost all the data shown below was calcaulted manualy (exept the "along frame" data).
+
+
+
+Stringer1 = 0
+Stringer2 = 0
+Stringer3 = 0.112079701
+Stringer4 = 13.117995018999999
+Stringer5 = 2.241594022
+Stringer6 = 15.0622665
+Stringer7 = 5.191469488999999
+Stringer8 = 3.4900373599999996
+Stringer9 = 11.162826897999999
+Stringer10 = 16.047633872000002
+Stringer11 = 5.361145704
+Stringer12 = 4.027085928
+Stringer13 = 2.3676836860000003
+Stringer14 = 10.350249066000002
+Stringer15 = 22.224470733000004
+Stringer16 = 11.776151930000001
+Stringer17 = 7.3178704859999995
+Stringer18 = 12.190224159
+Stringer19 = 2.5591531759999997
+Stringer20 = 0
+Stringer21 = 0
+Stringer22 = 3.9663760900000007
+Stringer23 = 7.182440846
+Stringer24 = 9.909713575
+Stringer25 = 9.159402242
+Stringer26 = 6.660958905
+Stringer27 = 0.600871731
+Stringer28 = 0
+Stringer29 = 0
+
+SumOfPositiveDisplacementScoresAlongStringer = [Stringer1, Stringer2, Stringer3, Stringer4, Stringer5, Stringer6, Stringer7, Stringer8, Stringer9, Stringer10, Stringer11, Stringer12, Stringer13, Stringer14, Stringer15, Stringer16, Stringer17, Stringer18, Stringer19, Stringer20, Stringer21, Stringer22, Stringer23, Stringer24, Stringer25, Stringer26, Stringer27, Stringer28, Stringer29]
+SumOfVeryHighDisplacementScoresAlongStrinegr = [0, 20, 0, 0, 10, 20, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0]
+EmptyListStringer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+EmptyListFrame = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+SumOfPositiveDisplacementScoresAlongFrame = [38.119999999999976, 121.26999999999995, 138.94, 3.87, 59.99999999999998, 95.36000000000001, 81.86, 242.05000000000004, 113.83, 45.749999999999986, 167.8, 234.14999999999998]
+SumOfVeryHighDisplacementScoresAlongFrame = [30, 20, 0, 0, 0, 20, 0, 0, 10, 10, 0, 0]
+print("\n\n")
+
+print("Sum of all the positive displacement scores of clip to frame along the frames", SumOfPositiveDisplacementScoresAlongFrame)
+print("Sum of all the positive displacement scores of clip to skin along the frames", EmptyListFrame)
+print("Sum of all the very high  displacement scores of clip to frame along the frames", EmptyListFrame)
+print("Sum of all the very high  displacement scores of clip to skin along the frames", SumOfVeryHighDisplacementScoresAlongFrame)
+
+print("Sum of all the positive displacement scores of clip to frame along the stringers", SumOfPositiveDisplacementScoresAlongStringer)
+print("Sum of all the positive displacement scores of clip to skin along the stringers", EmptyListStringer)
+print("Sum of all the very high  displacement scores of clip to frame along the stringers", EmptyListStringer)
+print("Sum of all the very high  displacement scores of clip to skin along the stringers", SumOfVeryHighDisplacementScoresAlongStrinegr)
+
 
 
