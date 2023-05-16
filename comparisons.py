@@ -1,12 +1,12 @@
 from load import *
 
-ax = plot_ini('test')    
+ax = plot_ini('')    
 all_obj = iterate_points(type = 1)
 for i in all_obj:
     try:
-        i.power_norm()
+        i.plot(ax, displacement = True)
     except:
         pass
-    else:
-        i.plot(ax, norm_power=True)
-plot_legends()
+plt.xlabel('Time [s]')
+plt.ylabel('Displacement [mm]')
+plt.show()

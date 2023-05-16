@@ -149,7 +149,7 @@ for obj in objects:
 
     weld_location = [obj.frame_no, obj.stringer_no, obj.weld_no, obj.type]
     
-    if i==13:
+    if i==1:
         plt.figure()
         plt.plot(peakst, peaksp, "o")
         plt.plot(max_time_freq, max_pressure_freq, "o")
@@ -290,12 +290,12 @@ plt.show()
 
 #for type 0
 
-with open('pca1_time.csv', 'w', newline='') as file:
+with open('pressure_time_0.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_time)):
         writer.writerow([repr(color_time[i][0][0]),abs(color_time[i][1])])
 
-with open('pca1_pressure.csv', 'w', newline='') as file:
+with open('pressure_0_no_look.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_pressure)):
         writer.writerow([repr(color_pressure[i][0][0]),abs(color_pressure[i][1])])  
@@ -337,12 +337,12 @@ plt.show()
 
 #for type 1
 """
-with open('pca1_time.csv', 'w', newline='') as file:
+with open('pressure_time_1.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_time)):
         writer.writerow([repr(color_time[i][0][0]),abs(color_time[i][1])])
 
-with open('pca1_pressure.csv', 'w', newline='') as file:
+with open('pressure_nolook_1.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_pressure)):
         writer.writerow([repr(color_pressure[i][0][0]),abs(color_pressure[i][1])])  
@@ -381,11 +381,7 @@ plt.bar(range(1,30),stringer_mean_pressure)
 plt.title("clip to steringer mean pressure")
 plt.show()
 
-"""
+
 #--------------------------------------------------------------------------------------#
 
-
-ax = plt.axes(projection='3d')
-ax.plot_surface(x_plot_p, y_plot, color_plot_p, rstride=1, cstride=1,
-                cmap='viridis', edgecolor='none')
-ax.set_title('surface');
+"""
