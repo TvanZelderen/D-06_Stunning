@@ -41,7 +41,7 @@ def Model_r(X, nor_data, dim:int, learning_rate: 0.001):
     model_train_history = encoder_decoder_model.fit(
         x = train_data,
         y = train_data,
-        epochs = 40,
+        epochs = 20,
         batch_size = 32,
         validation_data = (test_data, test_data)
     )
