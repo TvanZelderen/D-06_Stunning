@@ -1,27 +1,37 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 # Weights and scores for the final comparison of the models
-w_ssd = 2
-w_dummy1 = 1
-w_dummy2 = 1
+w_disp_heavy = 10
+w_energy = 4
+w_power = 4
+w_pressure_time = 1
+w_pressure_filter = 2
+w_pressure_peak = 1
+w_displ = 1
 
-w_total = 4
+w_total = 24
 
-amber_list = []
-red_list = []
+#amber_list = []
+#red_list = []
+suspicious_list = []
 
-amber_score = 2
-max_score = 3
+#amber_score = 2
+#max_score = 3
+cutoff_score = 12
 
-df1=pd.read_csv('ssd.csv', header = None, index_col = 0, names = ['Index','SSD'])
-df2=pd.read_csv('dummy1.csv', header = None, index_col = 0, names = ['Index','dummy1'])
-df3=pd.read_csv('dummy2.csv', header = None, index_col = 0, names = ['Index','dummy2'])
+df1=pd.read_csv('disp_heavy.csv', header = None, index_col = 0, names = ['Index','disp_heavy'])
+df2=pd.read_csv('energy.csv', header = None, index_col = 0, names = ['Index','energy'])
+df3=pd.read_csv('power.csv', header = None, index_col = 0, names = ['Index','power'])
+df4=pd.read_csv('pressure_time.csv', header = None, index_col = 0, names = ['Index','pressure_time'])
+df5=pd.read_csv('pressure_filter.csv', header = None, index_col = 0, names = ['Index','pressure_filter'])
+df6=pd.read_csv('pressure_peak.csv', header = None, index_col = 0, names = ['Index','pressure_peak'])
+df7=pd.read_csv('displ.csv', header = None, index_col = 0, names = ['Index','displacement'])
 
 dftotal=pd.concat([df1, df2, df3], axis= 1)
 corr_matrix = dftotal.corr()
 print(corr_matrix)
 
-dftotal['Final Score'] = dftotal['SSD']*w_ssd + dftotal['dummy1']*w_dummy1 + dftotal['dummy2']*w_dummy2
+dftotal['Final Score'] = dftotal['disp_heavy']*w_disp_heavy + dftotal['power']*w_power + dftotal['energy']*w_energy + dftotal['pressure_time']*w_pressure_time + dftotal['pressure_filter']*w_pressure_filter + dftotal['pressure_peak']*w_pressure_peak + dftotal['displacement']*w_displ
 dftotal['Final Score'] /= w_total
 print(dftotal.to_string)
 
