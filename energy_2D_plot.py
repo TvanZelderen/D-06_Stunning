@@ -10,8 +10,8 @@ axs = []
 fig, axs = plt.subplots(3, 4, subplot_kw=dict(projection="polar"))
 axs = np.reshape(axs, -1)
 ax_iter = iter(axs)
-weld_loc = 2
-weld_type = 1
+weld_loc = 6
+weld_type = 0
 print(axs)
 for j in range(0, 12):
     theta = np.array([], float)
@@ -38,9 +38,9 @@ for j in range(0, 12):
     ax.set_xticklabels(['1', '4', '7', '10', '13', '16', '19', '21', '24', '27', '30'])# ['1', '3', '5', '7', '9', '11', '13', '15', '17', '19', '21', '23', '25', '27','29', '30']) 
     ax.yaxis.set_ticks([1, 2, 3, 4])
 
-    ax.bar(theta, radii, bottom = 0.0, width = 6*np.pi/180, label = 'Weld Enegry [kJ]')
+    ax.bar(theta, radii, bottom = 0.0, width = 6*np.pi/180, label = 'Weld Energy [kJ]')
     radii[radii == 0] = np.nan
-    ax.plot(np.linspace(0, 2*np.pi, 50), np.ones(50)*np.nanmean(radii), color = 'green', linewidth= 0.7 , label = 'Mean Weld Enegry [kJ]')
+    ax.plot(np.linspace(0, 2*np.pi, 50), np.ones(50)*np.nanmean(radii), color = 'green', linewidth= 0.7 , label = 'Mean Weld Energy [kJ]')
     
 
     #ax.legend()
@@ -48,6 +48,6 @@ for j in range(0, 12):
     ax.set_thetamin(4.5)
     ax.set_thetamax(-184.5)
 handles, labels = ax.get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower right')
+fig.legend(handles, labels, loc='lower center')
 fig.suptitle('Weld position: ' + str(weld_loc) +', weld type: ' +str(weld_type))
 plt.show()
