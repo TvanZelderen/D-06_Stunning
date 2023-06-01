@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.cm import get_cmap
+from matplotlib.colors import ListedColormap
 from load import *
 from sklearn.preprocessing import Normalizer, StandardScaler
 import seaborn as sns
@@ -9,6 +11,12 @@ from collections import defaultdict
 import csv
 #from shape import get_peaks
 
+sns.set_theme()
+cmap = get_cmap('coolwarm')
+cmin=0.1
+cmax=1
+newcolors = cmap(np.linspace(cmin, cmax, 256))
+newcmp = ListedColormap(newcolors)
 
 def Data_Power(total):
     X = pd.DataFrame()
@@ -119,9 +127,9 @@ vis = 0
 map = 1
 local = 0
 list_ = 0
-power = 1
+power = 0
 pressure = 0
-displacement = 0
+displacement = 1
 clustering_list = 0
 
 a = 5
@@ -132,19 +140,19 @@ if power == 1:
      total0 = iterate_points(type = 0)
      X0 = Data_Power(total0)
      #clip_to_frame
-     total1 = iterate_points(type = 1)
+     total1 = iterate_points(type = 1, welds=[1,2])
      X1 = Data_Power(total1)
 if pressure == 1:
      total0 = iterate_points(type = 0)
      X0 = Data_Power(total0)
      #clip_to_frame
-     total1 = iterate_points(type = 1)
+     total1 = iterate_points(type = 1, welds=[1,2])
      X1 = Data_Power(total1)
 if displacement == 1:
      total0 = iterate_points(type = 0)
      X0 = Data_Disp(total0)
      #clip_to_frame
-     total1 = iterate_points(type = 1)
+     total1 = iterate_points(type = 1, welds=[1,2])
      X1 = Data_Disp(total1)
 
 
@@ -201,13 +209,12 @@ if vis == 1:
 
 #map
 if map == 1:
-     fig, (ax_0, ax_1) = plt.subplots(1, 2)
 
      x_plot = []
      y_plot = []
 
      for i in total0:
-          x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
+          x_plot.append(i.frame_no + ((i.weld_no-1)%3)/6 - 1/6)
           y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
      x_plot = np.array(x_plot)
      y_plot = np.array(y_plot)
@@ -218,15 +225,19 @@ if map == 1:
      sorted_x_plot = x_plot[idx]
      sorted_y_plot = y_plot[idx]
      #ssd_rank = np.arange(1,len(X_scores_0)+1)
-     im1 = ax_0.scatter(sorted_x_plot, sorted_y_plot, c=radius_0*10, cmap='coolwarm')
-     fig.colorbar(im1, ax = ax_0)
+     plt.scatter(sorted_x_plot, sorted_y_plot, c=radius_0*10, cmap=newcmp, s=10, clim=(0,10))
+     cbar = plt.colorbar()
+     cbar.set_label('Score [-]', rotation=90)
+     plt.xlabel('Frame number [-]')
+     plt.ylabel('Stringer number [-]')
+     plt.show()
 
      x_plot = []
      y_plot = []
 
      for i in total1:
-          x_plot.append(i.frame_no + ((i.weld_no-1)%3)/10 - 0.10)
-          y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
+          x_plot.append(i.frame_no + i.weld_no/5 - 3/10)
+          y_plot.append(i.stringer_no)
      x_plot = np.array(x_plot)
      y_plot = np.array(y_plot)
 
@@ -234,8 +245,11 @@ if map == 1:
      sorted_x_plot = x_plot[idx]
      sorted_y_plot = y_plot[idx]
      #ssd_rank = np.arange(1,len(X_scores_1)+1)
-     im2 = ax_1.scatter(sorted_x_plot, sorted_y_plot, c=radius_1*10, cmap='coolwarm')
-     fig.colorbar(im2, ax = ax_1)
+     plt.scatter(sorted_x_plot, sorted_y_plot, c=radius_1*10, cmap=newcmp, s=15, clim=(0,10))
+     cbar = plt.colorbar()
+     cbar.set_label('Score [-]', rotation=90)
+     plt.xlabel('Frame number [-]')
+     plt.ylabel('Stringer number [-]')
      plt.show()
 
 if local == 1:
