@@ -5,7 +5,7 @@ from load import *
 import random
 from scipy.signal import savgol_filter
 from scipy.optimize import curve_fit
-
+sns.set_theme()
 
 a = dt('5', '23', '2', 1) #choose (frame_no, stringer_no, weld_no, type) for pressure graphs
 
@@ -78,7 +78,7 @@ def boxplots2(): #boxplots of upper and lower pressure graph peaks
     print(outliers_list)
 
 def filter():
-    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
+    atotal = iterate_points(type= 0, frames='All', stringers='All', welds='All')
     outliers_list = [] 
     x_plot = []
     y_plot = []
@@ -101,25 +101,25 @@ def filter():
 
         ##### TYPE 0 ####
 
-        #Calculate residuals
-        #residuals = np.abs(p_smooth - aveg)
+        # Calculate residuals
+        residuals = np.abs(p_smooth - aveg)
         # Calculate the standard deviation of the residuals # ROOT MEAN SQUARE ERROR
-        #std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
-        #stdmed.append(std_deviation)
+        std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
+        stdmed.append(std_deviation)
 
         ##### TYPE 1 ####
 
-        amplitude = 0.6
-        frequency = 3
-        phase = 0
-        mean_value = aveg
+        # amplitude = 0.6
+        # frequency = 3
+        # phase = 0
+        # mean_value = aveg
 
-        initial_guess = [amplitude, frequency, phase, mean_value]
-        optimized_params, _ = curve_fit(sine_function, t, p_smooth, p0=initial_guess)
-        p_fitted = sine_function(t, *optimized_params)
-        residuals = np.abs(p_smooth - p_fitted)
-        std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
-        stdmed.append(std_deviation)
+        # initial_guess = [amplitude, frequency, phase, mean_value]
+        # optimized_params, _ = curve_fit(sine_function, t, p_smooth, p0=initial_guess)
+        # p_fitted = sine_function(t, *optimized_params)
+        # residuals = np.abs(p_smooth - p_fitted)
+        # std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
+        # stdmed.append(std_deviation)
 
         # plt.plot(t, p, label='Original Data')
         # plt.plot(t, p_smooth, label='Smoothed Data')
@@ -163,15 +163,25 @@ def filter():
 
 
     for i in atotal:
-        x_jittered = i.frame_no + random.uniform(-jitter_amount, jitter_amount)
-        x_plot.append(x_jittered)
-        y_plot.append(i.stringer_no)
+        #x_jittered = i.frame_no + random.uniform(-jitter_amount, jitter_amount)
 
-    plt.scatter(x_plot, y_plot, facecolor='gray', c=scores, cmap='coolwarm', vmax = 10)
-    plt.colorbar()
-    plt.xlabel("Frame number")
-    plt.ylabel("Stringer number")
-    plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
+        #for type 0
+        x_plot.append(i.frame_no + ((i.weld_no-1)%3)/6 - 1/6)
+        y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
+
+        # #for type 1
+        # x_plot.append(i.frame_no + i.weld_no/5 - 3/10)
+        # y_plot.append(i.stringer_no)
+    
+    #for type 0
+    plt.scatter(x_plot, y_plot, c=scores, cmap='coolwarm', s=10, clim=(0,7))
+    # #for type 1
+    # plt.scatter(x_plot, y_plot, c=scores, cmap='coolwarm', s=15, clim=(0,10))
+
+    cbar = plt.colorbar()
+    cbar.set_label('Score [-]', rotation=90)
+    plt.xlabel('Frame number [-]')
+    plt.ylabel('Stringer number [-]')
     plt.show()
 
     outlists = [
@@ -199,7 +209,7 @@ def filter():
 
 
 def boxplots222(): 
-    atotal = iterate_points(type= 1, frames='All', stringers='All', welds='All')
+    atotal = iterate_points(type= 1, frames='All', stringers='All', welds=[1,2])
     outliers_list = [] 
     variances = []
     x_plot = []
@@ -243,15 +253,25 @@ def boxplots222():
 
 
     for i in atotal:
-        x_jittered = i.frame_no + random.uniform(-jitter_amount, jitter_amount)
-        x_plot.append(x_jittered)
-        y_plot.append(i.stringer_no)
+        #x_jittered = i.frame_no + random.uniform(-jitter_amount, jitter_amount)
 
-    plt.scatter(x_plot, y_plot, facecolor='gray', c=scores, cmap='coolwarm', alpha=dot_alpha, vmax = 6)
-    plt.colorbar()
-    plt.xlabel("Frame number")
-    plt.ylabel("Stringer number")
-    plt.grid(True, linestyle='-', linewidth=0.5, zorder = 0)
+        # #for type 0
+        # x_plot.append(i.frame_no + ((i.weld_no-1)%3)/6 - 1/6)
+        # y_plot.append(i.stringer_no + ((i.weld_no-1)//3)/2.5 - 0.20)
+
+        #for type 1
+        x_plot.append(i.frame_no + i.weld_no/5 - 3/10)
+        y_plot.append(i.stringer_no)
+    
+    # #for type 0
+    # plt.scatter(x_plot, y_plot, c=scores, cmap='coolwarm', s=10, clim=(0,5))
+    #for type 1
+    plt.scatter(x_plot, y_plot, c=scores, cmap='coolwarm', s=15, clim=(0,10))
+
+    cbar = plt.colorbar()
+    cbar.set_label('Score [-]', rotation=90)
+    plt.xlabel('Frame number [-]')
+    plt.ylabel('Stringer number [-]')
     plt.show()
 
     outlists = [
@@ -286,5 +306,5 @@ def boxplots222():
 
 #boxplots2()  #boxplots of upper pressure peaks
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-#boxplots222() #boxplots of upper and lower pressure peaks
-filter()
+boxplots222() #boxplots of upper and lower pressure peaks
+#filter()
