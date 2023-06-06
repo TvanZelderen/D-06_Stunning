@@ -38,14 +38,10 @@ for file_idx in file_list:
     data_plot = data[:,4].reshape(-1)
 
     if file_idx[1] == 0:
-        s = 27
-        w = 6
         x_plot = frame_no + ((weld_no-1)%3)/6 - 1/6
         y_plot = stringer_no + ((weld_no-1)//3)/2.5 - 0.20
         plt.scatter(x_plot, y_plot, c=data_plot, cmap=newcmp, s=10, clim=(0,3.5))
     elif file_idx[1] == 1:
-        s = 29
-        w = 2
         x_plot = frame_no + weld_no/5 - 3/10
         y_plot = stringer_no
         plt.scatter(x_plot, y_plot, c=data_plot, cmap=newcmp, s=15, clim=(0,3.5))
