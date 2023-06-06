@@ -129,7 +129,7 @@ local = 0
 list_ = 0
 power = 0
 pressure = 0
-displacement = 1
+displacement = 0
 clustering_list = 0
 
 a = 5
