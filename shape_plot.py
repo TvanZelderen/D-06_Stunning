@@ -10,7 +10,7 @@ from numpy.random import random
 from sklearn.linear_model import LinearRegression as LiRe
 
 
-with open('powerthrong_0.csv', 'r', newline='') as file:
+with open('csvs\\powerthrong_0.csv', 'r', newline='') as file:
     data0 = list(csv.reader(file))
 data0 = np.array(data0)
 data0 = data0.astype('float64')
@@ -18,7 +18,7 @@ data = data0
 s = 27
 w = 6
 
-# with open('powerthrong_1.csv', 'r', newline='') as file:
+# with open('cvsv\\powerthrong_1.csv', 'r', newline='') as file:
 #     data1 = list(csv.reader(file))
 # data1 = np.array(data1)
 # data1 = data1.astype('float64')
@@ -42,7 +42,7 @@ index_csv = []
 for i in range(index.shape[0]):
     index_csv.append(repr(list(index[i,:])))
 
-# with open('power.csv', 'w', newline='') as file:
+# with open('csvs\\power.csv', 'w', newline='') as file:
 #     writer = csv.writer(file)
 #     for i in range(index.shape[0]):
 #         writer.writerow([index_csv[i],scaled_log[i]])
@@ -148,8 +148,10 @@ for i in range(ssd_array.shape[0]):
             x_slope.append(i)
             y_slope.append(j)
 plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm', clim =(-5,5))
-plt.title('Average increase of SSD between weld spots per location')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.set_label('SoS increase slope [-]', rotation=90)
+plt.xlabel('Frame number [-]')
+plt.ylabel('Stringer number [-]')
 plt.show()
 
 frame_mean_slope = np.nanmean(slope_array, axis=1)

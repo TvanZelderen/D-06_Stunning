@@ -1,7 +1,6 @@
 from load import Data
 from total_energy import energy
 from matplotlib import pyplot as plt
-from matplotlib.gridspec import GridSpec
 import numpy as np
 import seaborn as sns
 import pandas as pd
@@ -21,4 +20,5 @@ labels = ['Clip-to-frame', 'Clip-to-skin', 'Clip-to-stringer-to-skin']
     x="Energy [kJ]", y="Weld Position"
 )'''
 plt.boxplot([frame, skin, stringer_skin], labels=labels)
+plt.ylabel('Energy [kJ]')
 plt.show()

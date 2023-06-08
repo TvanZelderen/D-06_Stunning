@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import json
+import csv
+import numpy as np
 # Weights and scores for the final comparison of the models
 w_disp_heavy = 10
 w_energy = 4
@@ -20,13 +22,13 @@ suspicious_list = []
 #max_score = 3
 cutoff_score = 12
 
-df1=pd.read_csv('disp_heavy.csv', header = None, index_col = 0, names = ['Index','disp_heavy'])
-df2=pd.read_csv('energy.csv', header = None, index_col = 0, names = ['Index','energy'])
-df3=pd.read_csv('power.csv', header = None, index_col = 0, names = ['Index','power'])
-df4=pd.read_csv('pressure_time.csv', header = None, index_col = 0, names = ['Index','pressure_time'])
-df5=pd.read_csv('pressure_filter.csv', header = None, index_col = 0, names = ['Index','pressure_filter'])
-df6=pd.read_csv('pressure_peak.csv', header = None, index_col = 0, names = ['Index','pressure_peak'])
-df7=pd.read_csv('displ.csv', header = None, index_col = 0, names = ['Index','displacement'])
+df1=pd.read_csv('csvs\\disp_heavy.csv', header = None, index_col = 0, names = ['Index','disp_heavy'])
+df2=pd.read_csv('csvs\\energy.csv', header = None, index_col = 0, names = ['Index','energy'])
+df3=pd.read_csv('csvs\\power.csv', header = None, index_col = 0, names = ['Index','power'])
+df4=pd.read_csv('csvs\\pressure_time.csv', header = None, index_col = 0, names = ['Index','pressure_time'])
+df5=pd.read_csv('csvs\\pressure_filter.csv', header = None, index_col = 0, names = ['Index','pressure_filter'])
+df6=pd.read_csv('csvs\\pressure_peak.csv', header = None, index_col = 0, names = ['Index','pressure_peak'])
+df7=pd.read_csv('csvs\\displ.csv', header = None, index_col = 0, names = ['Index','displacement'])
 
 dftotal=pd.concat([df1, df2, df3, df4, df5, df6, df7], axis= 1)
 
@@ -63,3 +65,21 @@ plt.xlabel('Frame number')
 plt.ylabel('Stringer number')
 plt.colorbar()
 plt.show()
+
+index_csv = np.array(dftotal.index).reshape(-1,1)
+score = np.array(dftotal['Final Score']).reshape(-1,1)
+score_row = np.hstack((index_csv,score))
+
+type_list = [x[0][-2] for x in score_row]
+
+with open('csvs\\final_0.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(score_row.shape[0]):
+        if type_list[i] == '0' and not np.isnan(score_row[i,1]):
+            writer.writerow(score_row[i,:])
+
+with open('csvs\\final_1.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    for i in range(score_row.shape[0]):
+        if type_list[i] == '1' and not np.isnan(score_row[i,1]):
+            writer.writerow(score_row[i,:])

@@ -131,10 +131,12 @@ def av_freq(tn, pn):
     return tav, pav, ma, mi
 
 #to activate type 0
-objects = iterate_points(type=0)  
+#objects = iterate_points(type=0)  
 
 #to activate type 1
-#objects = iterate_points(type=1,welds=[1,2])
+objects = iterate_points(type=1,welds=[1,2])
+
+
 number=[]
 i=1
 weld_list = []
@@ -268,28 +270,34 @@ color_plot = []
 x_plot = []
 y_plot = []
 for weld in color_time:
-    x_plot.append(weld[0][0][0] + ((weld[0][0][2]-1)%3)/10 - 0.10)
-    y_plot.append(weld[0][0][1] + ((weld[0][0][2]-1)//3)/2.5 - 0.20)
+    x_plot.append(weld[0][0][0] + weld[0][0][2]/5 - 3/10)
+    y_plot.append(weld[0][0][1])
     color_plot.append(weld[1])
-plt.scatter(x_plot, y_plot, c=color_plot, cmap='coolwarm')
-plt.colorbar()
+plt.scatter(x_plot, y_plot, c=color_plot, s=15,cmap='coolwarm')
+cbar = plt.colorbar()
+cbar.set_label('Score [-]', rotation=90)
+plt.xlabel('Frame number [-]')
+plt.ylabel('Stringer number [-]')
 plt.show()
 
 color_plot_p = []
 x_plot_p = []
 y_plot_p = []
 for weld in color_pressure:
-    x_plot_p.append(weld[0][0][0] + ((weld[0][0][2]-1)%3)/10 - 0.10)
-    y_plot_p.append(weld[0][0][1] + ((weld[0][0][2]-1)//3)/2.5 - 0.20)
+    x_plot_p.append(weld[0][0][0] + weld[0][0][2]/5 - 3/10)
+    y_plot_p.append(weld[0][0][1])
     color_plot_p.append(weld[1])
-plt.scatter(x_plot_p, y_plot_p, c=color_plot_p, cmap='coolwarm')
-plt.colorbar()
+plt.scatter(x_plot_p, y_plot_p, c=color_plot_p, s=15, cmap='coolwarm')
+cbar = plt.colorbar()
+cbar.set_label('Score [-]', rotation=90)
+plt.xlabel('Frame number [-]')
+plt.ylabel('Stringer number [-]')
 plt.show()
 
 
 
 #for type 0
-
+'''
 with open('pressure_time_0.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_time)):
@@ -333,10 +341,10 @@ plt.show()
 plt.bar(range(1,28),stringer_mean_pressure)
 plt.title("clip to steringer mean pressure")
 plt.show()
-
+'''
 
 #for type 1
-"""
+
 with open('pressure_time_1.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     for i in range(len(color_time)):
@@ -383,5 +391,3 @@ plt.show()
 
 
 #--------------------------------------------------------------------------------------#
-
-"""
