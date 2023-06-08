@@ -61,7 +61,7 @@ while FrameNumber != 13:
 
         while (Time < (len(Weld) - 1)) :
 
-            if Weld[Time] > 3 and AllReadyInDisplacementAnomalyList == False:
+            if Weld[Time] > 5 and AllReadyInDisplacementAnomalyList == False:
                 IndentificationOfWeldList = [FrameNumber, Weldnumber]
                 DisplacementAnomalyList.append(10)
                 AllReadyInDisplacementAnomalyList = True
@@ -122,6 +122,17 @@ while FrameNumber != 13:
         AllReadyInDisplacementAnomalyList = False   
 
         Time = 1 
+        xtab = []
+        CounterForXtab = 0
+        while CounterForXtab < 10 :
+            CounterForXtab = round(CounterForXtab + 0.001, 3)
+            xtab.append(CounterForXtab)
+
+        plt.plot(xtab, ImportedData[1])
+        plt.xlabel('Time [s]')
+        plt.ylabel('Displacement [mm]')
+        print(FrameNumber, Weldnumber)
+        plt.show()
 
     list(filter(lambda a: a != 0, DisplacementValueOfPositiveDisplacement))      # Don't know what it does, but I did it to circumvent a bug, will fix later
     list(filter(lambda a: a != 0, TimeAtPositiveDisplacement))
@@ -129,18 +140,17 @@ while FrameNumber != 13:
 
     # To help the human during the debugging proces and to find ways to improve the code, a graph can be made which points to the welds which have
     #a positive displacement. 
-    xtab = []
-    CounterForXtab = 0
-    while CounterForXtab < 10 :
-        CounterForXtab = round(CounterForXtab + 0.001, 3)
-        xtab.append(CounterForXtab)
+
+
+
+
 
     for (WeldNumber, TimeStamp, Weldnumber2) in zip(WeldNumberWithPositiveDisplacement, TimeAtPositiveDisplacement, WeldNumberWithPositiveDisplacement) :
-        plt.plot(xtab, ImportedData[WeldNumber])
+        # plt.plot(xtab, ImportedData[WeldNumber])
         plt.xlabel('Time [s]')
         plt.ylabel('Displacement [mm]')
-        plt.annotate('Positive slope',xy=(TimeStamp -1, ImportedData[WeldNumber][TimeStamp -1]), xycoords='data',xytext=(0.2, 0.95), textcoords='axes fraction', arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
-        # print(FrameNumber, Weldnumber2)
+        # plt.annotate('Positive slope',xy=(TimeStamp -1, ImportedData[WeldNumber][TimeStamp -1]), xycoords='data',xytext=(0.2, 0.95), textcoords='axes fraction', arrowprops=dict(arrowstyle="->",connectionstyle="angle3,angleA=0,angleB=-90"),horizontalalignment='right', verticalalignment='top')
+        print(FrameNumber, Weldnumber2)
         # plt.show()    
 
     # Printed tekst used for debugging 
