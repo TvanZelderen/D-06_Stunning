@@ -75,7 +75,7 @@ def square_diff(x_axis, y_mean, obj):
     power, time = nan_filter(power,time)
 
     loc_diff = (y_mean - np.interp(x_axis,time,power))**2
-    obj.diff = sum(loc_diff)
+    obj.diff = sum(loc_diff)/len(loc_diff)
     return obj.diff
 
 def peak_metric(x_axis, y_mean, obj):
@@ -89,15 +89,15 @@ def peak_metric(x_axis, y_mean, obj):
     
     return obj.peak_m
 
-def rank(obj):
-    index = ranked_diff.index(obj.diff)
-    ranking = index+1
-    return ranking
+# def rank(obj):
+#     index = ranked_diff.index(obj.diff)
+#     ranking = index+1
+#     return ranking
 
 if __name__ == '__main__':
 
     ax = plot_ini('test')    
-    all_obj = iterate_points(type = 1)
+    all_obj = iterate_points(type = 0)
     for i in all_obj:
         try:
             i.power_norm()
@@ -121,7 +121,8 @@ if __name__ == '__main__':
             i.smoothing()
             get_peaks(i, time_norm=True, power_norm=True)
             ssds.append(square_diff(x_axis, y_mean, i))
-            pm.append(peak_metric(x_axis, y_mean, i))
+            #pm.append(peak_metric(x_axis, y_mean, i))
+            pm.append(0)
             file_list.append([i.frame_no, i.stringer_no, i.weld_no, i.type])
     
         # if i.diff < 0:
@@ -134,6 +135,6 @@ if __name__ == '__main__':
     pm = np.array(pm).reshape((-1,1))
     file_write = np.concatenate((file_list, ssds, pm), axis=1)
 
-    with open('powerthrong_1.csv', 'w', newline='') as file:
+    with open('csvs\\powerthrong_0_new.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(file_write)

@@ -18,7 +18,7 @@ data = data0
 s = 27
 w = 6
 
-# with open('cvsv\\powerthrong_1.csv', 'r', newline='') as file:
+# with open('csvs\\powerthrong_1.csv', 'r', newline='') as file:
 #     data1 = list(csv.reader(file))
 # data1 = np.array(data1)
 # data1 = data1.astype('float64')
@@ -147,9 +147,9 @@ for i in range(ssd_array.shape[0]):
             slope.append(reg.coef_[0])
             x_slope.append(i)
             y_slope.append(j)
-plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm', clim =(-5,5))
+plt.scatter(x_slope, y_slope, c=slope, cmap='coolwarm', clim =(-0.025,0.025))
 cbar = plt.colorbar()
-cbar.set_label('SoS increase slope [-]', rotation=90)
+cbar.set_label('MSE increase slope [-]', rotation=90)
 plt.xlabel('Frame number [-]')
 plt.ylabel('Stringer number [-]')
 plt.show()
@@ -157,8 +157,8 @@ plt.show()
 frame_mean_slope = np.nanmean(slope_array, axis=1)
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_slope)
-plt.xlabel('Frame number')
-plt.ylabel('Mean slope of SoS [-]')
+plt.xlabel('Frame number [-]')
+plt.ylabel('Mean slope of MSE [-]')
 plt.show()
 
 string_mean_slope = np.nanmean(slope_array, axis=0)
@@ -185,8 +185,8 @@ plt.show()
 frame_mean_ssd = np.nanmean(ssd_array, axis=(1,2))
 x_plot = range(1,13)
 plt.plot(x_plot,frame_mean_ssd)
-plt.xlabel('Frame number')
-plt.ylabel('SoS [-]')
+plt.xlabel('Frame number [-]')
+plt.ylabel('MSE [-]')
 plt.ylim(bottom = 0)
 plt.show()
 

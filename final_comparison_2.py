@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import json
 import csv
 import numpy as np
+import seaborn as sns
+sns.set_theme()
+
 # Weights and scores for the final comparison of the models
 w_disp_heavy = 10
 w_energy = 4
@@ -43,8 +46,8 @@ dftotal['Final Score'] /= w_total
 print(dftotal.to_string)
 
 plt.hist(dftotal['Final Score'], bins=100)
-plt.xlabel('Score')
-plt.ylabel('Freqeuncy')
+plt.xlabel('Score [-]')
+plt.ylabel('Freqeuncy [-]')
 plt.show()
 
 index = list(dftotal.index)
