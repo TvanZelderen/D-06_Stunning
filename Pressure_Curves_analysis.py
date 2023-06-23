@@ -109,36 +109,36 @@ def filter():
 
         ##### TYPE 1 ####
 
-        # amplitude = 0.6
-        # frequency = 3
-        # phase = 0
-        # mean_value = aveg
+        amplitude = 0.6
+        frequency = 3
+        phase = 0
+        mean_value = aveg
 
-        # initial_guess = [amplitude, frequency, phase, mean_value]
-        # optimized_params, _ = curve_fit(sine_function, t, p_smooth, p0=initial_guess)
-        # p_fitted = sine_function(t, *optimized_params)
-        # residuals = np.abs(p_smooth - p_fitted)
-        # std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
-        # stdmed.append(std_deviation)
+        initial_guess = [amplitude, frequency, phase, mean_value]
+        optimized_params, _ = curve_fit(sine_function, t, p_smooth, p0=initial_guess)
+        p_fitted = sine_function(t, *optimized_params)
+        residuals = np.abs(p_smooth - p_fitted)
+        std_deviation = np.sqrt((np.sum((residuals)**2))/(len(p_smooth)))
+        stdmed.append(std_deviation)
 
-        # plt.plot(t, p, label='Original Data')
-        # plt.plot(t, p_smooth, label='Smoothed Data')
-        # plt.plot(t, p_fitted, label='Fitted Sine Curve')
-        # plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
-        # plt.xlabel('Time')
-        # plt.ylabel('Pressure')
-        # plt.title('Smoothed Pressure Graph with Sine Curve Fit')
-        # plt.legend()
-        # plt.show()
+        plt.plot(t, p, label='Original Data')
+        plt.plot(t, p_smooth, label='Smoothed Data')
+        plt.plot(t, p_fitted, label='Fitted Sine Curve')
+        plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
+        plt.xlabel('Time')
+        plt.ylabel('Pressure')
+        plt.title('Smoothed Pressure Graph with Sine Curve Fit')
+        plt.legend()
+        plt.show()
 
-        # plt.plot(t, p, label='Original Data')
-        # plt.plot(t, p_smooth, label='Smoothed Data')
-        # plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
-        # plt.xlabel('Time')
-        # plt.ylabel('Pressure')
-        # plt.title('Smoothed Pressure Graph with Linear Regression')
-        # plt.legend()
-        # plt.show()
+        plt.plot(t, p, label='Original Data')
+        plt.plot(t, p_smooth, label='Smoothed Data')
+        plt.axhline(y=aveg, color='red', linestyle='--', label='Average')
+        plt.xlabel('Time')
+        plt.ylabel('Pressure')
+        plt.title('Smoothed Pressure Graph with Linear Regression')
+        plt.legend()
+        plt.show()
 
         outliers_list.append({
             'type': i.type,
@@ -306,5 +306,5 @@ def boxplots222():
 
 #boxplots2()  #boxplots of upper pressure peaks
 #peakvalues2(a) #plots of pressure peaks with upper and lower maximum values
-boxplots222() #boxplots of upper and lower pressure peaks
-#filter()
+#boxplots222() #boxplots of upper and lower pressure peaks
+filter()

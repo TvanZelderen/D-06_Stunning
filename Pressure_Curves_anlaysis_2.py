@@ -151,7 +151,7 @@ for obj in objects:
 
     weld_location = [obj.frame_no, obj.stringer_no, obj.weld_no, obj.type]
     
-    if i==1:
+    if i==13:
         plt.figure()
         plt.plot(peakst, peaksp, "o")
         plt.plot(max_time_freq, max_pressure_freq, "o")
@@ -160,6 +160,7 @@ for obj in objects:
         plt.plot(t, p)
         plt.xlabel("time")
         plt.ylabel("pressure")
+        plt.title('Example pressure curve')
         plt.show()
 
     weld_list.append([weld_location, ma, mi, av_time, av_pressure])#creates a matrix with the weld location, maximum and minimum time difference and average time

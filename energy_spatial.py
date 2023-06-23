@@ -21,4 +21,5 @@ labels = ['Clip-to-frame', 'Clip-to-skin', 'Clip-to-stringer-to-skin']
 )'''
 plt.boxplot([frame, skin, stringer_skin], labels=labels)
 plt.ylabel('Energy [kJ]')
+plt.title('Boxplots of energy distribution per type')
 plt.show()

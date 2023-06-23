@@ -1,23 +1,39 @@
 from load import *
-
 sns.set_theme()
-fig, axs = plt.subplots(1,2, sharey=True)
 
-all_obj = iterate_points(type = 0)
-for i in all_obj:
-    try:
-        i.plot(axs[0], displacement = True)
-    except:
-        pass
+# i = Data(1,2,1,1)
 
+# lblist = ['Clip-to-skin pressure outlier score map',
+#           'Clip-to-frame pressure outlier score map',
+#           'Clip-to-skin power outlier score map',
+#           'Clip-to-frame power outlier score map',
+#           'Zero derivative points, stringer 6',
+#           'Zero derivative points, stringer 7']
+
+# for label in lblist:
+#     ax = plot_ini(label)
+#     i.plot(ax, displacement = True)
+#     plt.savefig('C:\\Users\\SID-DRW\\Desktop\\New folder\\'+label+'.png')
+
+# all_obj = iterate_points(type = 0)
+# for i in all_obj:
+#     try:
+#         i.plot(ax, displacement = True)
+#     except:
+#         pass
+# plt.xlabel('Time [s]')
+# plt.ylabel('Displacement [mm]')
+# plt.show()
+
+ax = plot_ini('Clip-to-frame displacement curves')
 all_obj = iterate_points(type = 1)
 for i in all_obj:
     try:
-        i.plot(axs[1], displacement = True)
+        i.plot(ax, displacement = True)
     except:
         pass
 
-axs[0].set_xlabel('Time [s]')
-axs[1].set_xlabel('Time [s]')
-axs[0].set_ylabel('Displacement [mm]')
+plt.xlabel('Time [s]')
+plt.ylim([-1,20])
+plt.ylabel('Displacement [mm]')
 plt.show()
